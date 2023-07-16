@@ -3,6 +3,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "variable_printer.hpp"
+#include "floating_info.hpp"
 
 #include <fstream>
 
@@ -10,7 +11,6 @@
 
 #include <carina/type_cast.hpp>
 #include <carina/readable_scalar.hpp>
-#include <carina/floating_info.hpp>
 
 namespace Carina
 {

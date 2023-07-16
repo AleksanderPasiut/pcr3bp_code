@@ -4,8 +4,7 @@
 
 #include "tools/test_tools.hpp"
 #include "tools/print_bootstrap.hpp"
-
-#include <carina/floating_info.hpp>
+#include "tools/floating_info.hpp"
 
 #include <carina/map_base.hpp>
 #include <carina/pne_map.hpp>
