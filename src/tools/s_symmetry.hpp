@@ -1,0 +1,25 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Author: Aleksander M. Pasiut
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include <stdexcept>
+
+namespace Ursa
+{
+
+template<typename VectorType>
+VectorType S_symmetry(const VectorType& v)
+{
+    if (v.dimension() == 4)
+    {
+        return VectorType{ v[0], -v[1], -v[2], v[3] };
+    }
+    else
+    {
+        throw std::logic_error("Unexpected vector dimension!");
+    }
+}
+
+}
