@@ -22,7 +22,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    static_assert( Carina::MapCompatibility<MapT, MapU>::value );
+    static_assert( MapCompatibility<MapT, MapU>::value );
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Constructor

@@ -13,7 +13,7 @@ namespace Carina
 {
 
 template<typename MapT>
-class AffinePoincareMap : public Carina::MapBase<MapT>
+class AffinePoincareMap : public MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;

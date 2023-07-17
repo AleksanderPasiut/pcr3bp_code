@@ -8,6 +8,7 @@
 
 namespace Ursa
 {
+
 enum class LeviCivitaCoordinateChangeInverseVariant
 {
     PositiveU,
@@ -15,7 +16,6 @@ enum class LeviCivitaCoordinateChangeInverseVariant
     NegativeU,
     NegativeV
 };
-
 
 template<typename MapT>
 class LeviCivitaCoordinateChange

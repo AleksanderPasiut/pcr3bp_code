@@ -20,8 +20,8 @@ public:
 
     static VectorType eval(
         const VectorType& arg,
-        const Carina::LocalCoordinateSystem<MapT>& src,
-        const Carina::LocalCoordinateSystem<MapT>& dst)
+        const LocalCoordinateSystem<MapT>& src,
+        const LocalCoordinateSystem<MapT>& dst)
     {
         const MatrixType A = gaussInverseMatrix<MapT>(src.get_directions_matrix());
         const VectorType b = src.get_origin();

@@ -11,7 +11,7 @@ namespace Carina
 {
 
 template<typename MapT, typename ConstraintT>
-class IdWithConstraint : public Carina::MapBase<MapT>
+class IdWithConstraint : public MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;

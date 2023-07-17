@@ -19,18 +19,18 @@ static void print_data(std::ofstream& fs, double value)
 {
     fs << "Approx. value     " << value << '\n';
     fs << "Exact hex. value  " << std::string( ReadableScalar<double>(value) ) << '\n';
-    fs << "Exact frac. value " << Carina::FloatingInfo<double>(value) << '\n';
+    fs << "Exact frac. value " << FloatingInfo<double>(value) << '\n';
 }
 
 static void print_data(std::ofstream& fs, Interval value)
 {
     fs << "Approx. left bound      " << value.leftBound() << '\n';
     fs << "Approx. right bound     " << value.rightBound() << '\n';
-    fs << "Approx. span            " << Carina::span(value) << '\n';
+    fs << "Approx. span            " << span(value) << '\n';
     fs << "Exact hex. left bound   " << std::string( ReadableScalar<double>(value.leftBound()) ) << '\n';
     fs << "Exact hex. right bound  " << std::string( ReadableScalar<double>(value.rightBound()) ) << '\n';
-    fs << "Exact frac. left bound  " << Carina::FloatingInfo<double>(value.leftBound()) << '\n';
-    fs << "Exact frac. right bound " << Carina::FloatingInfo<double>(value.rightBound()) << '\n';
+    fs << "Exact frac. left bound  " << FloatingInfo<double>(value.leftBound()) << '\n';
+    fs << "Exact frac. right bound " << FloatingInfo<double>(value.rightBound()) << '\n';
 }
 
 template<>
