@@ -19,7 +19,7 @@ static void print_data(std::ofstream& fs, double value)
 {
     fs << "Approx. value     " << value << '\n';
     fs << "Exact hex. value  " << std::string( ReadableScalar<double>(value) ) << '\n';
-    fs << "Exact frac. value " << Leo::FloatingInfo<double>(value) << '\n';
+    fs << "Exact frac. value " << Carina::FloatingInfo<double>(value) << '\n';
 }
 
 static void print_data(std::ofstream& fs, Interval value)
@@ -29,8 +29,8 @@ static void print_data(std::ofstream& fs, Interval value)
     fs << "Approx. span            " << Carina::span(value) << '\n';
     fs << "Exact hex. left bound   " << std::string( ReadableScalar<double>(value.leftBound()) ) << '\n';
     fs << "Exact hex. right bound  " << std::string( ReadableScalar<double>(value.rightBound()) ) << '\n';
-    fs << "Exact frac. left bound  " << Leo::FloatingInfo<double>(value.leftBound()) << '\n';
-    fs << "Exact frac. right bound " << Leo::FloatingInfo<double>(value.rightBound()) << '\n';
+    fs << "Exact frac. left bound  " << Carina::FloatingInfo<double>(value.leftBound()) << '\n';
+    fs << "Exact frac. right bound " << Carina::FloatingInfo<double>(value.rightBound()) << '\n';
 }
 
 template<>
