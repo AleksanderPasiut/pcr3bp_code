@@ -28,7 +28,7 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @return True if condition is never satisfied. False if it might be satisfied.
-    //! @details Implementation makes use of Newton theorem
+    //! @details Implementation makes use of the Newton theorem
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool is_condition_never_satisfied(MapT condition, VectorType x_arg, MatrixType e_der, BoundType limit = 1e-15)
     {
@@ -46,8 +46,6 @@ public:
                 MatrixType c_der( condition.imageDimension(), condition.dimension() );
                 const VectorType val = condition(img, c_der);
 
-                // print_var(arg);
-                // print_var(val);
                 const VectorType zero_v = VectorType( condition.imageDimension() );
                 const bool intersection_empty = capd::vectalg::intersectionIsEmpty( val, zero_v );
                 if (intersection_empty)
@@ -68,14 +66,9 @@ public:
                         der(i, 1) = t_dr(i);
                     }
 
-                    // print_var(arg);
-                    // print_var(x_arg);
-
                     const MatrixType m = c_der * der;
-                    // print_var(m);
 
                     const MatrixType m_inv = Carina::gaussInverseMatrix<MapT>(m);
-                    // print_var(m_inv);
 
                     const VectorType X0 = VectorType{ arg, x_arg[0], x_arg[1] };
                     const VectorType x0 = Carina::mid_vector(X0);
