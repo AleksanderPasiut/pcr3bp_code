@@ -5,7 +5,7 @@
 #include "tools/test_tools.hpp"
 
 #include "tools/coordsys_vec.hpp"
-#include "tools/solution_curve_with_collision_check.hpp"
+#include "tools/solution_curve_with_condition_check.hpp"
 #include "tools/change_coordsys.hpp"
 #include "tools/ry_functions.hpp"
 
@@ -328,15 +328,10 @@ private:
                     m_gain_factor
                 };
 
-                SolutionCurveWithCollisionCheck<MapT> solution_curve {};
+                SolutionCurveWithConditionCheck<MapT> solution_curve {};
                 f_pos(N, time_span, solution_curve);
 
-                const VectorType arg_src = N * m_gain_factor;
-
-                MatrixType e_der( extension_to_4_src.imageDimension(), extension_to_4_src.dimension() );
-                extension_to_4_src(arg_src, e_der);
-
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition, arg_src, e_der );
+                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
                 EXPECT_TRUE(solution_curve_condition);
             }
             else
@@ -351,15 +346,10 @@ private:
                     m_gain_factor
                 };
 
-                SolutionCurveWithCollisionCheck<MapT> solution_curve {};
+                SolutionCurveWithConditionCheck<MapT> solution_curve {};
                 f_neg(N, time_span, solution_curve);
 
-                const VectorType arg_dst = N * m_gain_factor;
-
-                MatrixType e_der( extension_to_4_dst.imageDimension(), extension_to_4_dst.dimension() );
-                extension_to_4_dst(arg_dst, e_der);
-
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition, arg_dst, e_der );
+                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
                 EXPECT_TRUE(solution_curve_condition);
             }
         }
