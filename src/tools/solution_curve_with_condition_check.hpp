@@ -13,8 +13,11 @@
 namespace Ursa
 {
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief An extension of solution curve component that allows to check if given solution curve might satisfy given condition
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class SolutionCurveWithCollisionCheck : public Carina::SolutionCurve<MapT>
+class SolutionCurveWithConditionCheck : public Carina::SolutionCurve<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -25,7 +28,7 @@ public:
 
     using CurvePieceType = typename Carina::SolutionCurve<MapT>::BaseCurve;
 
-    SolutionCurveWithCollisionCheck() : Carina::SolutionCurve<MapT>(0.0)
+    SolutionCurveWithConditionCheck() : Carina::SolutionCurve<MapT>(0.0)
     {}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
