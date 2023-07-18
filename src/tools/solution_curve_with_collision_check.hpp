@@ -32,13 +32,15 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool is_condition_never_satisfied(MapT condition, VectorType x_arg, MatrixType e_der, BoundType limit = 1e-15)
     {
+        using CurvePieceType = typename Carina::SolutionCurve<MapT>::BaseCurve;
+
         bool ret = true;
         
-        for (auto& piece_ptr : this->pieces)
+        for (CurvePieceType*& piece_ptr : this->pieces)
         {
-            auto& piece = *piece_ptr;
+            CurvePieceType& piece = *piece_ptr;
 
-            auto internal_check = [&](double left, double right, auto& internal_check_ref) -> bool
+            auto internal_check = [&condition, x_arg, e_der, limit, &piece](double left, double right, auto& internal_check_ref) -> bool
             {
                 const ScalarType arg = ScalarType( left, right );
                 const VectorType img = piece(arg);
