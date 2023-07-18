@@ -3,7 +3,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "tools/test_tools.hpp"
-#include "tools/timemap_test_params.hpp"
 #include <carina/capd/norm.hpp>
 #include <carina/timemap_wrapper.hpp>
 #include "pcr3bp_basic/standard_system.hpp"

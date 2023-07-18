@@ -5,7 +5,6 @@
 #include <random>
 
 #include "tools/test_tools.hpp"
-#include "tools/timemap_test_params.hpp"
 #include <carina/projection_map.hpp>
 #include <carina/timemap_wrapper.hpp>
 #include <carina/concat.hpp>
