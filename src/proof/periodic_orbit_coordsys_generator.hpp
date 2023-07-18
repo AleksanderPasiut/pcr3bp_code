@@ -20,7 +20,7 @@
 #include "tools/coordsys4_alignment.hpp"
 #include "tools/unstable_directions_generator.hpp"
 #include "tools/direction_shifting.hpp"
-#include "tools/s_symmetry.hpp"
+#include "tools/auxiliary_functions.hpp"
 #include "tools/variable_printer.hpp"
 
 namespace Ursa

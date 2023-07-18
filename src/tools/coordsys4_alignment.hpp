@@ -5,7 +5,7 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include "s_symmetry.hpp"
+#include "auxiliary_functions.hpp"
 
 #include <carina/local_coordinate_system.hpp>
 #include <carina/extract.hpp>
@@ -63,7 +63,7 @@ public:
         assert_with_exception(arg.get_origin()[2] == 0.0);
 
         const VectorType unstable_pos_4d = arg.get_directions_matrix() * VectorType{ unstable_pos_2d[0], unstable_pos_2d[1], 0.0, 0.0 };
-        const VectorType unstable_neg_4d = -S_symmetry(unstable_pos_4d);
+        const VectorType unstable_neg_4d = -AuxiliaryFunctions<MapT>::S_symmetry(unstable_pos_4d);
 
         // const VectorType vf_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
         const VectorType h_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4);

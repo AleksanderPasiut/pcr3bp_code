@@ -7,7 +7,7 @@
 #include "tools/coordsys_vec.hpp"
 #include "tools/solution_curve_with_condition_check.hpp"
 #include "tools/change_coordsys.hpp"
-#include "tools/ry_functions.hpp"
+#include "tools/auxiliary_functions.hpp"
 
 #include "covering_relations_setup.hpp"
 
@@ -247,7 +247,7 @@ private:
             m_gain_factor
         };
 
-        MapT J = RY_Functions<MapT>::J();
+        MapT J = AuxiliaryFunctions<MapT>::J();
         Carina::CompositeMap<MapT, decltype(J)&, decltype(f)&, decltype(J)&> jfj
         {
             std::ref(J),
@@ -427,10 +427,10 @@ private:
         const ScalarType a0 = 0.59;
         const ScalarType w0 = b0 * alpha;
 
-        MapT R_inverse = RY_Functions<MapT>::R_Inverse(w0, a0, b0);
-        MapT Y_inverse = RY_Functions<MapT>::Y_Inverse(p);
-        MapT J = RY_Functions<MapT>::J();
-        MapT J2 = RY_Functions<MapT>::J2();
+        MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
+        MapT Y_inverse = AuxiliaryFunctions<MapT>::Y_Inverse(p);
+        MapT J = AuxiliaryFunctions<MapT>::J();
+        MapT J2 = AuxiliaryFunctions<MapT>::J2();
 
         {
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );

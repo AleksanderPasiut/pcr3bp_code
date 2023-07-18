@@ -7,7 +7,7 @@
 #include <carina/enp_map.hpp>
 #include <carina/parallel_shooting/parallel_shooting.hpp>
 
-#include <tools/s_symmetry.hpp>
+#include <tools/auxiliary_functions.hpp>
 #include "periodic_orbit_coordsys_generator.hpp"
 
 namespace Ursa
@@ -72,7 +72,7 @@ private:
         std::list<VectorType> origins_mirror {};
         for (const VectorType& v : ret)
         {
-            origins_mirror.push_front( S_symmetry(v) );
+            origins_mirror.push_front( AuxiliaryFunctions<MapT>::S_symmetry(v) );
         }
 
         ret.push_back(mid_v4);

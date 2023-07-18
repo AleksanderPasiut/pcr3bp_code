@@ -11,7 +11,7 @@ namespace Ursa
 {
 
 template<typename MapT>
-class RY_Functions
+class AuxiliaryFunctions
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -180,6 +180,18 @@ public:
 
         MapT map(func, 2, 2, 0);
 		return map;
+    }
+
+    static VectorType S_symmetry(const VectorType& v)
+    {
+        if (v.dimension() == 4)
+        {
+            return VectorType{ v[0], -v[1], -v[2], v[3] };
+        }
+        else
+        {
+            throw std::logic_error("Unexpected vector dimension!");
+        }
     }
 };
 

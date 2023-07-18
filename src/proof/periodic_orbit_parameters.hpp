@@ -7,7 +7,7 @@
 #include <carina/readable_interval.hpp>
 
 #include "tools/types.hpp"
-#include "tools/s_symmetry.hpp"
+#include "tools/auxiliary_functions.hpp"
 #include "pcr3bp_basic/setup_parameters.hpp"
 
 namespace Ursa
@@ -41,7 +41,7 @@ public:
 
     VectorType get_intermediate_point_neg() const
     {
-        return S_symmetry( get_intermediate_point() );
+        return AuxiliaryFunctions<MapT>::S_symmetry( get_intermediate_point() );
     }
 
 private:
