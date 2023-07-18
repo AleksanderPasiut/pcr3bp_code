@@ -331,12 +331,7 @@ private:
                 SolutionCurveWithCollisionCheck<MapT> solution_curve {};
                 f_pos(N, time_span, solution_curve);
 
-                const VectorType arg_src = N * m_gain_factor;
-
-                MatrixType e_der( extension_to_4_src.imageDimension(), extension_to_4_src.dimension() );
-                extension_to_4_src(arg_src, e_der);
-
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition, arg_src, e_der );
+                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
                 EXPECT_TRUE(solution_curve_condition);
             }
             else
@@ -354,12 +349,7 @@ private:
                 SolutionCurveWithCollisionCheck<MapT> solution_curve {};
                 f_neg(N, time_span, solution_curve);
 
-                const VectorType arg_dst = N * m_gain_factor;
-
-                MatrixType e_der( extension_to_4_dst.imageDimension(), extension_to_4_dst.dimension() );
-                extension_to_4_dst(arg_dst, e_der);
-
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition, arg_dst, e_der );
+                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
                 EXPECT_TRUE(solution_curve_condition);
             }
         }
