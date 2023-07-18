@@ -4,9 +4,8 @@
 
 #include "tools/test_tools.hpp"
 
-#include "tools/coordsys_vec.hpp"
+#include "tools/coordsys_utilities.hpp"
 #include "tools/solution_curve_with_condition_check.hpp"
-#include "tools/change_coordsys.hpp"
 #include "tools/auxiliary_functions.hpp"
 
 #include "covering_relations_setup.hpp"

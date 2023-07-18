@@ -9,7 +9,7 @@
 #include "homoclinic_orbit_origins_generator.hpp"
 #include "homoclinic_orbit_coordsys_generator.hpp"
 
-#include "tools/coordsys_vec.hpp"
+#include "tools/coordsys_utilities.hpp"
 
 namespace Ursa
 {
