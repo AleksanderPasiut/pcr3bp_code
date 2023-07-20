@@ -28,9 +28,9 @@ public:
 
     using Coordsys = Carina::LocalCoordinateSystem<MapT>;
 
-    CoveringRelationsTest( const CoveringRelationsSetup& setup)
-            : m_periodic_orbit_coordsys(setup.get_periodic_orbit_coordsys())
-            , m_homoclinic_orbit_coordsys(setup.get_homoclinic_orbit_coordsys())
+    CoveringRelationsTest(const CoveringRelationsSetup& setup)
+        : m_periodic_orbit_coordsys(setup.get_periodic_orbit_coordsys())
+        , m_homoclinic_orbit_coordsys(setup.get_homoclinic_orbit_coordsys())
     {}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
