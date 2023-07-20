@@ -5,7 +5,7 @@
 #pragma once
 
 #include "tools/local_poincare4.hpp"
-#include "tools/gig_map.hpp"
+#include "tools/gain_map.hpp"
 
 namespace Ursa
 {
@@ -71,11 +71,6 @@ public:
         const ScalarType k = m_input_gain.get_gain();
         return m_local_poincare4(vec * k, time, solution_curve);
     }
-
-    // ScalarType get_input_gain()
-    // {
-    //     return m_input_gain.get_gain();
-    // }
 
 private:
     LocalPoincare4<MapT> m_local_poincare4;
