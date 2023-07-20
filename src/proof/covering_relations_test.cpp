@@ -13,7 +13,7 @@
 
 #include "g_map.hpp"
 
-#include "advanced_cone_conditions.hpp"
+#include "parallelogram_covering_conditions.hpp"
 
 namespace Ursa
 {
@@ -414,10 +414,10 @@ private:
         }
 
         print_var(der_union);
-        AdvancedConeConditions<MapT> advanced_cone_conditions { der_union };
+        ParallelogramCoveringConditions<MapT> parallelogram_covering_conditions { der_union };
 
-        alpha = advanced_cone_conditions.alpha;
-        p = advanced_cone_conditions.p;
+        alpha = parallelogram_covering_conditions.alpha;
+        p = parallelogram_covering_conditions.p;
     }
 
     void parallelogram_covering_check(ScalarType alpha, ScalarType p)
