@@ -22,8 +22,6 @@ class CoveringRelationsSetup
 public:
     std::vector<Carina::LocalCoordinateSystem<IMap>> get_periodic_orbit_coordsys() const
     {
-        #if 1
-
         RegLyapunovCollisionOrbitParameters<IMap> m_parameters {};
 
         std::vector<Carina::LocalCoordinateSystem<IMap>> periodic_orbit_coordsys(4);
@@ -45,12 +43,6 @@ public:
             Carina::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(3).get_directions_matrix()) );
 
         return periodic_orbit_coordsys;
-
-        #else
-
-            return CoordsysVec<IMap>::convert(m_periodic_orbit_coordsys_approx);
-
-        #endif
     }
 
     std::vector<Carina::LocalCoordinateSystem<IMap>> get_homoclinic_orbit_coordsys() const

@@ -11,6 +11,8 @@
 
 namespace Ursa
 {
+namespace Pcr3bp
+{
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Generate local coordinate system in the specified point, where the basis directions (vu,vs,vf,vh) are orthonormal
@@ -20,7 +22,7 @@ namespace Ursa
 //!        - vu,vs are two unit vectors.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class Pcr3bpReg2_InitialCoordsysGenerator
+class Reg2_InitialCoordsysGenerator
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -50,4 +52,5 @@ public:
     }
 };
 
+}
 }

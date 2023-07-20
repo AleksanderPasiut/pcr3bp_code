@@ -9,9 +9,9 @@
 #include "tools/auxiliary_functions.hpp"
 
 #include "covering_relations_setup.hpp"
+#include "covering_relation_checker.hpp"
 
 #include "g_map.hpp"
-#include "covering_relation_checker.hpp"
 
 #include "advanced_cone_conditions.hpp"
 

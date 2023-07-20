@@ -54,7 +54,7 @@ private:
         std::list<Coordsys> ret {};
         for (const auto& v : m_homoclinic_orbit_origins)
         {
-            const Coordsys cs = Pcr3bpReg2_InitialCoordsysGenerator<MapT>::gen(m_basic_objects, v);
+            const Coordsys cs = Pcr3bp::Reg2_InitialCoordsysGenerator<MapT>::gen(m_basic_objects, v);
             ret.emplace_back(cs);
         }
 
