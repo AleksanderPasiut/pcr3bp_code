@@ -141,31 +141,31 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
     };
 
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "c_{" << index << "}"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << index << "}"; };
         print_vector_list_tex<0>("periodic_orbit_origins_1.tex.generated", periodic_orbit_origins, label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "c_{" << index << "}"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << index << "}"; };
         print_vector_list_tex<2>("periodic_orbit_origins_2.tex.generated", periodic_orbit_origins, label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "c_{" << (index+4) << "}"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << (index+4) << "}"; };
         print_vector_list_tex("homoclinic_orbit_origins.tex.generated", homoclinic_orbit_origins, label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w^{" << index << "}_1"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_1"; };
         print_vector_list_tex("coordsys_directions_1.tex.generated", coordsys_directions.at(0), label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w^{" << index << "}_2"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_2"; };
         print_vector_list_tex("coordsys_directions_2.tex.generated", coordsys_directions.at(1), label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w^{" << index << "}_3"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_3"; };
         print_vector_list_tex("coordsys_directions_3.tex.generated", coordsys_directions.at(2), label_func);
     }
     {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w^{" << index << "}_4"; };
+        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_4"; };
         print_vector_list_tex("coordsys_directions_4.tex.generated", coordsys_directions.at(3), label_func);
     }
 }
