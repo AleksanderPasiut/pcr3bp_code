@@ -13,13 +13,13 @@ namespace Ursa
 {
 
 template<typename MapT>
-struct AdvancedConeConditions
+struct ParallelogramCoveringConditions
 {
     using ScalarType = typename MapT::ScalarType;
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    AdvancedConeConditions(MatrixType mat)
+    ParallelogramCoveringConditions(MatrixType mat)
     {
         u = Carina::scalar_cast<double>(mat(1,1));
         s = Carina::scalar_cast<double>(mat(2,2));
@@ -64,7 +64,12 @@ struct AdvancedConeConditions
 
         alpha = alpha_min.rightBound() + 1e-6;
 
-        std::ofstream fs("advanced_cone_condtion_parameters.txt");
+        EXPECT_TRUE(alpha > 0.0);
+        EXPECT_TRUE(alpha < 1.0);
+
+        b_hat = alpha * (u_prim - c_prim) - (d+c_prim);
+
+        std::ofstream fs("parallelogram_covering_conditions_parameters.txt");
 
         if (fs)
         {
@@ -80,6 +85,7 @@ struct AdvancedConeConditions
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_min", alpha_min);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_max", alpha_max);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha", alpha);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient b_hat", b_hat);
 
             fs.close();
         }
@@ -104,6 +110,8 @@ struct AdvancedConeConditions
     ScalarType alpha_min;
     ScalarType alpha_max;
     ScalarType alpha;
+
+    ScalarType b_hat;
 };
 
 }
