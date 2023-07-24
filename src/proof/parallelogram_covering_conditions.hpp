@@ -59,7 +59,7 @@ struct ParallelogramCoveringConditions
         EXPECT_TRUE( delta + theta_prim + 2*c_prim < 1.0);
         EXPECT_TRUE( theta_prim + 4*c_prim < phi_prim );
 
-        alpha_min = (1 + delta + c_prim) / (phi_prim - c_prim);
+        alpha_min = (theta_prim + delta + 2*c_prim) / (phi_prim - delta - 2*c_prim);
         alpha_max = (1 - theta_prim - c_prim) / (delta + c_prim);
 
         alpha = alpha_min.rightBound() + 1e-6;
