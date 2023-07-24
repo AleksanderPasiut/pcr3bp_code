@@ -48,7 +48,7 @@ public:
             const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_homoclinic_orbit_coordsys.at(dst_idx);
 
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
-            check_collision_avoidance(coordsys_src, coordsys_dst, time_span);
+            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
     }
 
@@ -71,7 +71,7 @@ public:
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(1);
             const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(2);
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
-            check_collision_avoidance(coordsys_src, coordsys_dst, time_span);
+            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
 
         {
@@ -80,7 +80,7 @@ public:
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(2);
             const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(3);
             const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
-            check_collision_avoidance(coordsys_src, coordsys_dst, time_span);
+            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
             
         }
 
@@ -105,7 +105,7 @@ public:
             std::cout << "last homoclinic => periodic (1) covering\n";
 
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
-            check_collision_avoidance(coordsys_src, coordsys_dst, time_span);
+            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
         {
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
@@ -114,7 +114,7 @@ public:
             std::cout << "periodic (3) <= first homoclinic covering\n";
 
             const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
-            check_collision_avoidance(coordsys_src, coordsys_dst, time_span);
+            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
     }
 
@@ -282,7 +282,7 @@ private:
         return time_span;
     }
 
-    void check_collision_avoidance(
+    void simple_collision_avoidance_check(
         Carina::LocalCoordinateSystem<MapT> coordsys_src,
         Carina::LocalCoordinateSystem<MapT> coordsys_dst,
         ScalarType time_span)
@@ -422,8 +422,8 @@ private:
 
     void parallelogram_covering_check(ScalarType alpha, ScalarType p)
     {
-        const ScalarType b0 = 1.0 - 1e-7;
-        const ScalarType a0 = 0.59;
+        const ScalarType b0 = 1.0 - pow(2.0, -24);
+        const ScalarType a0 = 151.0 / 256;
         const ScalarType w0 = b0 * alpha;
 
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
