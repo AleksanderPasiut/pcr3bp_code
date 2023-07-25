@@ -446,17 +446,17 @@ private:
             };
 
             Carina::CompositeMap<MapT,
-                decltype(J2)&,
                 decltype(poincare)&,
                 decltype(J2)&,
                 decltype(Y_inverse)&,
-                decltype(R_inverse)&> composite
+                decltype(R_inverse)&,
+                decltype(J2)&> composite
             {
-                std::ref(J2),
                 std::ref(poincare),
                 std::ref(J2),
                 std::ref(Y_inverse),
-                std::ref(R_inverse)
+                std::ref(R_inverse),
+                std::ref(J2)
             };
             
             CoveringRelationCheck cr { composite };
@@ -489,20 +489,24 @@ private:
 
             Carina::CompositeMap<MapT,
                 decltype(J)&,
-                decltype(J2)&,
                 decltype(poincare)&,
                 decltype(J2)&,
                 decltype(J)&,
                 decltype(Y_inverse)&,
-                decltype(R_inverse)&> composite
+                decltype(R_inverse)&,
+                decltype(J)&,
+                decltype(J2)&,
+                decltype(J)&> composite
             {
                 std::ref(J),
-                std::ref(J2),
                 std::ref(poincare),
                 std::ref(J2),
                 std::ref(J),
                 std::ref(Y_inverse),
-                std::ref(R_inverse)
+                std::ref(R_inverse),
+                std::ref(J),
+                std::ref(J2),
+                std::ref(J)
             };
             
             CoveringRelationCheck cr { composite };
