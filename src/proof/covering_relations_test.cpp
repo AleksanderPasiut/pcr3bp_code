@@ -159,8 +159,10 @@ public:
         std::ofstream fs("collision_manifold_parameters.txt");
         if (fs)
         {
-            Carina::VariablePrinter<MapT>::print("Collision manifold derivative -ddy/ddx", -fy / fx);
-            Carina::VariablePrinter<MapT>::print("Collision manifold derivative -ddx/ddy", -fx / fy);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fx", fx);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fy", fy);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddy/ddx", -fy / fx);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddx/ddy", -fx / fy);
             fs.close();
         }
         else
@@ -578,3 +580,13 @@ TEST(Pcr3bp_proof, parallelogram_coverings)
     test.check_parallelogram_coverings();
 }
 
+TEST(Pcr3bp_proof, collision_manifold_derivative)
+{
+    using namespace Ursa;
+
+    capd::rounding::DoubleRounding::roundNearest();
+
+    CoveringRelationsSetup setup {};
+    CoveringRelationsTest<IMap> test { setup };
+    test.collision_manifold_derivative();
+}
