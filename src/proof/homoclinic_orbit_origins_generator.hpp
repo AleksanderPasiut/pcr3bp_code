@@ -49,35 +49,35 @@ public:
         };
 
         m_points.reserve(30);
-        m_points.push_back( initial_origins.at(0) ); // ---------------------- c4
+        m_points.push_back( initial_origins.at(0) ); // ---------------------- w4
         m_points.push_back( move_pt( initial_origins.at(1), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(1) ); // ---------------------- c6
+        m_points.push_back( initial_origins.at(1) ); // ---------------------- w6
         m_points.push_back( move_pt( initial_origins.at(1), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(2) ); // ---------------------- c8
+        m_points.push_back( initial_origins.at(2) ); // ---------------------- w8
         m_points.push_back( move_pt( initial_origins.at(3), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(3) ); // ---------------------- c10
+        m_points.push_back( initial_origins.at(3) ); // ---------------------- w10
         m_points.push_back( move_pt( initial_origins.at(3), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(4) ); // ---------------------- c12
+        m_points.push_back( initial_origins.at(4) ); // ---------------------- w12
         m_points.push_back( move_pt( initial_origins.at(5), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(5) ); // ---------------------- c14
+        m_points.push_back( initial_origins.at(5) ); // ---------------------- w14
         m_points.push_back( move_pt( initial_origins.at(5), +t_inter_2 ) );
         m_points.push_back( move_pt( initial_origins.at(5), +t_inter_2 + t_inter_3/2 ) );
-        m_points.push_back( initial_origins.at(6) ); // ---------------------- c17
-        m_points.push_back( initial_origins.at(7) ); // ---------------------- c18
-        m_points.push_back( initial_origins.at(8) ); // ---------------------- c19
+        m_points.push_back( initial_origins.at(6) ); // ---------------------- w17
+        m_points.push_back( initial_origins.at(7) ); // ---------------------- w18
+        m_points.push_back( initial_origins.at(8) ); // ---------------------- w19
         m_points.push_back( move_pt( initial_origins.at(9), -t_inter_2 - t_inter_3/2 ) );
         m_points.push_back( move_pt( initial_origins.at(9), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(9) ); // ---------------------- c22
+        m_points.push_back( initial_origins.at(9) ); // ---------------------- w22
         m_points.push_back( move_pt( initial_origins.at(9), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(10) ); // ---------------------- c24
+        m_points.push_back( initial_origins.at(10) ); // ---------------------- w24
         m_points.push_back( move_pt( initial_origins.at(11), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(11) ); // ---------------------- c26
+        m_points.push_back( initial_origins.at(11) ); // ---------------------- w26
         m_points.push_back( move_pt( initial_origins.at(11), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(12) ); // ---------------------- c28
+        m_points.push_back( initial_origins.at(12) ); // ---------------------- w28
         m_points.push_back( move_pt( initial_origins.at(13), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(13) ); // ---------------------- c30
+        m_points.push_back( initial_origins.at(13) ); // ---------------------- w30
         m_points.push_back( move_pt( initial_origins.at(13), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(14) ); // ---------------------- c32
+        m_points.push_back( initial_origins.at(14) ); // ---------------------- w32
     }
 
     const std::vector<VectorType>& get_points() const noexcept

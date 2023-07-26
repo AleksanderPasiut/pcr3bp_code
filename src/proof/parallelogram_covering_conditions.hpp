@@ -21,8 +21,8 @@ struct ParallelogramCoveringConditions
 
     ParallelogramCoveringConditions(MatrixType mat)
     {
-        u = Carina::scalar_cast<double>(mat(1,1));
-        s = Carina::scalar_cast<double>(mat(2,2));
+        phi = Carina::scalar_cast<double>(mat(1,1));
+        theta = Carina::scalar_cast<double>(mat(2,2));
 
         auto abs = [](ScalarType iv) -> double
         {
@@ -31,57 +31,57 @@ struct ParallelogramCoveringConditions
 
         c = std::max(
         {
-            abs(mat(1,1) - u),
+            abs(mat(1,1) - phi),
             abs(mat(1,2)),
             abs(mat(2,1)),
-            abs(mat(2,2) - s)
+            abs(mat(2,2) - theta)
         });
 
-        EXPECT_TRUE(u>1.0);
-        EXPECT_TRUE(s>0.0);
-        EXPECT_TRUE(s<1.0);
-        EXPECT_TRUE(c<s);
+        EXPECT_TRUE(phi>1.0);
+        EXPECT_TRUE(theta>0.0);
+        EXPECT_TRUE(theta<1.0);
+        EXPECT_TRUE(c<theta);
         EXPECT_TRUE(c>0.0);
 
-        beta = (u - s)/c;
+        beta = (phi - theta)/c;
         
         p = (beta - sqrt(beta*beta - 4.0))/2 + 1e-6;
 
-        EXPECT_TRUE(s > p*u);
-        EXPECT_TRUE(p*(u-s) > c*(1+p)*(1+p));
+        EXPECT_TRUE(theta > p*phi);
+        EXPECT_TRUE(p*(phi-theta) > c*(1+p)*(1+p));
 
-        u_prim = (u - p*p*s) / (1 - p*p);
-        s_prim = (s - p*u*u) / (1 - p*p);
-        d = p*(u-s) / (1 - p*p);
+        phi_prim = (phi - p*p*theta) / (1 - p*p);
+        theta_prim = (theta - p*p*phi) / (1 - p*p);
+        delta = p*(phi-theta) / (1 - p*p);
         c_prim = c*(1+p)*(1+p) / (1 - p*p);
 
 
-        EXPECT_TRUE( d + s_prim + 2*c_prim < 1.0);
-        EXPECT_TRUE( s_prim + 4*c_prim < u_prim );
+        EXPECT_TRUE( delta + theta_prim + 2*c_prim < 1.0);
+        EXPECT_TRUE( theta_prim + 4*c_prim < phi_prim );
 
-        alpha_min = (1 + d + c_prim) / (u_prim - c_prim);
-        alpha_max = (1 - s_prim - c_prim) / (d + c_prim);
+        alpha_min = (theta_prim + delta + 2*c_prim) / (phi_prim - delta - 2*c_prim);
+        alpha_max = (1 - theta_prim - c_prim) / (delta + c_prim);
 
         alpha = alpha_min.rightBound() + 1e-6;
 
         EXPECT_TRUE(alpha > 0.0);
         EXPECT_TRUE(alpha < 1.0);
 
-        b_hat = alpha * (u_prim - c_prim) - (d+c_prim);
+        b_hat = alpha * (phi_prim - c_prim) - (delta+c_prim);
 
         std::ofstream fs("parallelogram_covering_conditions_parameters.txt");
 
         if (fs)
         {
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient u", u);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient s", s);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient phi", phi);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient theta", theta);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient c", c);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient beta", beta);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient p", p);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient u'", u_prim);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient s'", s_prim);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient phi'", phi_prim);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient theta'", theta_prim);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient c'", c_prim);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient d", d);
+            Carina::VariablePrinter<MapT>::print(fs, "Coefficient delta", delta);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_min", alpha_min);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_max", alpha_max);
             Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha", alpha);
@@ -95,16 +95,16 @@ struct ParallelogramCoveringConditions
         }
     }
 
-    ScalarType u;
-    ScalarType s;
+    ScalarType phi;
+    ScalarType theta;
     ScalarType c;
     ScalarType beta;
 
     ScalarType p;
 
-    ScalarType u_prim;
-    ScalarType s_prim;
-    ScalarType d;
+    ScalarType phi_prim;
+    ScalarType theta_prim;
+    ScalarType delta;
     ScalarType c_prim;
 
     ScalarType alpha_min;

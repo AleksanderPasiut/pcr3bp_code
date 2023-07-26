@@ -61,97 +61,97 @@ public:
 		return map;
     }
 
-    static MapT R(ScalarType w, ScalarType a, ScalarType b)
+    static MapT R(ScalarType d, ScalarType a, ScalarType b)
     {
         using Carina::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& w = param[0];
+            Node& d = param[0];
             Node& a = param[1];
             Node& b = param[2];
 
             Node& xi = in[0];
             Node& eta = in[1];
 
-            out[0] = w*(xi+1)/2;
+            out[0] = d*(xi+1)/2;
             out[1] = ( (a+b)+eta*(b-a) )/2;
         };
 
         MapT map(func, 2, 2, 3);
-        map.setParameter(0, w);
+        map.setParameter(0, d);
         map.setParameter(1, a);
         map.setParameter(2, b);
 		return map;
     }
 
-    static MapT R_T(ScalarType w, ScalarType a, ScalarType b)
+    static MapT R_T(ScalarType d, ScalarType a, ScalarType b)
     {
         using Carina::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& w = param[0];
+            Node& d = param[0];
             Node& a = param[1];
             Node& b = param[2];
 
             Node& xi = in[1];
             Node& eta = in[0];
 
-            out[1] = w*(xi+1)/2;
+            out[1] = d*(xi+1)/2;
             out[0] = ( (a+b)+eta*(b-a) )/2;
         };
 
         MapT map(func, 2, 2, 3);
-        map.setParameter(0, w);
+        map.setParameter(0, d);
         map.setParameter(1, a);
         map.setParameter(2, b);
 		return map;
     }
 
-    static MapT R_Inverse(ScalarType w, ScalarType a, ScalarType b)
+    static MapT R_Inverse(ScalarType d, ScalarType a, ScalarType b)
     {
         using Carina::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& w = param[0];
+            Node& d = param[0];
             Node& a = param[1];
             Node& b = param[2];
 
             Node& xi = in[0];
             Node& eta = in[1];
 
-            out[0] = 2*xi / w - 1;
+            out[0] = 2*xi / d - 1;
             out[1] = (2*eta - (a+b)) / (b-a);
         };
 
         MapT map(func, 2, 2, 3);
-        map.setParameter(0, w);
+        map.setParameter(0, d);
         map.setParameter(1, a);
         map.setParameter(2, b);
 		return map;
     }
 
-    static MapT R_T_Inverse(ScalarType w, ScalarType a, ScalarType b)
+    static MapT R_T_Inverse(ScalarType d, ScalarType a, ScalarType b)
     {
         using Carina::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& w = param[0];
+            Node& d = param[0];
             Node& a = param[1];
             Node& b = param[2];
 
             Node& xi = in[1];
             Node& eta = in[0];
 
-            out[1] = 2*xi / w - 1;
+            out[1] = 2*xi / d - 1;
             out[0] = (2*eta - (a+b)) / (b-a);
         };
 
         MapT map(func, 2, 2, 3);
-        map.setParameter(0, w);
+        map.setParameter(0, d);
         map.setParameter(1, a);
         map.setParameter(2, b);
 		return map;
