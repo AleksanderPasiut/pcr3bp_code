@@ -119,66 +119,17 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check collision manifold derivative
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void collision_manifold_derivative()
-    {
-        LocalPoincare4_Constraint<MapT> extension_to_4_P0
-        {
-            std::ref(m_basic_objects.m_hamiltonian_reg2),
-            std::ref( m_periodic_orbit_coordsys.at(0) )
-        };
-
-        Carina::AffineMap<MapT> P_0_c { m_periodic_orbit_coordsys.at(0) };
-
-        using Carina::Node;
-        auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
-        };
-
-        MapT collision_condition(collision_condition_f, 4, 1, 1);
-        collision_condition.setParameter(0, m_basic_objects.m_setup.get_mu(2));
-
-        Carina::CompositeMap<MapT,
-            decltype(extension_to_4_P0)&,
-            decltype(P_0_c)&,
-            decltype(collision_condition)&> composite(
-                std::ref(extension_to_4_P0),
-                std::ref(P_0_c),
-                std::ref(collision_condition)
-            );
-
-        std::cout.precision(20);
-
-        MatrixType der(1, 2);
-        composite(N * m_gain_factor, der);
-        const ScalarType fx = der(1,1);
-        const ScalarType fy = der(1,2);
-
-        std::ofstream fs("collision_manifold_parameters.txt");
-        if (fs)
-        {
-            Carina::VariablePrinter<MapT>::print("Collision manifold derivative -ddy/ddx", -fy / fx);
-            Carina::VariablePrinter<MapT>::print("Collision manifold derivative -ddx/ddy", -fx / fy);
-            fs.close();
-        }
-        else
-        {
-            throw std::logic_error("Failed to export collision manifold parameters!");
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Check parallelogram covering relations
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_parallelogram_coverings()
     {
-        ScalarType alpha {};
-        ScalarType p {};
-        collision_avoidance_check(alpha, p);
+        ScalarType alpha0 {};
+        ScalarType p0 {};
+        parallelogram_covering_check(alpha0, p0);
 
-        parallelogram_covering_check(alpha, p);
+        parallelogram_covering_endings_check(alpha0, p0);
+
+        collision_manifold_derivative(p0);
     }
 
 private:
@@ -354,7 +305,10 @@ private:
         }
     }
 
-    void collision_avoidance_check(ScalarType& alpha, ScalarType& p)
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Check parallelogram coverings around fixed point and export alpha0 and p0 parameters
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void parallelogram_covering_check(ScalarType& alpha0, ScalarType& p0)
     {
         const VectorType arg = N;
 
@@ -416,18 +370,18 @@ private:
         print_var(der_union);
         ParallelogramCoveringConditions<MapT> parallelogram_covering_conditions { der_union };
 
-        alpha = parallelogram_covering_conditions.alpha;
-        p = parallelogram_covering_conditions.p;
+        alpha0 = parallelogram_covering_conditions.alpha;
+        p0 = parallelogram_covering_conditions.p;
     }
 
-    void parallelogram_covering_check(ScalarType alpha, ScalarType p)
+    void parallelogram_covering_endings_check(ScalarType alpha0, ScalarType p0)
     {
         const ScalarType b0 = 1.0 - pow(2.0, -24);
         const ScalarType a0 = 151.0 / 256;
-        const ScalarType w0 = b0 * alpha;
+        const ScalarType w0 = b0 * alpha0;
 
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
-        MapT Y_inverse = AuxiliaryFunctions<MapT>::Y_Inverse(p);
+        MapT Y_inverse = AuxiliaryFunctions<MapT>::Y_Inverse(p0);
         MapT J = AuxiliaryFunctions<MapT>::J();
         MapT J2 = AuxiliaryFunctions<MapT>::J2();
 
@@ -524,6 +478,67 @@ private:
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Check collision manifold derivative
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void collision_manifold_derivative(ScalarType p0)
+    {
+        MapT Y = AuxiliaryFunctions<MapT>::Y(p0);
+        MapT J2 = AuxiliaryFunctions<MapT>::J2();
+
+        LocalPoincare4_Constraint<MapT> map_E0
+        {
+            std::ref(m_basic_objects.m_hamiltonian_reg2),
+            std::ref( m_periodic_orbit_coordsys.at(0) )
+        };
+
+        Carina::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
+
+        using Carina::Node;
+        auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
+        {
+            out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
+        };
+
+        MapT map_C(collision_condition_f, 4, 1, 1);
+        map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
+
+        Carina::CompositeMap<MapT,
+            decltype(Y)&,
+            decltype(J2)&,
+            decltype(map_E0)&,
+            decltype(map_L0)&,
+            decltype(map_C)&> map_C2(
+                std::ref(Y),
+                std::ref(J2),
+                std::ref(map_E0),
+                std::ref(map_L0),
+                std::ref(map_C)
+            );
+
+        std::cout.precision(20);
+
+        MatrixType der(1, 2);
+        map_C2(N * m_gain_factor, der);
+        const ScalarType fx = der(1,1);
+        const ScalarType fy = der(1,2);
+
+        std::ofstream fs("collision_manifold_parameters.txt");
+        if (fs)
+        {
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fx", fx);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fy", fy);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddy/ddx", -fy / fx);
+            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddx/ddy", -fx / fy);
+            fs.close();
+        }
+        else
+        {
+            throw std::logic_error("Failed to export collision manifold parameters!");
+        }
+    }
+
+
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
     const std::vector<Coordsys> m_periodic_orbit_coordsys;
@@ -577,4 +592,3 @@ TEST(Pcr3bp_proof, parallelogram_coverings)
     CoveringRelationsTest<IMap> test { setup };
     test.check_parallelogram_coverings();
 }
-
