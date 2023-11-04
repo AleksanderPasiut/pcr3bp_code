@@ -36,8 +36,10 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    LyapunovOrbitRegCollisionSetup()
+    LyapunovOrbitRegCollisionSetup(ScalarType intermediate_time) : m_intermediate_time(intermediate_time)
     {
+        std::cout << "Intermediate time: " << intermediate_time << '\n';
+
         const VectorType h0 = VectorType{ -0.711059 };
         const VectorType v = m_parallel_shooting_init(h0);
         const VectorType v_optimized = VectorType{ v[1], v[2], v[3], v[4], v[0] };
@@ -83,12 +85,12 @@ public:
 private:
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    ScalarType const m_t0 { 58696.0 / 65536 };
+    ScalarType const m_intermediate_time;
     MapT m_vf_reg { Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField(2, m_basic_objects.m_setup, false) };
 
     Carina::CoordinateSection<MapT> m_section { m_vf_reg.dimension(), 1, 0 };
     Carina::PoincareWrapper<MapT, decltype(m_section)> m_poincare { m_vf_reg, m_basic_objects.m_order, m_section };
-    Carina::TimemapWrapper<MapT> m_timemap { m_vf_reg, m_t0, m_basic_objects.m_order };
+    Carina::TimemapWrapper<MapT> m_timemap { m_vf_reg, m_intermediate_time, m_basic_objects.m_order };
 
     const VectorType m_initial_point { m_basic_objects.m_parameters.get_initial_point() };
     const VectorType m_h_to_5_extend_vector { Carina::Concat<MapT>::concat_vectors({ m_initial_point, VectorType{ 0.0 } }) };
@@ -133,5 +135,19 @@ TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous)
 {
     using namespace Ursa;
 
-    LyapunovOrbitRegCollisionSetup<IMap> setup {};
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 58696.0 / 65536 );
+}
+
+TEST(Extended_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_2)
+{
+    using namespace Ursa;
+
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 7.0 / 8 );
+}
+
+TEST(Exteded_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_3)
+{
+    using namespace Ursa;
+
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 5.0 / 6 );
 }
