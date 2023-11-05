@@ -149,5 +149,5 @@ TEST(Exteded_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_3)
 {
     using namespace Ursa;
 
-    LyapunovOrbitRegCollisionSetup<IMap> setup( 5.0 / 6 );
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 1.0 / 2 );
 }
