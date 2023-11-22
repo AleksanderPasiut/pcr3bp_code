@@ -36,8 +36,10 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    LyapunovOrbitRegCollisionSetup()
+    LyapunovOrbitRegCollisionSetup(ScalarType intermediate_time, bool full_test = true) : m_intermediate_time(intermediate_time)
     {
+        std::cout << "Intermediate time: " << intermediate_time << '\n';
+
         const VectorType h0 = VectorType{ -0.711059 };
         const VectorType v = m_parallel_shooting_init(h0);
         const VectorType v_optimized = VectorType{ v[1], v[2], v[3], v[4], v[0] };
@@ -53,42 +55,45 @@ public:
         image_point[1] = 0.0; // v-component is 0.0 from the definition of the poincare section
         image_point[2] = 0.0; // pu-component is 0.0 from the Newton operator definition
 
-        EXPECT_EQ(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point());
-        EXPECT_EQ(image_point, m_basic_objects.m_parameters.get_image_point());
+        if (full_test)
+        {
+            EXPECT_EQ(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point());
+            EXPECT_EQ(image_point, m_basic_objects.m_parameters.get_image_point());
 
-        const std::string suffix = std::is_same<IMap, MapT>::value ? ".txt" : ".approx.txt";
+            const std::string suffix = std::is_same<IMap, MapT>::value ? ".txt" : ".approx.txt";
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_initial_point" + suffix,
-            "Initial point on periodic orbit, (u,v,pu,pv) components",
-            m_initial_point);
+            Carina::VariablePrinter<MapT>::print(
+                "periodic_orbit_initial_point" + suffix,
+                "Initial point on periodic orbit, (u,v,pu,pv) components",
+                m_initial_point);
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_intermediate_point" + suffix,
-            "Intermediate point on periodic orbit, (u,v,pu,pv) components",
-            intermediate_point);
+            Carina::VariablePrinter<MapT>::print(
+                "periodic_orbit_intermediate_point" + suffix,
+                "Intermediate point on periodic orbit, (u,v,pu,pv) components",
+                intermediate_point);
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_image_point" + suffix,
-            "Image point on periodic orbit, (u,v,pu,pv) components",
-            image_point);
+            Carina::VariablePrinter<MapT>::print(
+                "periodic_orbit_image_point" + suffix,
+                "Image point on periodic orbit, (u,v,pu,pv) components",
+                image_point);
 
-        const ScalarType energy = root[4];
-        Carina::VariablePrinter<MapT>::print(
-            "collision_energy" + suffix,
-            "Energy of Lyapunov orbit that passes through regularized collision",
-            energy);
+            const ScalarType energy = root[4];
+            Carina::VariablePrinter<MapT>::print(
+                "collision_energy" + suffix,
+                "Energy of Lyapunov orbit that passes through regularized collision",
+                energy);
+        }
     }
 
 private:
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    ScalarType const m_t0 { 58696.0 / 65536 };
+    ScalarType const m_intermediate_time;
     MapT m_vf_reg { Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField(2, m_basic_objects.m_setup, false) };
 
     Carina::CoordinateSection<MapT> m_section { m_vf_reg.dimension(), 1, 0 };
     Carina::PoincareWrapper<MapT, decltype(m_section)> m_poincare { m_vf_reg, m_basic_objects.m_order, m_section };
-    Carina::TimemapWrapper<MapT> m_timemap { m_vf_reg, m_t0, m_basic_objects.m_order };
+    Carina::TimemapWrapper<MapT> m_timemap { m_vf_reg, m_intermediate_time, m_basic_objects.m_order };
 
     const VectorType m_initial_point { m_basic_objects.m_parameters.get_initial_point() };
     const VectorType m_h_to_5_extend_vector { Carina::Concat<MapT>::concat_vectors({ m_initial_point, VectorType{ 0.0 } }) };
@@ -134,12 +139,26 @@ TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_nonrigorous)
     using namespace Ursa;
 
     capd::rounding::DoubleRounding::roundNearest();
-    LyapunovOrbitRegCollisionSetup<RMap> setup {};
+    LyapunovOrbitRegCollisionSetup<RMap> setup( 58696.0 / 65536 );
 }
 
 TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous)
 {
     using namespace Ursa;
 
-    LyapunovOrbitRegCollisionSetup<IMap> setup {};
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 58696.0 / 65536 );
+}
+
+TEST(Extended_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_2)
+{
+    using namespace Ursa;
+
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 7.0 / 8, false );
+}
+
+TEST(Exteded_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_3)
+{
+    using namespace Ursa;
+
+    LyapunovOrbitRegCollisionSetup<IMap> setup( 1.0 / 2, false );
 }
