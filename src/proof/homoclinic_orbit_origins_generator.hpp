@@ -11,6 +11,8 @@
 
 #include "homoclinic_orbit_origins_initial.hpp"
 
+#include <vector>
+
 namespace Ursa
 {
 
@@ -30,7 +32,7 @@ public:
     {
         const std::vector<VectorType>& initial_origins = homoclinic_orbit_origins_initial.get_points();
 
-        const double t_inter_1 = 0.895631;
+        // const double t_inter_1 = 0.895631;
         const double t_inter_2 = 0.0133115509;
         const double t_inter_3 = 1.041086989;
 

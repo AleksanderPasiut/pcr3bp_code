@@ -14,6 +14,7 @@
 
 #include "objects/reg_masses.hpp"
 #include "objects/reg_evolution.hpp"
+#include "objects/coordinate_systems_origins.hpp"
 
 #include "proof/periodic_orbit_parameters.hpp"
 
@@ -38,34 +39,15 @@ public:
         const size_t point_count = static_cast<size_t>(this->get_param(1));
         const size_t steps = static_cast<size_t>(this->get_param(2));
         const size_t option = static_cast<size_t>(this->get_param(3));
+        const double point_size = this->get_param(4);
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
 
         for (const double& u0 : u0_vec)
         {
-            const RVector PV = LyapunovOrbitRegParam::calculate(m_setup, u0, steps);
-
-            RegEvolutionParam param;
-            param.setup = m_setup;
-            param.u0 = PV[0];
-            param.v0 = PV[1];
-            param.pu0 = PV[2];
-            param.pv0 = PV[3];
-            param.h = PV[4];
-
-            Pcr3bpRegPoincarePositiveU<RMap> poincare( m_setup );
-            Real t = poincare.get_return_time(RVector{ param.u0, param.v0, param.pu0, param.pv0, param.h });
-            param.t = 2 * t;
-
-            param.point_count = point_count;
-
-            param.point_thickness = 0.0f;//5e-3f;
-            param.line_thickness = 0.006f;
-            param.point_subcount = 10;
-            param.color = (u0 == 0.0) ? Leo::Color(1.0, 0.0, 0.0) : Leo::Color(0.3, 0.1, 0.8);
-
             if (option == 0)
             {
+                RegEvolutionParam param = get_reg_evolution_param(u0, steps, point_count);
                 m_evolutions.emplace_back(std::ref(m_core_ref), std::cref(param));
             }
             else
@@ -75,16 +57,51 @@ public:
 
             if (option == 1)
             {
+                RegEvolutionParam param = get_reg_evolution_param(u0, steps, point_count);
                 m_evolutions_std.emplace_back(std::ref(m_core_ref), std::cref(param));
             }
             else
             {
                 m_evolutions_std.clear();
             }
+
+            if (option == 2)
+            {
+                m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, point_size );
+            }
+            else
+            {
+                m_coordinate_systems_origins.reset();
+            }
         }
     }
 
 private:
+    RegEvolutionParam get_reg_evolution_param(double u0, size_t steps, size_t point_count)
+    {
+        const RVector PV = LyapunovOrbitRegParam::calculate(m_setup, u0, steps);
+
+        RegEvolutionParam param;
+        param.setup = m_setup;
+        param.u0 = PV[0];
+        param.v0 = PV[1];
+        param.pu0 = PV[2];
+        param.pv0 = PV[3];
+        param.h = PV[4];
+
+        Pcr3bpRegPoincarePositiveU<RMap> poincare( m_setup );
+        Real t = poincare.get_return_time(RVector{ param.u0, param.v0, param.pu0, param.pv0, param.h });
+        param.t = 2 * t;
+
+        param.point_count = point_count;
+
+        param.point_thickness = 0.0f;//5e-3f;
+        param.line_thickness = 0.006f;
+        param.point_subcount = 10;
+        param.color = (u0 == 0.0) ? Leo::Color(1.0, 0.0, 0.0) : Leo::Color(0.3, 0.1, 0.8);
+        return param;
+    }
+
     Lyra::Core2d& m_core_ref;
 
     Pcr3bp::SetupParameters<RMap> m_setup {};
@@ -92,6 +109,8 @@ private:
 
     std::list<RegEvolution> m_evolutions {};
     std::list<RegEvolutionWithCoordChange> m_evolutions_std {};
+
+    std::unique_ptr<CoordinateSystemsOrigins> m_coordinate_systems_origins {};
 
 };
 
