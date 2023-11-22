@@ -47,10 +47,6 @@ public:
         m_mass_2.fill(point_size);
         m_mass_1A_ptr->fill(point_size);
         m_mass_1B_ptr->fill(point_size);
-
-        // core_ref.register_manifold(&m_mass_2);
-        // core_ref.register_manifold(m_mass_1A_ptr.get());
-        // core_ref.register_manifold(m_mass_1B_ptr.get());
     }
 
     const Pcr3bpSetupValues<RMap>& get_setup() const noexcept

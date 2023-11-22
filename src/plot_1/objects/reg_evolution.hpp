@@ -59,16 +59,7 @@ public:
             param.color)
     {
         this->m_renderable_points.fill(param.point_thickness);
-        // m_core_ref.register_manifold(&m_renderable_points);
-
         this->m_renderable_line.fill(param.line_thickness);
-        // m_core_ref.register_manifold(&m_renderable_line);
-    }
-
-    virtual ~RegEvolution() noexcept
-    {
-        // m_core_ref.unregister_manifold(&m_renderable_points);
-        // m_core_ref.unregister_manifold(&m_renderable_line);
     }
 
 private:
@@ -110,12 +101,6 @@ public:
             param.color)
     {
         this->m_renderable_line.fill(param.line_thickness);
-        // m_core_ref.register_manifold(&m_renderable_line);
-    }
-
-    virtual ~RegEvolutionWithCoordChange() noexcept
-    {
-        // m_core_ref.unregister_manifold(&m_renderable_line);
     }
 
 private:

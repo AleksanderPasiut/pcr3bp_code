@@ -15,12 +15,6 @@ namespace Ursa
 
 class StdMasses
 {
-private:
-    Pcr3bpSetupValues<RMap> m_setup;
-
-    CapdVectorRenderable<RVector, 2> m_mass_1;
-    CapdVectorRenderable<RVector, 2> m_mass_2;
-
 public:
     StdMasses(
         Lyra::Core2d& core_ref,
@@ -33,15 +27,18 @@ public:
     {
         m_mass_1.fill(0.01f);
         m_mass_2.fill(0.01f);
-
-        // core_ref.register_manifold(&m_mass_1);
-        // core_ref.register_manifold(&m_mass_2);
     }
 
     const Pcr3bpSetupValues<RMap>& get_setup() const noexcept
     {
         return m_setup;
     }
+
+private:
+    Pcr3bpSetupValues<RMap> m_setup;
+
+    CapdVectorRenderable<RVector, 2> m_mass_1;
+    CapdVectorRenderable<RVector, 2> m_mass_2;
 };
 
 }
