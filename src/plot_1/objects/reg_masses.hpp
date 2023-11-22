@@ -31,7 +31,7 @@ public:
         float point_size = 0.01f,
         Leo::Color color_1 = Leo::Color(0.4, 0.5, 0.8),
         Leo::Color color_2 = Leo::Color(0.8, 0.2, 0.2))
-            : m_setup()
+            : m_setup(0.01)
             , m_mass_2(core_ref.get_objects(), { 0.0, 0.0 }, color_2)
             , m_mass_1A_ptr()
             , m_mass_1B_ptr()

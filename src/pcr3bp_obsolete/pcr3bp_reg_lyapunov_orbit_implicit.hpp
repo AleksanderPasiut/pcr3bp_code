@@ -128,7 +128,7 @@ struct LyapunovOrbitRegParam
 public:
     static RVector calculate(Real u0, size_t steps)
     {
-        const Pcr3bp::SetupParameters<RMap> setup;
+        const Pcr3bp::SetupParameters<RMap> setup { 0.01 };
 
         const LyapunovOrbitRegLookupTable::Entry entry = calculate_initial(u0, steps, setup);
 

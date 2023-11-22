@@ -19,7 +19,7 @@ namespace Ursa
 
 struct RegEvolutionParam
 {
-    Pcr3bp::SetupParameters<RMap> setup;
+    Pcr3bp::SetupParameters<RMap> setup { 0.01 };
     Real u0;
     Real v0;
     Real pu0;
