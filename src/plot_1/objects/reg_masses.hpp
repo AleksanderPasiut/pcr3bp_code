@@ -32,7 +32,7 @@ public:
         Leo::Color color_1 = Leo::Color(0.4, 0.5, 0.8),
         Leo::Color color_2 = Leo::Color(0.8, 0.2, 0.2))
             : m_setup()
-            , m_mass_2({ 0.0, 0.0 }, color_2)
+            , m_mass_2(core_ref.get_objects(), { 0.0, 0.0 }, color_2)
             , m_mass_1A_ptr()
             , m_mass_1B_ptr()
     {
@@ -41,16 +41,16 @@ public:
         const RVector pos_1A = invc({ m_setup.get_x(1), 0.0, 0.0, 0.0, 0.0 });
         const RVector pos_1B = -pos_1A;
 
-        m_mass_1A_ptr = std::make_unique<VectorRenderable>(pos_1A, color_1);
-        m_mass_1B_ptr = std::make_unique<VectorRenderable>(pos_1B, color_1);
+        m_mass_1A_ptr = std::make_unique<VectorRenderable>(std::ref(core_ref.get_objects()), pos_1A, color_1);
+        m_mass_1B_ptr = std::make_unique<VectorRenderable>(std::ref(core_ref.get_objects()), pos_1B, color_1);
 
         m_mass_2.fill(point_size);
         m_mass_1A_ptr->fill(point_size);
         m_mass_1B_ptr->fill(point_size);
 
-        core_ref.register_manifold(&m_mass_2);
-        core_ref.register_manifold(m_mass_1A_ptr.get());
-        core_ref.register_manifold(m_mass_1B_ptr.get());
+        // core_ref.register_manifold(&m_mass_2);
+        // core_ref.register_manifold(m_mass_1A_ptr.get());
+        // core_ref.register_manifold(m_mass_1B_ptr.get());
     }
 
     const Pcr3bpSetupValues<RMap>& get_setup() const noexcept

@@ -46,15 +46,15 @@ public:
     RenderableUAlpha23(Lyra::Core3d& core_ref, const Rhez_U_Alpha_Param_23& param)
         : m_core_ref(core_ref)
         , m_map(param.setup, param.h)
-        , m_renderable(m_map, Leo::RulerSet<2>({ param.u_ruler, param.alpha_ruler }), param.color)
+        , m_renderable(core_ref.get_objects(), m_map, Leo::RulerSet<2>({ param.u_ruler, param.alpha_ruler }), param.color)
     {
         m_renderable.fill(param.thickness);
-        m_core_ref.register_manifold(&m_renderable);
+        // m_core_ref.register_manifold(&m_renderable);
     }
 
     virtual ~RenderableUAlpha23() noexcept
     {
-        m_core_ref.unregister_manifold(&m_renderable);
+        // m_core_ref.unregister_manifold(&m_renderable);
     }
 };
 

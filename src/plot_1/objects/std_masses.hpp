@@ -28,14 +28,14 @@ public:
         Leo::Color color_1 = Leo::Color(0.4, 0.5, 0.8),
         Leo::Color color_2 = Leo::Color(0.8, 0.2, 0.2))
             : m_setup()
-            , m_mass_1({ m_setup.get_x(1), 0.0 }, color_1)
-            , m_mass_2({ m_setup.get_x(2), 0.0 }, color_2)
+            , m_mass_1(core_ref.get_objects(), { m_setup.get_x(1), 0.0 }, color_1)
+            , m_mass_2(core_ref.get_objects(), { m_setup.get_x(2), 0.0 }, color_2)
     {
         m_mass_1.fill(0.01f);
         m_mass_2.fill(0.01f);
 
-        core_ref.register_manifold(&m_mass_1);
-        core_ref.register_manifold(&m_mass_2);
+        // core_ref.register_manifold(&m_mass_1);
+        // core_ref.register_manifold(&m_mass_2);
     }
 
     const Pcr3bpSetupValues<RMap>& get_setup() const noexcept

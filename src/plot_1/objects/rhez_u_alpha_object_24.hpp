@@ -48,16 +48,16 @@ public:
     RenderableUAlpha24(Lyra::Core3d& core_ref, const Rhez_U_Alpha_Param_24& param, const Leo::Matrix4f& rotation)
         : m_core_ref(core_ref)
         , m_map(param.setup, param.h)
-        , m_renderable( Leo::RulerSet<2>({ param.u_ruler, param.alpha_ruler }), rotation)
+        , m_renderable( core_ref.get_objects(), Leo::RulerSet<2>({ param.u_ruler, param.alpha_ruler }), rotation)
         , m_thickness(param.thickness)
     {
         this->refresh();
-        m_core_ref.register_manifold(&m_renderable);
+        // m_core_ref.register_manifold(&m_renderable);
     }
 
     virtual ~RenderableUAlpha24() noexcept
     {
-        m_core_ref.unregister_manifold(&m_renderable);
+        // m_core_ref.unregister_manifold(&m_renderable);
     }
 
     void refresh()

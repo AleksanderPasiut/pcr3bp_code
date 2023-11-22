@@ -54,27 +54,29 @@ public:
         , m_solution(0.0)
         , m_interpolation(get_solution(param), param.point_count)
         , m_renderable_points(
+            core_ref.get_objects(),
             m_solution,
             0.0,
             param.t,
             param.point_count,
             param.color)
         , m_renderable_line(
+            core_ref.get_objects(),
             m_interpolation,
             Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.point_count, param.point_subcount) }),
             param.color)
     {
         this->m_renderable_points.fill(param.point_thickness);
-        m_core_ref.register_manifold(&m_renderable_points);
+        // m_core_ref.register_manifold(&m_renderable_points);
 
         this->m_renderable_line.fill(param.line_thickness);
-        m_core_ref.register_manifold(&m_renderable_line);
+        // m_core_ref.register_manifold(&m_renderable_line);
     }
 
     virtual ~StdEvolution() noexcept
     {
-        m_core_ref.unregister_manifold(&m_renderable_line);
-        m_core_ref.unregister_manifold(&m_renderable_points);
+        // m_core_ref.unregister_manifold(&m_renderable_line);
+        // m_core_ref.unregister_manifold(&m_renderable_points);
     }
 
 private:

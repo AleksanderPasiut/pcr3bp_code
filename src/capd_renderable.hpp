@@ -120,12 +120,13 @@ class CapdSolutionCurvePointRenderable : public Lyra::ManifoldInterface<0, image
 {
 public:
     CapdSolutionCurvePointRenderable(
+        Lyra::CoreObjects<image_dimension>& objects,
         const Carina::SolutionCurve<MapT>& curve,
         double minimum,
         double maximum,
         size_t points,
         Leo::Color color)
-            : Lyra::ManifoldInterface<0, image_dimension>({ points, color })
+            : Lyra::ManifoldInterface<0, image_dimension>(objects, { points, color })
             , m_curve(curve)
             , m_ruler(minimum, maximum, points, 1)
     {}
@@ -195,10 +196,11 @@ class CapdMapRenderable : public Lyra::ManifoldInterface<domain_dimension, image
 {
 public:
     CapdMapRenderable(
+        Lyra::CoreObjects<image_dimension>& objects,
         MapT& map,
         const Leo::RulerSet<domain_dimension>& ruler_set,
         Leo::Color color)
-            : Lyra::ManifoldInterface<domain_dimension, image_dimension>({ ruler_set, color })
+            : Lyra::ManifoldInterface<domain_dimension, image_dimension>(objects, { ruler_set, color })
             , m_map(map)
     {}
 
@@ -217,6 +219,8 @@ public:
 private:
     MapT& m_map;
 };
+
+#ifdef DISABLED
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render N->4 map with wireframe
@@ -250,6 +254,8 @@ public:
 private:
     MapT& m_map;
 };
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render map with discrete domain as points (in 2. or 3. dim)
@@ -287,8 +293,8 @@ template<typename VectorType, size_t image_dimension>
 class CapdVectorRenderable : public Lyra::ManifoldInterface<0, image_dimension>
 {
 public:
-    CapdVectorRenderable(VectorType vector, Leo::Color color)
-        : Lyra::ManifoldInterface<0, image_dimension>({ 1, color })
+    CapdVectorRenderable(Lyra::CoreObjects<image_dimension>& objects, VectorType vector, Leo::Color color)
+        : Lyra::ManifoldInterface<0, image_dimension>(objects, { 1, color })
         , m_vector(vector)
     {}
 
@@ -310,6 +316,8 @@ public:
 private:
     const VectorType m_vector;
 };
+
+#ifdef DISABLED
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render single vector as point (4. dim)
@@ -341,6 +349,8 @@ public:
 private:
     const VectorType m_vector;
 };
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render single interval vector with map (in 2. or 3. dim)
