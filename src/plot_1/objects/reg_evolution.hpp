@@ -10,7 +10,7 @@
 #include "pcr3bp_basic/regularized_system.hpp"
 #include "capd_renderable.hpp"
 
-#include "tools/solution_curve_interpolation.hpp"
+#include "tools/plotting/solution_curve_interpolation.hpp"
 
 #include "pcr3bp_basic/levi_civita_coordinate_change.hpp"
 

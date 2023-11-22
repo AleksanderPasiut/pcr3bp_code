@@ -5,7 +5,7 @@
 #pragma once
 
 #include <carina/newton_method/newton_method.hpp>
-#include <carina/implicit_function_differential_equation.hpp>
+#include <tools/plotting/implicit_function_differential_equation.hpp>
 
 #include "pcr3bp_reg_lyapunov_orbit_lookup.hpp"
 

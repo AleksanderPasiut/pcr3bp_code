@@ -4,16 +4,14 @@
 
 #pragma once
 
-#include "capd/basic_types.hpp"
-#include "capd/basic_tools.hpp"
-
-#include "type_cast.hpp"
+#include <carina/capd/basic_types.hpp>
+#include <carina/capd/basic_tools.hpp>
+#include <carina/type_cast.hpp>
+#include <carina/map_base.hpp>
 
 #include <leo/array/array_static_buffer.hpp>
 #include <leo/diffeq.hpp>
 #include <leo/linear/linear.hpp>
-
-#include "map_base.hpp"
 
 namespace Carina
 {

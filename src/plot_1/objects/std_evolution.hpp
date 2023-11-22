@@ -10,7 +10,7 @@
 #include "pcr3bp_basic/standard_system.hpp"
 #include "capd_renderable.hpp"
 
-#include "tools/solution_curve_interpolation.hpp"
+#include "tools/plotting/solution_curve_interpolation.hpp"
 
 namespace Ursa
 {

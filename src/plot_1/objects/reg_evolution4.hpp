@@ -7,7 +7,7 @@
 #include <lyra/core3d.hpp>
 #include <carina/timemap_wrapper.hpp>
 #include "tools/test_tools.hpp"
-#include "tools/solution_curve_interpolation.hpp"
+#include "tools/plotting/solution_curve_interpolation.hpp"
 #include "pcr3bp_basic/regularized_system.hpp"
 #include "capd_renderable.hpp"
 

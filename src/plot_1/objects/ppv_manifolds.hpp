@@ -6,7 +6,7 @@
 
 #include <lyra/core3d.hpp>
 
-#include "tools/solution_curve_interpolation.hpp"
+#include "tools/plotting/solution_curve_interpolation.hpp"
 #include "capd_renderable.hpp"
 
 #include "ppv_manifolds_maps.hpp"
