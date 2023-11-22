@@ -21,6 +21,7 @@ add_dependencies(${PROJECT_NAME} carina)
 
 add_subdirectory(src/googletest)
 add_subdirectory(src/carina)
+add_subdirectory(src/bluesky)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(${PROJECT_NAME} PRIVATE -lstdc++)
