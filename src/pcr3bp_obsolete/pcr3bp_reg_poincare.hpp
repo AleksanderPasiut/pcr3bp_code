@@ -9,14 +9,10 @@
 
 #include <pcr3bp_basic/regularized_system.hpp>
 
+#include <tools/direction.hpp>
+
 namespace Ursa
 {
-
-enum class Direction
-{
-    Positive,
-    Negative
-};
 
 template<typename MapT>
 class Pcr3bpRegPoincareBase : Carina::MapBase<MapT>
