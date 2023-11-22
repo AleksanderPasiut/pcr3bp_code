@@ -27,7 +27,6 @@ public:
         : CoreInteriorBase()
         , m_core_ref(core_ref)
         , m_masses(core_ref, m_setup, 0.03f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
-        , m_evolutions()
     {}
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
@@ -41,13 +40,9 @@ public:
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
 
-        // RegLyapunovCollisionOrbitParameters<RMap> collision_orbit_params {};
-        // double u0 = 0.0;
-
         for (const double& u0 : u0_vec)
         {
-            // const RVector PV = collision_orbit_params.get_initial_point();
-            const RVector PV = LyapunovOrbitRegParam::calculate(u0, steps);
+            const RVector PV = LyapunovOrbitRegParam::calculate(m_setup, u0, steps);
 
             RegEvolutionParam param;
             param.setup = m_setup;
@@ -75,10 +70,10 @@ public:
 private:
     Lyra::Core2d& m_core_ref;
 
-    Pcr3bp::SetupParameters<RMap> m_setup { 0.01 };
+    Pcr3bp::SetupParameters<RMap> m_setup {};
     RegMasses m_masses;
 
-    std::list<RegEvolution> m_evolutions;
+    std::list<RegEvolution> m_evolutions {};
 };
 
 }

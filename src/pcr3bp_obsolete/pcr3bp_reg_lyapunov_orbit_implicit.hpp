@@ -126,11 +126,12 @@ public:
 struct LyapunovOrbitRegParam
 {
 public:
-    static RVector calculate(Real u0, size_t steps)
+    static RVector calculate(Pcr3bp::SetupParameters<RMap> setup, Real u0, size_t steps)
     {
-        const Pcr3bp::SetupParameters<RMap> setup { 0.01 };
-
         const LyapunovOrbitRegLookupTable::Entry entry = calculate_initial(u0, steps, setup);
+
+        using MapT = RMap;
+        MapT m_vf_reg_pos2 { Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField4(2, setup, entry.h1) };
 
         LyapunovOrbitReg<RMap> orbit(setup, u0, g_t0);
 
@@ -138,7 +139,7 @@ public:
         Carina::NewtonMethod newton(orbit, approx_root, steps);
         const RVector PV = newton.get_root();
 
-        return RVector{ entry.u0, 0.0, 0.0, entry.pv0, entry.h1 };
+        return RVector{ entry.u0, 0.0, 0.0, PV[0], PV[5] };
     }
 
 private:
