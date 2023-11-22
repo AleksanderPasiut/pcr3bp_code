@@ -24,7 +24,7 @@ public:
     CoreInterior(Lyra::Core2d& core_ref)
         : CoreInteriorBase()
         , m_core_ref(core_ref)
-        , m_masses(core_ref, 0.03f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
+        , m_masses(core_ref, m_setup, 0.03f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
         , m_evolutions()
     {}
 
@@ -44,14 +44,14 @@ public:
             const RVector PV = LyapunovOrbitRegParam::calculate(u0, steps);
 
             RegEvolutionParam param;
-            param.setup = m_masses.get_setup();
+            param.setup = m_setup;
             param.u0 = PV[0];
             param.v0 = PV[1];
             param.pu0 = PV[2];
             param.pv0 = PV[3];
             param.h = PV[4];
 
-            Pcr3bpRegPoincarePositiveU<RMap> poincare(m_masses.get_setup());
+            Pcr3bpRegPoincarePositiveU<RMap> poincare(m_setup);
             Real t = poincare.get_return_time(RVector{ param.u0, param.v0, param.pu0, param.pv0, param.h });
             param.t = 2 * t;
 
@@ -69,6 +69,7 @@ public:
 private:
     Lyra::Core2d& m_core_ref;
 
+    Pcr3bp::SetupParameters<RMap> m_setup { 0.01 };
     StdMasses m_masses;
 
     std::list<RegEvolutionWithCoordChange> m_evolutions;
