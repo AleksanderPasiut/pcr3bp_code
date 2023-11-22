@@ -46,8 +46,6 @@ function(plot_component SLAVE_NAME SOURCE_FILE)
 
     add_executable(${SLAVE_NAME} ${SOURCE_FILE})
     target_include_directories(${SLAVE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
-    # target_include_directories(${SLAVE_NAME} PRIVATE ${TAURUS_INCLUDE_DIRS})
-    # target_include_directories(${SLAVE_NAME} PRIVATE ${CARINA_INCLUDE_DIRS})
     target_link_libraries(${SLAVE_NAME} PRIVATE taurus)
     target_link_libraries(${SLAVE_NAME} PRIVATE carina)
 
@@ -57,11 +55,8 @@ if(TRUE)
 
 plot_component( plot_reg_evolution_raw
     src/plot_1/reg_evolution_raw_plot.cpp)
-    
+
 plot_component( plot_reg_evolution_lyapunov_multi
     src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
-
-plot_component( plot_reg_evolution_lyapunov_multi_std
-    src/plot_1/reg_evolution_lyapunov_plot.multi.std.cpp)
 
 endif()

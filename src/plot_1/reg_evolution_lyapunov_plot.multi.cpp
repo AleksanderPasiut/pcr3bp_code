@@ -37,6 +37,7 @@ public:
 
         const size_t point_count = static_cast<size_t>(this->get_param(1));
         const size_t steps = static_cast<size_t>(this->get_param(2));
+        const size_t option = static_cast<size_t>(this->get_param(3));
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
 
@@ -63,7 +64,23 @@ public:
             param.point_subcount = 10;
             param.color = (u0 == 0.0) ? Leo::Color(1.0, 0.0, 0.0) : Leo::Color(0.3, 0.1, 0.8);
 
-            m_evolutions.emplace_back(std::ref(m_core_ref), std::cref(param));
+            if (option == 0)
+            {
+                m_evolutions.emplace_back(std::ref(m_core_ref), std::cref(param));
+            }
+            else
+            {
+                m_evolutions.clear();
+            }
+
+            if (option == 1)
+            {
+                m_evolutions_std.emplace_back(std::ref(m_core_ref), std::cref(param));
+            }
+            else
+            {
+                m_evolutions_std.clear();
+            }
         }
     }
 
@@ -74,6 +91,8 @@ private:
     RegMasses m_masses;
 
     std::list<RegEvolution> m_evolutions {};
+    std::list<RegEvolutionWithCoordChange> m_evolutions_std {};
+
 };
 
 }
