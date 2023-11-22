@@ -55,6 +55,9 @@ endfunction()
 
 if(TRUE)
 
+plot_component( plot_reg_evolution_raw
+    src/plot_1/reg_evolution_raw_plot.cpp)
+    
 plot_component( plot_reg_evolution_lyapunov_multi
     src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
 
