@@ -131,6 +131,14 @@ private:
 
 }
 
+TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_nonrigorous)
+{
+    using namespace Ursa;
+
+    capd::rounding::DoubleRounding::roundNearest();
+    LyapunovOrbitRegCollisionSetup<RMap> setup {};
+}
+
 TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous)
 {
     using namespace Ursa;
