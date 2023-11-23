@@ -79,6 +79,15 @@ public:
             m_coordinate_systems_origins.reset();
             m_homoclinic_orbit.reset();
         }
+
+        if (option == 3)
+        {
+            m_homoclinic_orbit_std = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count, false);
+        }
+        else
+        {
+            m_homoclinic_orbit_std.reset();
+        }
     }
 
 private:
@@ -101,7 +110,7 @@ private:
         param.point_count = point_count;
 
         param.point_thickness = 0.0f;//5e-3f;
-        param.line_thickness = 0.006f;
+        param.line_thickness = 0.002f;
         param.point_subcount = 10;
         param.color = (u0 == 0.0) ? Leo::Color(1.0, 0.0, 0.0) : Leo::Color(0.3, 0.1, 0.8);
         return param;
@@ -118,6 +127,7 @@ private:
     std::unique_ptr<CoordinateSystemsOrigins> m_coordinate_systems_origins {};
 
     std::unique_ptr<HomoclinicOrbit> m_homoclinic_orbit {};
+    std::unique_ptr<HomoclinicOrbit> m_homoclinic_orbit_std {};
 
 };
 
@@ -136,8 +146,8 @@ int main(int argc, char* argv[])
             .ruler_y = Leo::Ruler<>(-1.5, 1.5, 7, 1),
             .grid_color = Leo::Color(0.1, 0.1, 0.1),
             .grid_width = 0.005f,
-            .label_x = L"u",
-            .label_y = L"v",
+            .label_x = L".",
+            .label_y = L".",
             .label_properties{
                 .back_color = Leo::Color(1.0, 1.0, 1.0),
                 .fore_color = Leo::Color(0.1, 0.1, 0.1),

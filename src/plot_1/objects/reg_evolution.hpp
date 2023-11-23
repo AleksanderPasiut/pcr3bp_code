@@ -108,9 +108,9 @@ private:
 class RegEvolutionWithCoordChange final
 {
 public:
-    RegEvolutionWithCoordChange(Lyra::Core2d& core_ref, const RegEvolutionParam& param)
+    RegEvolutionWithCoordChange(Lyra::Core2d& core_ref, const RegEvolutionParam& param, Direction direction = Direction::Positive)
         : m_core_ref(core_ref)
-        , m_map(Pcr3bp::RegularizedSystem<RMap>::createPositiveVectorField(2, param.setup, false))
+        , m_map(create_vector_field(param.setup, direction))
         , m_timemap(m_map, 0.0, 20)
         , m_solution(0.0)
         , m_interpolation(get_solution(param), param.point_count)
@@ -125,6 +125,25 @@ public:
     }
 
 private:
+    RMap create_vector_field(const Pcr3bp::SetupParameters<RMap>& setup, Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction::Positive:
+            {
+                return Pcr3bp::RegularizedSystem<RMap>::createPositiveVectorField(2, setup, false);
+            }
+            case Direction::Negative:
+            {
+                return Pcr3bp::RegularizedSystem<RMap>::createNegativeVectorField(2, setup, false);
+            }
+            default:
+            {
+                throw std::logic_error("Unknown direction type!");
+            }
+        }
+    }
+
     Carina::SolutionCurve<RMap>& get_solution(const RegEvolutionParam& param)
     {
         const RVector U0 = { param.u0, param.v0, param.pu0, param.pv0, param.h };

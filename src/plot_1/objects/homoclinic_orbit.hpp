@@ -14,7 +14,7 @@ namespace Ursa
 class HomoclinicOrbit final
 {
 public:
-    HomoclinicOrbit(Lyra::Core2d& core_ref, double evolution_time, size_t point_count)
+    HomoclinicOrbit(Lyra::Core2d& core_ref, double evolution_time, size_t point_count, bool reg = true)
         : m_core_ref(core_ref)
     {
         RegLyapunovCollisionOrbitParameters<RMap> m_parameters { m_setup };
@@ -38,18 +38,34 @@ public:
         auto points = generator.get_points();
 
         {
-            auto point = *std::next(points.begin(), 4);
+            auto point = *std::next(points.begin(), 8);
             param.u0 = point[0];
             param.pu0 = point[2];
             param.pv0 = point[3];
-            m_segments.emplace_back( std::ref(core_ref), param, Direction::Positive);
+
+            if (reg)
+            {
+                m_segments.emplace_back( std::ref(core_ref), param, Direction::Positive );
+            }
+            else
+            {
+                m_segments_std.emplace_back( std::ref(core_ref), param, Direction::Positive );
+            }
         }
         {
-            auto point = *std::next(points.rbegin(), 4);
+            auto point = *std::next(points.rbegin(), 8);
             param.u0 = point[0];
             param.pu0 = point[2];
             param.pv0 = point[3];
-            m_segments.emplace_back( std::ref(core_ref), param, Direction::Negative);
+
+            if (reg)
+            {
+                m_segments.emplace_back( std::ref(core_ref), param, Direction::Negative );
+            }
+            else
+            {
+                m_segments_std.emplace_back( std::ref(core_ref), param, Direction::Negative );
+            }
         }
     }
 
@@ -59,6 +75,7 @@ private:
     Pcr3bp::SetupParameters<RMap> m_setup {};
 
     std::list<RegEvolution> m_segments {};
+    std::list<RegEvolutionWithCoordChange> m_segments_std {};
 };
 
 }
