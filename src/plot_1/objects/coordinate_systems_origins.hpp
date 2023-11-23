@@ -22,7 +22,7 @@ public:
         Pcr3bp::SetupParameters<RMap> setup,
         int selected_point= -1,
         float point_size = 0.01f,
-        Leo::Color color_1 = Leo::Color(0.1, 0.5, 0.1) )
+        Leo::Color color_1 = Leo::Color(0.0, 0.0, 0.0) )
     {
         HomoclinicOrbitOriginsInitial<RMap> m_homoclinic_orbit_origins_initial {};
         HomoclinicOrbitOriginsGenerator<RMap> generator { m_homoclinic_orbit_origins_initial };
