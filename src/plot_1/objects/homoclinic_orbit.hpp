@@ -28,9 +28,9 @@ public:
         param.point_count = point_count;
 
         param.point_thickness = 0.0f;//5e-3f;
-        param.line_thickness = 0.006f;
+        param.line_thickness = 0.003f;
         param.point_subcount = 10;
-        param.color = Leo::Color(1.0, 0.0, 0.0);
+        param.color = Leo::Color(0.0, 0.6, 0.0);
 
         HomoclinicOrbitOriginsInitial<RMap> m_homoclinic_orbit_origins_initial {};
         HomoclinicOrbitOriginsGenerator<RMap> generator { m_homoclinic_orbit_origins_initial };

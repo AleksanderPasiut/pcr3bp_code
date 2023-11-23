@@ -16,7 +16,7 @@ TEST(Plot, RegEvolutionLyapunovMulti)
         Aquila::ParamConfig("steps", 0.0, 1000.0, 5.0, 1.0, 0),
         Aquila::ParamConfig("option", 0.0, 1000.0, 0.0, 1.0, 0),
         Aquila::ParamConfig("point size", 0.0, 1.0, 0.02, 0.001, 3),
-        Aquila::ParamConfig("evolution time", 0.0, 10.0, 6.272, 0.001, 3),
+        Aquila::ParamConfig("evolution time", 0.0, 10.0, 2.637, 0.001, 3),
         Aquila::ParamConfig("selected point", -1.0, 50.0, -1.0, 1.0, 0)
     };
 
