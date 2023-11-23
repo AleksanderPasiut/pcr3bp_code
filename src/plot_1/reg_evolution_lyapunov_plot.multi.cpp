@@ -15,6 +15,7 @@
 #include "objects/reg_masses.hpp"
 #include "objects/reg_evolution.hpp"
 #include "objects/coordinate_systems_origins.hpp"
+#include "objects/homoclinic_orbit.hpp"
 
 #include "proof/periodic_orbit_parameters.hpp"
 
@@ -40,6 +41,7 @@ public:
         const size_t steps = static_cast<size_t>(this->get_param(2));
         const size_t option = static_cast<size_t>(this->get_param(3));
         const double point_size = this->get_param(4);
+        const double evolution_time = this->get_param(5);
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
 
@@ -73,6 +75,15 @@ public:
             {
                 m_coordinate_systems_origins.reset();
             }
+        }
+
+        if (option == 3)
+        {
+            m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count);
+        }
+        else
+        {
+            m_homoclinic_orbit.reset();
         }
     }
 
@@ -111,6 +122,8 @@ private:
     std::list<RegEvolutionWithCoordChange> m_evolutions_std {};
 
     std::unique_ptr<CoordinateSystemsOrigins> m_coordinate_systems_origins {};
+
+    std::unique_ptr<HomoclinicOrbit> m_homoclinic_orbit {};
 
 };
 

@@ -15,7 +15,8 @@ TEST(Plot, RegEvolutionLyapunovMulti)
         Aquila::ParamConfig("point_count", 0.0, 50000.0, 800.0, 1.0, 0),
         Aquila::ParamConfig("steps", 0.0, 1000.0, 5.0, 1.0, 0),
         Aquila::ParamConfig("option", 0.0, 1000.0, 0.0, 1.0, 0),
-        Aquila::ParamConfig("point size", 0.0, 1.0, 0.02, 0.001, 3)
+        Aquila::ParamConfig("point size", 0.0, 1.0, 0.02, 0.001, 3),
+        Aquila::ParamConfig("evolution time", 0.0, 10.0, 6.272, 0.001, 3)
     };
 
     Glib::RefPtr<Gtk::Application> app =
