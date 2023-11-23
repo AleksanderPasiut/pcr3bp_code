@@ -19,7 +19,6 @@ public:
     {
         RegLyapunovCollisionOrbitParameters<RMap> m_parameters { m_setup };
 
-
         RegEvolutionParam param;
         param.v0 = 0.0;
         param.h = m_parameters.get_energy();
@@ -38,15 +37,20 @@ public:
 
         auto points = generator.get_points();
 
-        param.u0 = (*points.begin())[0];
-        param.pu0 = (*points.begin())[2];
-        param.pv0 = (*points.begin())[3];
-        m_segments.emplace_back( std::ref(core_ref), param, Direction::Positive);
-
-        param.u0 = (*points.rbegin())[0];
-        param.pu0 = (*points.rbegin())[2];
-        param.pv0 = (*points.rbegin())[3];
-        m_segments.emplace_back( std::ref(core_ref), param, Direction::Negative);
+        {
+            auto point = *std::next(points.begin(), 4);
+            param.u0 = point[0];
+            param.pu0 = point[2];
+            param.pv0 = point[3];
+            m_segments.emplace_back( std::ref(core_ref), param, Direction::Positive);
+        }
+        {
+            auto point = *std::next(points.rbegin(), 4);
+            param.u0 = point[0];
+            param.pu0 = point[2];
+            param.pv0 = point[3];
+            m_segments.emplace_back( std::ref(core_ref), param, Direction::Negative);
+        }
     }
 
 private:
