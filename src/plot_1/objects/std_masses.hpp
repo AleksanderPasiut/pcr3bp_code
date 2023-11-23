@@ -25,8 +25,8 @@ public:
             : m_mass_1(core_ref.get_objects(), { setup.get_x(1), 0.0 }, color_1)
             , m_mass_2(core_ref.get_objects(), { setup.get_x(2), 0.0 }, color_2)
     {
-        m_mass_1.fill(0.01f);
-        m_mass_2.fill(0.01f);
+        m_mass_1.fill(point_size);
+        m_mass_2.fill(point_size);
     }
 
 private:

@@ -28,7 +28,7 @@ public:
     CoreInterior(Lyra::Core2d& core_ref)
         : CoreInteriorBase()
         , m_core_ref(core_ref)
-        , m_masses(core_ref, m_setup, 0.03f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
+        , m_masses(core_ref, m_setup, 0.02f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
     {}
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
@@ -42,6 +42,7 @@ public:
         const size_t option = static_cast<size_t>(this->get_param(3));
         const double point_size = this->get_param(4);
         const double evolution_time = this->get_param(5);
+        const int selected_point = this->get_param(6);
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
 
@@ -65,24 +66,17 @@ public:
             else
             {
                 m_evolutions_std.clear();
-            }
-
-            if (option == 2)
-            {
-                m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, point_size );
-            }
-            else
-            {
-                m_coordinate_systems_origins.reset();
-            }
+            }   
         }
 
-        if (option == 3)
+        if (option == 2)
         {
+            m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, selected_point, point_size );
             m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count);
         }
         else
         {
+            m_coordinate_systems_origins.reset();
             m_homoclinic_orbit.reset();
         }
     }
