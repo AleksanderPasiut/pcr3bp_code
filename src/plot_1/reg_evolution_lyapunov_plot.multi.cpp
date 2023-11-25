@@ -75,6 +75,7 @@ public:
 
         if (option == 3)
         {
+            m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, selected_point, point_size, false );
             m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count, false);
 
             RegEvolutionParam param = get_reg_evolution_param(0.0, steps, point_count);

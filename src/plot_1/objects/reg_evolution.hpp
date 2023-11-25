@@ -6,6 +6,7 @@
 
 #include <lyra/core2d.hpp>
 #include <carina/timemap_wrapper.hpp>
+#include <carina/composite_map.hpp>
 
 #include "tools/test_tools.hpp"
 #include "tools/direction.hpp"
@@ -166,6 +167,8 @@ private:
     public:
         using VectorType = RVector;
 
+        using Node = Carina::Node;
+
         SolutionCurveCoordChange(
             SolutionCurveInterpolation<RMap>& interpolation_ref,
             const Pcr3bp::SetupParameters<RMap>& setup)
@@ -175,12 +178,21 @@ private:
 
         RVector operator() (RVector arg)
         {
-            return m_coord_change( m_interpolation_ref( arg ) );
+            return m_composite( m_interpolation_ref( arg ) );
         }
 
     private:
         SolutionCurveInterpolation<RMap>& m_interpolation_ref;
         RMap m_coord_change;
+
+        RMap m_magnify { [](Node, Node in[], int, Node out[], int, Node param[], int) -> void
+        {
+            out[0] = 10 * in[0];
+            out[1] = 10 * in[1];
+            
+        }, 5, 2, 0};
+
+        Carina::CompositeMap<RMap, RMap&, RMap&> m_composite { std::ref(m_coord_change), std::ref(m_magnify) };
 
     } m_interpolation_with_coord_change;
 
