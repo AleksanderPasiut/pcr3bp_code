@@ -4,3 +4,6 @@
 [submodule "src/googletest"]
 	path = src/googletest
 	url = https://github.com/google/googletest
+[submodule "src/bluesky"]
+	path = src/bluesky
+	url = https://github.com/AleksanderPasiut/bluesky
