@@ -12,6 +12,7 @@
 #include "pcr3bp_obsolete/pcr3bp_reg_lyapunov_orbit_implicit.hpp"
 #include "pcr3bp_obsolete/pcr3bp_reg_poincare.hpp"
 
+#include "objects/std_masses.hpp"
 #include "objects/reg_masses.hpp"
 #include "objects/reg_evolution.hpp"
 #include "objects/coordinate_systems_origins.hpp"
@@ -28,13 +29,14 @@ public:
     CoreInterior(Lyra::Core2d& core_ref)
         : CoreInteriorBase()
         , m_core_ref(core_ref)
-        // , m_masses(core_ref, m_setup, 0.02f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
     {}
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase::set_param(packet_vector);
 
+        m_std_masses.reset();
+        m_reg_masses.reset();
         m_evolutions.clear();
         m_evolutions_std.clear();
         m_coordinate_systems_origins.reset();
@@ -48,6 +50,21 @@ public:
         const int selected_point = this->get_param(6);
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
+
+        switch (option)
+        {
+            case 0:
+            case 2:
+            {
+                m_reg_masses = std::make_unique<RegMasses>(std::ref(m_core_ref), std::cref(m_setup), point_size, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0));
+                break;
+            }
+            default:
+            {
+                m_std_masses = std::make_unique<StdMasses>(std::ref(m_core_ref), std::cref(m_setup), point_size, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0));
+                break;
+            }
+        }
 
         for (const double& u0 : u0_vec)
         {
@@ -112,7 +129,8 @@ private:
     Lyra::Core2d& m_core_ref;
 
     Pcr3bp::SetupParameters<RMap> m_setup {};
-    // RegMasses m_masses;
+    std::unique_ptr<RegMasses> m_reg_masses {};
+    std::unique_ptr<StdMasses> m_std_masses {};
 
     std::list<RegEvolution> m_evolutions {};
     std::list<RegEvolutionWithCoordChange> m_evolutions_std {};
