@@ -20,6 +20,15 @@
 namespace Ursa
 {
 
+struct CurveParam
+{
+    size_t point_count;
+    size_t point_subcount;
+
+    float line_thickness;
+    float point_thickness;
+};
+
 struct RegEvolutionParam
 {
     Pcr3bp::SetupParameters<RMap> setup;
@@ -30,12 +39,7 @@ struct RegEvolutionParam
     Real h;
     Real t;
 
-    size_t point_count;
-    size_t point_subcount;
-
-    float line_thickness;
-    float point_thickness;
-
+    CurveParam curve_param;
     Leo::Color color;
 };
 
@@ -47,22 +51,22 @@ public:
         , m_map(create_vector_field(param.setup, direction))
         , m_timemap(m_map, 0.0, 20)
         , m_solution(0.0)
-        , m_interpolation(get_solution(param), param.point_count)
+        , m_interpolation(get_solution(param), param.curve_param.point_count)
         , m_renderable_points(
             core_ref.get_objects(),
             m_solution,
             0.0,
             param.t,
-            param.point_count,
+            param.curve_param.point_count,
             param.color)
         , m_renderable_line(
             core_ref.get_objects(),
             m_interpolation,
-            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.point_count, param.point_subcount) }),
+            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.curve_param.point_count, param.curve_param.point_subcount) }),
             param.color)
     {
-        this->m_renderable_points.fill(param.point_thickness);
-        this->m_renderable_line.fill(param.line_thickness);
+        this->m_renderable_points.fill(param.curve_param.point_thickness);
+        this->m_renderable_line.fill(param.curve_param.line_thickness);
     }
 
 private:
@@ -114,15 +118,15 @@ public:
         , m_map(create_vector_field(param.setup, direction))
         , m_timemap(m_map, 0.0, 20)
         , m_solution(0.0)
-        , m_interpolation(get_solution(param), param.point_count)
+        , m_interpolation(get_solution(param), param.curve_param.point_count)
         , m_interpolation_with_coord_change( m_interpolation, param.setup )
         , m_renderable_line(
             m_core_ref.get_objects(),
             m_interpolation_with_coord_change,
-            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.point_count, param.point_subcount) }),
+            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.curve_param.point_count, param.curve_param.point_subcount) }),
             param.color)
     {
-        this->m_renderable_line.fill(param.line_thickness);
+        this->m_renderable_line.fill(param.curve_param.line_thickness);
     }
 
 private:

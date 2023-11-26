@@ -46,11 +46,11 @@ public:
         param.pv0 = this->get_param(3);
         param.h = this->get_param(4);
         param.t = this->get_param(5);
-        param.point_count = this->get_param(6);
+        param.curve_param.point_count = this->get_param(6);
 
-        param.point_thickness = 5e-3f;
-        param.line_thickness = 1e-3f;
-        param.point_subcount = 10;
+        param.curve_param.point_thickness = 5e-3f;
+        param.curve_param.line_thickness = 1e-3f;
+        param.curve_param.point_subcount = 10;
         param.color = Leo::Color(0.3, 0.1, 0.8);
 
         m_func_ptr = std::make_unique<RegEvolution>(std::ref(m_core_ref), std::cref(param));
