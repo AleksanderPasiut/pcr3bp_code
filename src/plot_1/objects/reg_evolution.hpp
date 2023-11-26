@@ -187,8 +187,8 @@ private:
 
         RMap m_magnify { [](Node, Node in[], int, Node out[], int, Node param[], int) -> void
         {
-            out[0] = 10 * in[0];
-            out[1] = 10 * in[1];
+            out[0] = 1 * in[0];
+            out[1] = 1 * in[1];
             
         }, 5, 2, 0};
 

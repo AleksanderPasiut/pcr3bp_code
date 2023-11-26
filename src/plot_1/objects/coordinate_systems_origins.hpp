@@ -48,8 +48,8 @@ public:
             RMap coord_change( LeviCivitaCoordinateChange<RMap>::create(2, setup, true, false, false) );
             RMap magnify( [](Node, Node in[], int, Node out[], int, Node param[], int) -> void
             {
-                out[0] = 10 * in[0];
-                out[1] = 10 * in[1];
+                out[0] = 1 * in[0];
+                out[1] = 1 * in[1];
                 
             }, 4, 2, 0);
 
