@@ -12,6 +12,7 @@
 #include "pcr3bp_obsolete/pcr3bp_reg_lyapunov_orbit_implicit.hpp"
 #include "pcr3bp_obsolete/pcr3bp_reg_poincare.hpp"
 
+#include "objects/std_masses.hpp"
 #include "objects/reg_masses.hpp"
 #include "objects/reg_evolution.hpp"
 #include "objects/coordinate_systems_origins.hpp"
@@ -28,13 +29,14 @@ public:
     CoreInterior(Lyra::Core2d& core_ref)
         : CoreInteriorBase()
         , m_core_ref(core_ref)
-        // , m_masses(core_ref, m_setup, 0.02f, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0))
     {}
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase::set_param(packet_vector);
 
+        m_std_masses.reset();
+        m_reg_masses.reset();
         m_evolutions.clear();
         m_evolutions_std.clear();
         m_coordinate_systems_origins.reset();
@@ -46,20 +48,44 @@ public:
         const double point_size = this->get_param(4);
         const double evolution_time = this->get_param(5);
         const int selected_point = this->get_param(6);
+        const float line_thickness = static_cast<float>( this->get_param(7) );
+
+        CurveParam curve_param
+        {
+            .point_count = point_count,
+            .point_subcount = 10,
+            .line_thickness = line_thickness,
+            .point_thickness = 0.0f,
+        };
 
         std::vector<double> u0_vec = { -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15 };
+
+        switch (option)
+        {
+            case 0:
+            case 2:
+            {
+                m_reg_masses = std::make_unique<RegMasses>(std::ref(m_core_ref), std::cref(m_setup), point_size, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0));
+                break;
+            }
+            default:
+            {
+                m_std_masses = std::make_unique<StdMasses>(std::ref(m_core_ref), std::cref(m_setup), point_size, Leo::Color(0.1, 0.1, 0.4), Leo::Color(0.6, 0.0, 0.0));
+                break;
+            }
+        }
 
         for (const double& u0 : u0_vec)
         {
             if (option == 0)
             {
-                RegEvolutionParam param = get_reg_evolution_param(u0, steps, point_count);
+                RegEvolutionParam param = get_reg_evolution_param(u0, steps, curve_param);
                 m_evolutions.emplace_back(std::ref(m_core_ref), std::cref(param));
             }
 
             if (option == 1)
             {
-                RegEvolutionParam param = get_reg_evolution_param(u0, steps, point_count);
+                RegEvolutionParam param = get_reg_evolution_param(u0, steps, curve_param);
                 m_evolutions_std.emplace_back(std::ref(m_core_ref), std::cref(param));
             }
         }
@@ -67,23 +93,24 @@ public:
         if (option == 2)
         {
             m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, selected_point, point_size );
-            m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count);
+            m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, curve_param);
 
-            RegEvolutionParam param = get_reg_evolution_param(0.0, steps, point_count);
+            RegEvolutionParam param = get_reg_evolution_param(0.0, steps, curve_param);
             m_evolutions.emplace_back(std::ref(m_core_ref), std::cref(param));
         }
 
         if (option == 3)
         {
-            m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, point_count, false);
+            m_coordinate_systems_origins = std::make_unique<CoordinateSystemsOrigins>( std::ref(m_core_ref), m_setup, selected_point, point_size, false );
+            m_homoclinic_orbit = std::make_unique<HomoclinicOrbit>(std::ref(m_core_ref), evolution_time, curve_param, false);
 
-            RegEvolutionParam param = get_reg_evolution_param(0.0, steps, point_count);
+            RegEvolutionParam param = get_reg_evolution_param(0.0, steps, curve_param);
             m_evolutions_std.emplace_back(std::ref(m_core_ref), std::cref(param));
         }
     }
 
 private:
-    RegEvolutionParam get_reg_evolution_param(double u0, size_t steps, size_t point_count)
+    RegEvolutionParam get_reg_evolution_param(double u0, size_t steps, CurveParam curve_param)
     {
         const RVector PV = LyapunovOrbitRegParam::calculate(m_setup, u0, steps);
 
@@ -99,11 +126,7 @@ private:
         Real t = poincare.get_return_time(RVector{ param.u0, param.v0, param.pu0, param.pv0, param.h });
         param.t = 2 * t;
 
-        param.point_count = point_count;
-
-        param.point_thickness = 0.0f;//5e-3f;
-        param.line_thickness = 0.003f;
-        param.point_subcount = 10;
+        param.curve_param = curve_param;
         param.color = (u0 == 0.0) ? Leo::Color(1.0, 0.0, 0.0) : Leo::Color(0.3, 0.1, 0.8);
         return param;
     }
@@ -111,7 +134,8 @@ private:
     Lyra::Core2d& m_core_ref;
 
     Pcr3bp::SetupParameters<RMap> m_setup {};
-    // RegMasses m_masses;
+    std::unique_ptr<RegMasses> m_reg_masses {};
+    std::unique_ptr<StdMasses> m_std_masses {};
 
     std::list<RegEvolution> m_evolutions {};
     std::list<RegEvolutionWithCoordChange> m_evolutions_std {};

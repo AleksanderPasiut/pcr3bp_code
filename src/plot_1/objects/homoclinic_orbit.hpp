@@ -14,7 +14,7 @@ namespace Ursa
 class HomoclinicOrbit final
 {
 public:
-    HomoclinicOrbit(Lyra::Core2d& core_ref, double evolution_time, size_t point_count, bool reg = true)
+    HomoclinicOrbit(Lyra::Core2d& core_ref, double evolution_time, CurveParam curve_param, bool reg = true)
         : m_core_ref(core_ref)
     {
         RegLyapunovCollisionOrbitParameters<RMap> m_parameters { m_setup };
@@ -25,11 +25,7 @@ public:
 
         param.setup = m_setup;
         param.t = evolution_time;
-        param.point_count = point_count;
-
-        param.point_thickness = 0.0f;//5e-3f;
-        param.line_thickness = 0.003f;
-        param.point_subcount = 10;
+        param.curve_param = curve_param;
         param.color = Leo::Color(0.0, 0.6, 0.0);
 
         HomoclinicOrbitOriginsInitial<RMap> m_homoclinic_orbit_origins_initial {};

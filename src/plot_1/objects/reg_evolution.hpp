@@ -6,6 +6,7 @@
 
 #include <lyra/core2d.hpp>
 #include <carina/timemap_wrapper.hpp>
+#include <carina/composite_map.hpp>
 
 #include "tools/test_tools.hpp"
 #include "tools/direction.hpp"
@@ -19,6 +20,15 @@
 namespace Ursa
 {
 
+struct CurveParam
+{
+    size_t point_count;
+    size_t point_subcount;
+
+    float line_thickness;
+    float point_thickness;
+};
+
 struct RegEvolutionParam
 {
     Pcr3bp::SetupParameters<RMap> setup;
@@ -29,12 +39,7 @@ struct RegEvolutionParam
     Real h;
     Real t;
 
-    size_t point_count;
-    size_t point_subcount;
-
-    float line_thickness;
-    float point_thickness;
-
+    CurveParam curve_param;
     Leo::Color color;
 };
 
@@ -46,22 +51,22 @@ public:
         , m_map(create_vector_field(param.setup, direction))
         , m_timemap(m_map, 0.0, 20)
         , m_solution(0.0)
-        , m_interpolation(get_solution(param), param.point_count)
+        , m_interpolation(get_solution(param), param.curve_param.point_count)
         , m_renderable_points(
             core_ref.get_objects(),
             m_solution,
             0.0,
             param.t,
-            param.point_count,
+            param.curve_param.point_count,
             param.color)
         , m_renderable_line(
             core_ref.get_objects(),
             m_interpolation,
-            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.point_count, param.point_subcount) }),
+            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.curve_param.point_count, param.curve_param.point_subcount) }),
             param.color)
     {
-        this->m_renderable_points.fill(param.point_thickness);
-        this->m_renderable_line.fill(param.line_thickness);
+        this->m_renderable_points.fill(param.curve_param.point_thickness);
+        this->m_renderable_line.fill(param.curve_param.line_thickness);
     }
 
 private:
@@ -113,15 +118,15 @@ public:
         , m_map(create_vector_field(param.setup, direction))
         , m_timemap(m_map, 0.0, 20)
         , m_solution(0.0)
-        , m_interpolation(get_solution(param), param.point_count)
+        , m_interpolation(get_solution(param), param.curve_param.point_count)
         , m_interpolation_with_coord_change( m_interpolation, param.setup )
         , m_renderable_line(
             m_core_ref.get_objects(),
             m_interpolation_with_coord_change,
-            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.point_count, param.point_subcount) }),
+            Leo::RulerSet<1>({ Leo::Ruler<Real>(0.0, param.t, param.curve_param.point_count, param.curve_param.point_subcount) }),
             param.color)
     {
-        this->m_renderable_line.fill(param.line_thickness);
+        this->m_renderable_line.fill(param.curve_param.line_thickness);
     }
 
 private:
@@ -166,6 +171,8 @@ private:
     public:
         using VectorType = RVector;
 
+        using Node = Carina::Node;
+
         SolutionCurveCoordChange(
             SolutionCurveInterpolation<RMap>& interpolation_ref,
             const Pcr3bp::SetupParameters<RMap>& setup)
@@ -175,12 +182,21 @@ private:
 
         RVector operator() (RVector arg)
         {
-            return m_coord_change( m_interpolation_ref( arg ) );
+            return m_composite( m_interpolation_ref( arg ) );
         }
 
     private:
         SolutionCurveInterpolation<RMap>& m_interpolation_ref;
         RMap m_coord_change;
+
+        RMap m_magnify { [](Node, Node in[], int, Node out[], int, Node param[], int) -> void
+        {
+            out[0] = 1 * in[0];
+            out[1] = 1 * in[1];
+            
+        }, 5, 2, 0};
+
+        Carina::CompositeMap<RMap, RMap&, RMap&> m_composite { std::ref(m_coord_change), std::ref(m_magnify) };
 
     } m_interpolation_with_coord_change;
 
