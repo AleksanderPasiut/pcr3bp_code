@@ -130,17 +130,26 @@ private:
         auto it = homoclinic_orbit_coordsys_initial.begin();
         ret.push_back( *it++ );
 
+        size_t index = 1;
+
         auto it_pos = unstable_dirs_pos_2d.begin();
         auto it_neg = std::next(unstable_dirs_neg_2d.rbegin(), 1);
-        for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg)
+        for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg, ++index)
         {
             const Coordsys& cs_init = *it;
             const VectorType& p = *it_pos;
             const VectorType& n = *it_neg;
 
-            Coordsys cs = Coordsys4_Alignment<MapT>::align( cs_init, p, n );
-
-            ret.push_back( cs );
+            if (index == 14)
+            {
+                Coordsys cs = Coordsys4_Alignment<MapT>::align_with_s_symmetry( cs_init, p );
+                ret.push_back( cs );
+            }
+            else
+            {
+                Coordsys cs = Coordsys4_Alignment<MapT>::align( cs_init, p, n );
+                ret.push_back( cs );
+            }
         }
 
         ret.push_back( *it );

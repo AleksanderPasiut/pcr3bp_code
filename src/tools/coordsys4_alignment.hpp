@@ -59,23 +59,23 @@ public:
     {
         assert_with_exception(arg.get_origin().dimension() == 4);
         assert_with_exception(unstable_pos_2d.dimension() == 2);
-        assert_with_exception(arg.get_origin()[1] == 0.0);
-        assert_with_exception(arg.get_origin()[2] == 0.0);
+
+        const VectorType new_origin = { arg.get_origin()[0], 0.0, 0.0, arg.get_origin()[3] };
 
         const VectorType unstable_pos_4d = arg.get_directions_matrix() * VectorType{ unstable_pos_2d[0], unstable_pos_2d[1], 0.0, 0.0 };
         const VectorType unstable_neg_4d = -AuxiliaryFunctions<MapT>::S_symmetry(unstable_pos_4d);
 
-        // const VectorType vf_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
+        const VectorType vf_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
         const VectorType h_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4);
 
-        // const VectorType vf_dir_s_symmetric = { vf_dir[0], 0.0, 0.0, vf_dir[3] };
+        const VectorType vf_dir_s_symmetric = { 0.0, vf_dir[1], vf_dir[2], 0.0 };
         const VectorType h_dir_s_symmetric = { h_dir[0], 0.0, 0.0, h_dir[3] };
 
-        const MatrixType new_dirs = Carina::Concat<MapT>::build_matrix_from_vvectors({ unstable_pos_4d, unstable_neg_4d, VectorType{ 0, 1, 0, 0 }, h_dir_s_symmetric });
+        const MatrixType new_dirs = Carina::Concat<MapT>::build_matrix_from_vvectors({ unstable_pos_4d, unstable_neg_4d, vf_dir_s_symmetric, h_dir_s_symmetric });
 
         Coordsys ret
         {
-            arg.get_origin(),
+            new_origin,
             new_dirs
         };
 
