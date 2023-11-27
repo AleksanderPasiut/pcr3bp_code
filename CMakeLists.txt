@@ -4,6 +4,31 @@ project(ursa)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
+################################################################################
+# plot components build
+################################################################################
+function(plot_component SLAVE_NAME SOURCE_FILE)
+
+    add_executable(${SLAVE_NAME} ${SOURCE_FILE})
+    target_include_directories(${SLAVE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(${SLAVE_NAME} PRIVATE taurus)
+    target_link_libraries(${SLAVE_NAME} PRIVATE carina)
+
+endfunction()
+
+if(TRUE)
+
+plot_component( plot_reg_evolution_raw
+    src/plot_1/reg_evolution_raw_plot.cpp)
+
+plot_component( plot_reg_evolution_lyapunov_multi
+    src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
+
+endif()
+
+################################################################################
+# primary component build
+################################################################################
 set(SOURCES_LIST
     src/tools/variable_printer.cpp
     src/tools/print_bootstrap.cpp
@@ -39,24 +64,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE carina)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE taurus)
 
-################################################################################
-# plot components build
-################################################################################
-function(plot_component SLAVE_NAME SOURCE_FILE)
-
-    add_executable(${SLAVE_NAME} ${SOURCE_FILE})
-    target_include_directories(${SLAVE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
-    target_link_libraries(${SLAVE_NAME} PRIVATE taurus)
-    target_link_libraries(${SLAVE_NAME} PRIVATE carina)
-
-endfunction()
-
-if(TRUE)
-
-plot_component( plot_reg_evolution_raw
-    src/plot_1/reg_evolution_raw_plot.cpp)
-
-plot_component( plot_reg_evolution_lyapunov_multi
-    src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
-
-endif()
