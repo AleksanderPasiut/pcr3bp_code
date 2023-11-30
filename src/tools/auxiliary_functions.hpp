@@ -171,19 +171,19 @@ public:
 		return map;
     }
 
-    static MapT J2()
-    {
-        using Carina::Node;
+    // static MapT J2()
+    // {
+    //     using Carina::Node;
 
-        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            out[0] = in[0];
-            out[1] = -in[1];
-        };
+    //     auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
+    //     {
+    //         out[0] = in[0];
+    //         out[1] = -in[1];
+    //     };
 
-        MapT map(func, 2, 2, 0);
-		return map;
-    }
+    //     MapT map(func, 2, 2, 0);
+	// 	return map;
+    // }
 
     static VectorType S_symmetry(const VectorType& v)
     {

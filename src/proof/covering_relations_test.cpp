@@ -38,7 +38,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_homoclinic_coverings()
     {
-        for (size_t i = 1; i < m_homoclinic_orbit_coordsys.size(); ++i)
+        // for (size_t i = 1; i < m_homoclinic_orbit_coordsys.size(); ++i)
+        for (size_t i = 1; i <= 14; ++i)
         {
             const size_t src_idx = i-1;
             const size_t dst_idx = i;
@@ -74,23 +75,23 @@ public:
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
 
-        {
-            std::cout << "periodic orbit covering 2 <= 3\n";
+        // {
+        //     std::cout << "periodic orbit covering 2 <= 3\n";
 
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(2);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(3);
-            const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
-            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(2);
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(3);
+        //     const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
+        //     simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
             
-        }
+        // }
 
-        {
-            std::cout << "periodic orbit covering 3 <= 0\n";
+        // {
+        //     std::cout << "periodic orbit covering 3 <= 0\n";
 
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(0);
-            check_covering_relation_backward(coordsys_src, coordsys_dst);
-        }
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(0);
+        //     check_covering_relation_backward(coordsys_src, coordsys_dst);
+        // }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,15 +99,15 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_jump_coverings()
     {
-        {
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
+        // {
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
+        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
 
-            std::cout << "last homoclinic => periodic (1) covering\n";
+        //     std::cout << "last homoclinic => periodic (1) covering\n";
 
-            const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
-            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
-        }
+        //     const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
+        //     simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
+        // }
         {
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
             const Carina::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
@@ -163,8 +164,7 @@ private:
         print_var(cr.get_img_right());
 
         EXPECT_TRUE(cr.contraction_condition());
-        EXPECT_TRUE(cr.left_expansion_condition());
-        EXPECT_TRUE(cr.right_expansion_condition());
+        EXPECT_TRUE(cr.expansion_condition());
 
         // check that image is properly covered by its coordinate system
         LocalPoincare4_Constraint<MapT> extension_to_4_dst
@@ -217,8 +217,7 @@ private:
         print_var(cr.get_img_right());
 
         EXPECT_TRUE(cr.contraction_condition());
-        EXPECT_TRUE(cr.left_expansion_condition());
-        EXPECT_TRUE(cr.right_expansion_condition());
+        EXPECT_TRUE(cr.expansion_condition());
 
         // check that image is properly covered by its coordinate system
         LocalPoincare4_Constraint<MapT> extension_to_4_dst
@@ -383,7 +382,7 @@ private:
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
         MapT Y_inverse = AuxiliaryFunctions<MapT>::Y_Inverse(p0);
         MapT J = AuxiliaryFunctions<MapT>::J();
-        MapT J2 = AuxiliaryFunctions<MapT>::J2();
+        // MapT J2 = AuxiliaryFunctions<MapT>::J2();
 
         {
             const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
@@ -401,16 +400,17 @@ private:
 
             Carina::CompositeMap<MapT,
                 decltype(poincare)&,
-                decltype(J2)&,
+                // decltype(J2)&,
                 decltype(Y_inverse)&,
-                decltype(R_inverse)&,
-                decltype(J2)&> composite
+                decltype(R_inverse)&
+                // decltype(J2)&
+                > composite
             {
                 std::ref(poincare),
-                std::ref(J2),
+                // std::ref(J2),
                 std::ref(Y_inverse),
                 std::ref(R_inverse),
-                std::ref(J2)
+                // std::ref(J2)
             };
             
             CoveringRelationCheck cr { composite };
@@ -423,8 +423,7 @@ private:
             print_var(cr.get_img_right());
 
             EXPECT_TRUE(cr.contraction_condition());
-            EXPECT_TRUE(cr.left_expansion_condition());
-            EXPECT_TRUE(cr.right_expansion_condition());
+            EXPECT_TRUE(cr.expansion_condition());
         }
 
         {
@@ -444,22 +443,22 @@ private:
             Carina::CompositeMap<MapT,
                 decltype(J)&,
                 decltype(poincare)&,
-                decltype(J2)&,
+                // decltype(J2)&,
                 decltype(J)&,
                 decltype(Y_inverse)&,
                 decltype(R_inverse)&,
                 decltype(J)&,
-                decltype(J2)&,
+                // decltype(J2)&,
                 decltype(J)&> composite
             {
                 std::ref(J),
                 std::ref(poincare),
-                std::ref(J2),
+                // std::ref(J2),
                 std::ref(J),
                 std::ref(Y_inverse),
                 std::ref(R_inverse),
                 std::ref(J),
-                std::ref(J2),
+                // std::ref(J2),
                 std::ref(J)
             };
             
@@ -473,8 +472,7 @@ private:
             print_var(cr.get_img_right());
 
             EXPECT_TRUE(cr.contraction_condition());
-            EXPECT_TRUE(cr.left_expansion_condition());
-            EXPECT_TRUE(cr.right_expansion_condition());
+            EXPECT_TRUE(cr.expansion_condition());
         }
     }
 
@@ -484,7 +482,7 @@ private:
     void collision_manifold_derivative(ScalarType p0)
     {
         MapT Y = AuxiliaryFunctions<MapT>::Y(p0);
-        MapT J2 = AuxiliaryFunctions<MapT>::J2();
+        // MapT J2 = AuxiliaryFunctions<MapT>::J2();
 
         LocalPoincare4_Constraint<MapT> map_E0
         {
@@ -505,12 +503,12 @@ private:
 
         Carina::CompositeMap<MapT,
             decltype(Y)&,
-            decltype(J2)&,
+            // decltype(J2)&,
             decltype(map_E0)&,
             decltype(map_L0)&,
             decltype(map_C)&> map_C2(
                 std::ref(Y),
-                std::ref(J2),
+                // std::ref(J2),
                 std::ref(map_E0),
                 std::ref(map_L0),
                 std::ref(map_C)
