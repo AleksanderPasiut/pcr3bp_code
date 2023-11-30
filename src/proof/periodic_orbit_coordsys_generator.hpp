@@ -234,10 +234,9 @@ private:
             m_initial_coordsys.at(1),
             *std::next(m_unstable_pos_dirs_2d.begin(), 0),
             *std::next(m_unstable_neg_dirs_2d.rbegin(), 0)),
-        Coordsys4_Alignment<MapT>::align(
+        Coordsys4_Alignment<MapT>::align_with_s_symmetry(
             m_initial_coordsys.at(2),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 1),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 1)),
+            *std::next(m_unstable_pos_dirs_2d.begin(), 1)),
         Coordsys4_Alignment<MapT>::align(
             m_initial_coordsys.at(3),
             *std::next(m_unstable_pos_dirs_2d.begin(), 2),
