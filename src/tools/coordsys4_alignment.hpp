@@ -63,7 +63,7 @@ public:
         const VectorType new_origin = { arg.get_origin()[0], 0.0, 0.0, arg.get_origin()[3] };
 
         const VectorType unstable_pos_4d = arg.get_directions_matrix() * VectorType{ unstable_pos_2d[0], unstable_pos_2d[1], 0.0, 0.0 };
-        const VectorType unstable_neg_4d = -AuxiliaryFunctions<MapT>::S_symmetry(unstable_pos_4d);
+        const VectorType unstable_neg_4d = AuxiliaryFunctions<MapT>::S_symmetry(unstable_pos_4d);
 
         const VectorType vf_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
         const VectorType h_dir = Carina::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4);

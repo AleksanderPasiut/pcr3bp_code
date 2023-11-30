@@ -55,7 +55,7 @@ public:
 
     VectorType get_unstable_neg() const
     {
-        return m_unstable_dir_neg;
+        return -m_unstable_dir_neg;
     }
 
     ScalarType get_expansion_pos_factor() const
