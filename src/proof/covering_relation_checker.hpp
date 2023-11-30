@@ -49,14 +49,19 @@ public:
         return m_img[1].subset( I );
     }
 
-    bool right_expansion_condition() const noexcept
+    bool expansion_condition() const noexcept
     {
-        return m_img_right[0].leftBound() > I.rightBound();
-    }
+        if (m_img_right[0].leftBound() > I.rightBound() && m_img_left[0].rightBound() < I.leftBound())
+        {
+            return true;
+        }
 
-    bool left_expansion_condition() const noexcept
-    {
-        return m_img_left[0].rightBound() < I.leftBound();
+        if (m_img_left[0].leftBound() > I.rightBound() && m_img_right[0].rightBound() < I.leftBound())
+        {
+            return true;
+        }
+
+        return false;
     }
 
     const VectorType get_img() const noexcept
