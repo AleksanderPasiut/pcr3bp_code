@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <carina/map_compatibility.hpp>
+#include <capd_utils/map_compatibility.hpp>
 
 #include <list>
 #include <stdexcept>
 #include <sstream>
 
-namespace Carina
+namespace CapdUtils
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

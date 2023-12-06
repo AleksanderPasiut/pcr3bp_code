@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <carina/capd/basic_types.hpp>
-#include <carina/map_base.hpp>
+#include <capd_utils/capd/basic_types.hpp>
+#include <capd_utils/map_base.hpp>
 
 namespace Ursa
 {
@@ -15,7 +15,7 @@ namespace Ursa
 //! @details This coordinate change maps standard configuration space to fragment of regularized space for which u > 0
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class LeviCivitaInverseCoordinateChange : public Carina::MapBase<MapT>
+class LeviCivitaInverseCoordinateChange : public CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -96,7 +96,7 @@ public:
     }
 
 private:
-    static Carina::Node delta(Carina::Node& x, Carina::Node& y, Carina::Node& xi)
+    static CapdUtils::Node delta(CapdUtils::Node& x, CapdUtils::Node& y, CapdUtils::Node& xi)
     {
         return sqrt( sqr(x-xi) + sqr(y) );
     }
@@ -106,7 +106,7 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     MapT create_f1(ScalarType xi, bool append_h)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
         auto func = [append_h](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             Node& x = in[0];
@@ -137,7 +137,7 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     MapT create_f2(ScalarType xi, bool append_h)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
         auto func = [append_h](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             Node& x = in[0];
@@ -168,7 +168,7 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     MapT create_f3(ScalarType xi, bool append_h)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
         auto func = [append_h](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             Node& x = in[0];
@@ -200,7 +200,7 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     MapT create_f4(ScalarType xi, bool append_h)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
         auto func = [append_h](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             Node& x = in[0];
@@ -229,7 +229,7 @@ private:
 
     MapT create_g(bool append_h)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
         auto func = [append_h](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             Node& u = in[0];

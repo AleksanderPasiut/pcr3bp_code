@@ -38,7 +38,7 @@ public:
         return instance;
     }
 
-    Entry get_base(Carina::Real u0) noexcept
+    Entry get_base(CapdUtils::Real u0) noexcept
     {
         auto key_func = [](const Entry& entry) -> double { return entry.u0; };
         return Leo::get_by_double_key(m_lookup, u0, key_func);

@@ -26,7 +26,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    using Coordsys = Carina::LocalCoordinateSystem<MapT>;
+    using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
     CoveringRelationsTest(const CoveringRelationsSetup& setup)
         : m_periodic_orbit_coordsys(setup.get_periodic_orbit_coordsys())
@@ -45,8 +45,8 @@ public:
             const size_t dst_idx = i;
             std::cout << "homoclinic orbit covering " << src_idx << " => " << dst_idx << '\n';
 
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_homoclinic_orbit_coordsys.at(src_idx);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_homoclinic_orbit_coordsys.at(dst_idx);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_homoclinic_orbit_coordsys.at(src_idx);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_homoclinic_orbit_coordsys.at(dst_idx);
 
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
@@ -61,16 +61,16 @@ public:
         {
             std::cout << "periodic orbit covering 0 => 1\n";
 
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(0);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(0);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
             check_covering_relation_forward(coordsys_src, coordsys_dst);
         }
 
         {
             std::cout << "periodic orbit covering 1 => 2\n";
 
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(1);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(2);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(1);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(2);
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
@@ -78,8 +78,8 @@ public:
         // {
         //     std::cout << "periodic orbit covering 2 <= 3\n";
 
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(2);
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(3);
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(2);
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(3);
         //     const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
         //     simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
             
@@ -88,8 +88,8 @@ public:
         // {
         //     std::cout << "periodic orbit covering 3 <= 0\n";
 
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(0);
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(0);
         //     check_covering_relation_backward(coordsys_src, coordsys_dst);
         // }
     }
@@ -100,8 +100,8 @@ public:
     void check_jump_coverings()
     {
         // {
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
-        //     const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
+        //     const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
 
         //     std::cout << "last homoclinic => periodic (1) covering\n";
 
@@ -109,8 +109,8 @@ public:
         //     simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         // }
         {
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
 
             std::cout << "periodic (3) <= first homoclinic covering\n";
 
@@ -139,8 +139,8 @@ private:
     //! @return Time interval of underlying evolved trajectory
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ScalarType check_covering_relation_forward(
-        Carina::LocalCoordinateSystem<MapT> coordsys_src,
-        Carina::LocalCoordinateSystem<MapT> coordsys_dst)
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst)
     {
         G_Map<MapT> f
         {
@@ -157,7 +157,7 @@ private:
         const ScalarType time_span = f.get_last_evaluation_return_time();
 
         print_var(cr.get_der());
-        print_var( Carina::span_matrix(cr.get_der()) );
+        print_var( CapdUtils::span_matrix(cr.get_der()) );
 
         print_var(cr.get_img());
         print_var(cr.get_img_left());
@@ -184,8 +184,8 @@ private:
     //! @return Return interval of time of evolved solution
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ScalarType check_covering_relation_backward(
-        Carina::LocalCoordinateSystem<MapT> coordsys_src,
-        Carina::LocalCoordinateSystem<MapT> coordsys_dst)
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst)
     {
         G_Map<MapT> f
         {
@@ -198,7 +198,7 @@ private:
         };
 
         MapT J = AuxiliaryFunctions<MapT>::J();
-        Carina::CompositeMap<MapT, decltype(J)&, decltype(f)&, decltype(J)&> jfj
+        CapdUtils::CompositeMap<MapT, decltype(J)&, decltype(f)&, decltype(J)&> jfj
         {
             std::ref(J),
             std::ref(f),
@@ -210,7 +210,7 @@ private:
         const ScalarType time_span = f.get_last_evaluation_return_time();
 
         print_var(cr.get_der());
-        print_var( Carina::span_matrix(cr.get_der()) );
+        print_var( CapdUtils::span_matrix(cr.get_der()) );
 
         print_var(cr.get_img());
         print_var(cr.get_img_left());
@@ -233,8 +233,8 @@ private:
     }
 
     void simple_collision_avoidance_check(
-        Carina::LocalCoordinateSystem<MapT> coordsys_src,
-        Carina::LocalCoordinateSystem<MapT> coordsys_dst,
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
         ScalarType time_span)
     {
         LocalPoincare4_Constraint<MapT> extension_to_4_src
@@ -251,7 +251,7 @@ private:
         };
 
         {
-            using Carina::Node;
+            using CapdUtils::Node;
             auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
             {
                 out[0] = in[0];
@@ -262,7 +262,7 @@ private:
             MapT collision_condition(collision_condition_f, 4, 3, 1);
             collision_condition.setParameter(0, m_basic_objects.m_setup.get_mu(2));
 
-            Carina::MaxNorm<MapT> norm {};
+            CapdUtils::MaxNorm<MapT> norm {};
 
             const VectorType expected_collision = m_basic_objects.m_parameters.get_initial_point();
             if ( norm(coordsys_src.get_origin() - expected_collision) < norm(coordsys_dst.get_origin() - expected_collision) )
@@ -385,8 +385,8 @@ private:
         // MapT J2 = AuxiliaryFunctions<MapT>::J2();
 
         {
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
 
             G_Map<MapT> poincare
             {
@@ -398,7 +398,7 @@ private:
                 m_gain_factor
             };
 
-            Carina::CompositeMap<MapT,
+            CapdUtils::CompositeMap<MapT,
                 decltype(poincare)&,
                 // decltype(J2)&,
                 decltype(Y_inverse)&,
@@ -416,7 +416,7 @@ private:
             CoveringRelationCheck cr { composite };
 
             print_var(cr.get_der());
-            print_var( Carina::span_matrix(cr.get_der()) );
+            print_var( CapdUtils::span_matrix(cr.get_der()) );
 
             print_var(cr.get_img());
             print_var(cr.get_img_left());
@@ -427,8 +427,8 @@ private:
         }
 
         {
-            const Carina::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-            const Carina::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
 
             G_Map<MapT> poincare
             {
@@ -440,7 +440,7 @@ private:
                 m_gain_factor
             };
 
-            Carina::CompositeMap<MapT,
+            CapdUtils::CompositeMap<MapT,
                 decltype(J)&,
                 decltype(poincare)&,
                 // decltype(J2)&,
@@ -465,7 +465,7 @@ private:
             CoveringRelationCheck cr { composite };
 
             print_var(cr.get_der());
-            print_var( Carina::span_matrix(cr.get_der()) );
+            print_var( CapdUtils::span_matrix(cr.get_der()) );
 
             print_var(cr.get_img());
             print_var(cr.get_img_left());
@@ -490,9 +490,9 @@ private:
             std::ref( m_periodic_orbit_coordsys.at(0) )
         };
 
-        Carina::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
+        CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
 
-        using Carina::Node;
+        using CapdUtils::Node;
         auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
             out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
@@ -501,7 +501,7 @@ private:
         MapT map_C(collision_condition_f, 4, 1, 1);
         map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
 
-        Carina::CompositeMap<MapT,
+        CapdUtils::CompositeMap<MapT,
             decltype(Y)&,
             // decltype(J2)&,
             decltype(map_E0)&,
@@ -524,10 +524,10 @@ private:
         std::ofstream fs("collision_manifold_parameters.txt");
         if (fs)
         {
-            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fx", fx);
-            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fy", fy);
-            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddy/ddx", -fy / fx);
-            Carina::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddx/ddy", -fx / fy);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fx", fx);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fy", fy);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddy/ddx", -fy / fx);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddx/ddy", -fx / fy);
             fs.close();
         }
         else
