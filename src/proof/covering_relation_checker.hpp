@@ -30,7 +30,7 @@ public:
         assert_with_exception(map.dimension() == 2);
         assert_with_exception(map.imageDimension() == 2);
 
-        Carina::C1_Map<MapT, MapU&> c1_map
+        CapdUtils::C1_Map<MapT, MapU&> c1_map
         {
             std::ref(map)
         };

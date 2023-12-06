@@ -19,7 +19,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    using Node = Carina::Node;
+    using Node = CapdUtils::Node;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Create extended Hamiltonian of PCR3BP in regularized coordinates

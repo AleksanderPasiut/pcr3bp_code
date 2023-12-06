@@ -24,7 +24,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static MapT createHamiltonian(const Pcr3bp::SetupParameters<MapT>& setup, ScalarType h0 = ScalarType(0.0))
     {
-        using Carina::Node;
+        using CapdUtils::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
@@ -73,7 +73,7 @@ public:
 private:
     static MapT createVectorFieldInternal(const Pcr3bp::SetupParameters<MapT>& setup, bool h_coordinate, ScalarType direction)
 	{
-        using Carina::Node;
+        using CapdUtils::Node;
 
         auto func = [h_coordinate](Node, Node in[], int, Node out[], int, Node param[], int)
         {

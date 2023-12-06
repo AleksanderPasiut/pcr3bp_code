@@ -17,7 +17,7 @@ namespace Ursa
 //! @brief An extension of solution curve component that allows to check if given solution curve might satisfy given condition
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class SolutionCurveWithConditionCheck : public Carina::SolutionCurve<MapT>
+class SolutionCurveWithConditionCheck : public CapdUtils::SolutionCurve<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -26,9 +26,9 @@ public:
 
     using BoundType = typename ScalarType::BoundType;
 
-    using CurvePieceType = typename Carina::SolutionCurve<MapT>::BaseCurve;
+    using CurvePieceType = typename CapdUtils::SolutionCurve<MapT>::BaseCurve;
 
-    SolutionCurveWithConditionCheck() : Carina::SolutionCurve<MapT>(0.0)
+    SolutionCurveWithConditionCheck() : CapdUtils::SolutionCurve<MapT>(0.0)
     {}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,14 +66,14 @@ private:
             return true;
         }
 
-        if (Carina::span(arg) < limit)
+        if (CapdUtils::span(arg) < limit)
         {
             print_var(arg);
             return false;
         }
 
         // Split the time interval and perform the check on parts recursively...
-        const BoundType split_point = Carina::scalar_cast<BoundType>(arg);
+        const BoundType split_point = CapdUtils::scalar_cast<BoundType>(arg);
 
         return
             internal_check( condition, limit, piece, left, split_point ) &&

@@ -18,7 +18,7 @@ namespace Ursa
 //! @todo
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class LocalPoincare4_Constraint : public Carina::MapBase<MapT>
+class LocalPoincare4_Constraint : public CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -27,7 +27,7 @@ public:
 
     LocalPoincare4_Constraint(
         MapT& constraint,
-        const Carina::LocalCoordinateSystem<MapT>& src_coordsys)
+        const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys)
             : m_constraint(constraint)
             , m_src_coordsys(src_coordsys)
     {
@@ -60,17 +60,17 @@ public:
 private:
     MapT& m_constraint;
     
-    const Carina::LocalCoordinateSystem<MapT> m_src_coordsys;
+    const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys;
 
-    Carina::AffineMap<MapT> m_linear_src { m_src_coordsys };
+    CapdUtils::AffineMap<MapT> m_linear_src { m_src_coordsys };
 
-    Carina::AffineMap2<MapT> m_affine_section_constraint
+    CapdUtils::AffineMap2<MapT> m_affine_section_constraint
     {
         m_src_coordsys.get_origin(),
-        Carina::Extract<MapT>::get_vvector( m_src_coordsys.get_directions_matrix(), 3 )
+        CapdUtils::Extract<MapT>::get_vvector( m_src_coordsys.get_directions_matrix(), 3 )
     };
 
-    Carina::CompositeMap<MapT,
+    CapdUtils::CompositeMap<MapT,
         decltype(m_linear_src)&,
         decltype(m_affine_section_constraint)&> m_affine_section_constraint_src
     {
@@ -78,19 +78,19 @@ private:
         std::ref(m_affine_section_constraint)
     };
 
-    Carina::CompositeMap<MapT, decltype(m_linear_src)&, MapT&> m_constraint_src
+    CapdUtils::CompositeMap<MapT, decltype(m_linear_src)&, MapT&> m_constraint_src
     {
         std::ref(m_linear_src),
         std::ref(m_constraint)
     };
 
-    Carina::ImageSum<MapT, decltype(m_affine_section_constraint_src)&, decltype(m_constraint_src)&> m_dual_constraint
+    CapdUtils::ImageSum<MapT, decltype(m_affine_section_constraint_src)&, decltype(m_constraint_src)&> m_dual_constraint
     {
         std::ref(m_affine_section_constraint_src),
         std::ref(m_constraint_src)
     };
 
-    Carina::IdWithConstraint<MapT, decltype(m_dual_constraint)&> m_extension_to_4
+    CapdUtils::IdWithConstraint<MapT, decltype(m_dual_constraint)&> m_extension_to_4
     {
         std::ref(m_dual_constraint)
     };

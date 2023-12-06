@@ -37,42 +37,42 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    using Coordsys = Carina::LocalCoordinateSystem<MapT>;
+    using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
     static_assert(std::is_same<MapT, RMap>::value);
 
     PeriodicOrbitCoordsysGenerator()
     {
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_total_expansion_factor_pos.txt",
             "Total expansion factor along periodic orbit (positive direction)",
             m_unstable_dir_gen.get_expansion_pos_factor());
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_total_expansion_factor_neg.txt",
             "Total expansion factor along periodic orbit (negative direction)",
             m_unstable_dir_gen.get_expansion_pos_factor());
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_average_expansion_factor_pos.txt",
             "Average expansion factor along periodic orbit (positive direction)",
             m_expansion_factor_pos);
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_average_expansion_factor_neg.txt",
             "Average expansion factor along periodic orbit (negative direction)",
             m_expansion_factor_neg);
 
         m_local_poincare_pos.at(0)(VectorType(2));
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_g_0_1_approx_return_time.txt",
             "Approximate value of return time on underlying Poincare map of g_01 map",
             m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
 
         m_local_poincare_pos.at(1)(VectorType(2));
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "periodic_orbit_g_1_2_approx_return_time.txt",
             "Approximate value of return time on underlying Poincare map of g_12 map",
             m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
@@ -161,19 +161,19 @@ private:
         }
     };
 
-    Carina::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_pos_dual
+    CapdUtils::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_pos_dual
     {
         std::ref(m_local_poincare_pos.at(0)),
         std::ref(m_local_poincare_pos.at(1))
     };
 
-    Carina::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_neg_dual
+    CapdUtils::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_neg_dual
     {
         std::ref(m_local_poincare_neg.at(0)),
         std::ref(m_local_poincare_neg.at(1))
     };
 
-    Carina::UnstableDirectionsGenerator<MapT,
+    CapdUtils::UnstableDirectionsGenerator<MapT,
         decltype(m_local_poincare_pos_dual)&,
         decltype(m_local_poincare_neg_dual)&> m_unstable_dir_gen
     {
@@ -193,7 +193,7 @@ private:
         std::pow(static_cast<double>(m_unstable_dir_gen.get_expansion_neg_factor()), 0.25)
     };
 
-    Carina::DirectionShifting<MapT,
+    CapdUtils::DirectionShifting<MapT,
         LocalPoincare4<MapT>&,
         LocalPoincare4<MapT>&,
         LocalPoincare4<MapT>&> m_direction_shifting_pos
@@ -204,7 +204,7 @@ private:
         std::ref(m_local_poincare_pos.at(2))
     };
 
-    Carina::DirectionShifting<MapT,
+    CapdUtils::DirectionShifting<MapT,
         LocalPoincare4<MapT>&,
         LocalPoincare4<MapT>&,
         LocalPoincare4<MapT>&> m_direction_shifting_neg

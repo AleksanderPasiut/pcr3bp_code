@@ -30,7 +30,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static MapT create(size_t mu_index, Pcr3bp::SetupParameters<MapT> setup, bool full_change, bool append_h, bool append_t)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
 
         const ScalarType x0 = setup.get_x(mu_index);
 
@@ -88,7 +88,7 @@ public:
         bool append_h,
         LeviCivitaCoordinateChangeInverseVariant variant = LeviCivitaCoordinateChangeInverseVariant::PositiveU)
     {
-        using Carina::Node;
+        using CapdUtils::Node;
 
         const ScalarType x0 = setup.get_x(mu_index);
 

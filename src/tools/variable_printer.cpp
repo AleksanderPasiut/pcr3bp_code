@@ -12,7 +12,7 @@
 #include <capd_utils/type_cast.hpp>
 #include <capd_utils/readable_scalar.hpp>
 
-namespace Carina
+namespace CapdUtils
 {
 
 static void print_data(std::ofstream& fs, double value)

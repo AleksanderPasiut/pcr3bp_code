@@ -24,7 +24,7 @@ namespace Ursa
 //! @todo
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class LocalPoincare4 : public Carina::MapBase<MapT>
+class LocalPoincare4 : public CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -35,8 +35,8 @@ public:
         MapT& vector_field,
         MapT& constraint,
         unsigned order,
-        const Carina::LocalCoordinateSystem<MapT>& src_coordsys,
-        const Carina::LocalCoordinateSystem<MapT>& dst_coordsys)
+        const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
+        const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys)
             : m_vector_field(vector_field)
             , m_constraint(constraint)
             , m_order(order)
@@ -76,7 +76,7 @@ public:
         return m_affine_poincare.get_last_evaluation_return_time();
     }
 
-    void operator() (const VectorType& vec, ScalarType time, Carina::SolutionCurve<MapT>& solution_curve)
+    void operator() (const VectorType& vec, ScalarType time, CapdUtils::SolutionCurve<MapT>& solution_curve)
     {
         const VectorType e = m_extension_to_4(vec);
         const VectorType v = m_affine_src(e);
@@ -91,10 +91,10 @@ private:
 
     unsigned m_order;
     
-    const Carina::LocalCoordinateSystem<MapT> m_src_coordsys;
-    const Carina::LocalCoordinateSystem<MapT> m_dst_coordsys;
+    const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys;
+    const CapdUtils::LocalCoordinateSystem<MapT> m_dst_coordsys;
 
-    Carina::AffinePoincareMap<MapT> m_affine_poincare
+    CapdUtils::AffinePoincareMap<MapT> m_affine_poincare
     {
         m_vector_field,
         m_order,
@@ -110,10 +110,10 @@ private:
 
     MapT m_projection_to_2
     {
-        Carina::ProjectionMap<MapT>::create( 4, { 0, 1 } )
+        CapdUtils::ProjectionMap<MapT>::create( 4, { 0, 1 } )
     };
 
-    Carina::CompositeMap<MapT,
+    CapdUtils::CompositeMap<MapT,
         decltype(m_extension_to_4)&,
         decltype(m_affine_poincare)&,
         decltype(m_projection_to_2)&> m_affine_poincare_2
@@ -123,12 +123,12 @@ private:
         std::ref(m_projection_to_2)
     };
 
-    Carina::AffineMap<MapT> m_affine_src
+    CapdUtils::AffineMap<MapT> m_affine_src
     {
         m_src_coordsys
     };
 
-    Carina::TimemapWrapper<MapT> m_timemap
+    CapdUtils::TimemapWrapper<MapT> m_timemap
     {
         m_vector_field,
         0.0,

@@ -27,7 +27,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    using Coordsys = Carina::LocalCoordinateSystem<MapT>;
+    using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
     static_assert(std::is_same<MapT, RMap>::value);
 
@@ -111,12 +111,12 @@ private:
         const ScalarType expansion_factor_pos = std::pow( total_expansion_factor_pos, 1.0 / poincare_pos_list.size() );
         const ScalarType expansion_factor_neg = std::pow( total_expansion_factor_neg, 1.0 / poincare_neg_list.size() );
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "homoclinic_orbit_average_expansion_factor_pos.txt",
             "Average expansion factor along homoclinic orbit (positive direction)",
             expansion_factor_pos);
 
-        Carina::VariablePrinter<MapT>::print(
+        CapdUtils::VariablePrinter<MapT>::print(
             "homoclinic_orbit_average_expansion_factor_neg.txt",
             "Average expansion factor along homoclinic orbit (negative direction)",
             expansion_factor_neg);
@@ -160,7 +160,7 @@ private:
     std::list<VectorType> get_unstable_dirs(std::list<LocalPoincare4<MapT>>& poincare_map_list, VectorType v, ScalarType expansion_factor)
     {
         std::list<VectorType> ret {};
-        Carina::MaxNorm<MapT> norm {};
+        CapdUtils::MaxNorm<MapT> norm {};
 
         for (LocalPoincare4<MapT>& poincare_map : poincare_map_list)
         {

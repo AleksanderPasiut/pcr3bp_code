@@ -44,7 +44,7 @@ private:
     LeviCivitaInverseCoordinateChange<MapT> m_rci{ m_setup.get_x(2) };
     MapT m_rcf { LeviCivitaCoordinateChange<MapT>::create(2, m_setup, true, true, false) };
 
-    Carina::MaxNorm<MapT> m_norm {};
+    CapdUtils::MaxNorm<MapT> m_norm {};
 };
 
 }
@@ -112,7 +112,7 @@ TEST(Pcr3bp_basic, coordinate_change_test)
 
     MapT m_lcf { LeviCivitaCoordinateChange<MapT>::create(2, m_setup, true, false, false) };
 
-    Carina::MaxNorm<MapT> m_norm {};
+    CapdUtils::MaxNorm<MapT> m_norm {};
 
     auto test = [m_norm, m_lcf](MapT m_lci, VectorType U, ScalarType precision)
     {

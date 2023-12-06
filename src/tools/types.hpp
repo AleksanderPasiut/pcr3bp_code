@@ -10,13 +10,13 @@
 namespace Ursa
 {
 
-using Real = Carina::Real;
-using RVector = Carina::RVector;
-using RMatrix = Carina::RMatrix;
-using RMap = Carina::RMap;
-using Interval = Carina::Interval;
-using IVector = Carina::IVector;
-using IMatrix = Carina::IMatrix;
-using IMap = Carina::IMap;
+using Real = CapdUtils::Real;
+using RVector = CapdUtils::RVector;
+using RMatrix = CapdUtils::RMatrix;
+using RMap = CapdUtils::RMap;
+using Interval = CapdUtils::Interval;
+using IVector = CapdUtils::IVector;
+using IMatrix = CapdUtils::IMatrix;
+using IMap = CapdUtils::IMap;
 
 }

@@ -89,7 +89,7 @@ private:
         }
     }
 
-    Carina::SolutionCurve<RMap>& get_solution(const RegEvolutionParam& param)
+    CapdUtils::SolutionCurve<RMap>& get_solution(const RegEvolutionParam& param)
     {
         const RVector U0 = { param.u0, param.v0, param.pu0, param.pv0, param.h };
 
@@ -102,8 +102,8 @@ private:
     Lyra::Core2d& m_core_ref;
 
     RMap m_map;
-    Carina::TimemapWrapper<RMap> m_timemap;
-    Carina::SolutionCurve<RMap> m_solution;
+    CapdUtils::TimemapWrapper<RMap> m_timemap;
+    CapdUtils::SolutionCurve<RMap> m_solution;
     SolutionCurveInterpolation<RMap> m_interpolation;
 
     CapdSolutionCurvePointRenderable<RMap, 2> m_renderable_points;
@@ -149,7 +149,7 @@ private:
         }
     }
 
-    Carina::SolutionCurve<RMap>& get_solution(const RegEvolutionParam& param)
+    CapdUtils::SolutionCurve<RMap>& get_solution(const RegEvolutionParam& param)
     {
         const RVector U0 = { param.u0, param.v0, param.pu0, param.pv0, param.h };
 
@@ -162,8 +162,8 @@ private:
     Lyra::Core2d& m_core_ref;
 
     RMap m_map;
-    Carina::TimemapWrapper<RMap> m_timemap;
-    Carina::SolutionCurve<RMap> m_solution;
+    CapdUtils::TimemapWrapper<RMap> m_timemap;
+    CapdUtils::SolutionCurve<RMap> m_solution;
     SolutionCurveInterpolation<RMap> m_interpolation;
 
     class SolutionCurveCoordChange
@@ -171,7 +171,7 @@ private:
     public:
         using VectorType = RVector;
 
-        using Node = Carina::Node;
+        using Node = CapdUtils::Node;
 
         SolutionCurveCoordChange(
             SolutionCurveInterpolation<RMap>& interpolation_ref,
@@ -196,7 +196,7 @@ private:
             
         }, 5, 2, 0};
 
-        Carina::CompositeMap<RMap, RMap&, RMap&> m_composite { std::ref(m_coord_change), std::ref(m_magnify) };
+        CapdUtils::CompositeMap<RMap, RMap&, RMap&> m_composite { std::ref(m_coord_change), std::ref(m_magnify) };
 
     } m_interpolation_with_coord_change;
 

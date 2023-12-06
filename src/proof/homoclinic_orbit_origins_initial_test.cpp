@@ -30,7 +30,7 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
         const auto& homoclinic_orbit_points = homoclinic_orbit_origins_initial_generator.get_points();
         for (auto it = homoclinic_orbit_points.begin(); ;)
         {
-            Carina::BootstrapPrint<MapT>::print(ostr, *it);
+            CapdUtils::BootstrapPrint<MapT>::print(ostr, *it);
 
             ++it;
             if (it != homoclinic_orbit_points.end())
@@ -47,12 +47,12 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
         ostr.close();
     }
 
-    Carina::VariablePrinter<MapT>::print(
+    CapdUtils::VariablePrinter<MapT>::print(
             "homoclinic_orbit_total_expansion_factor_pos.txt",
             "Total expansion factor along homoclinic orbit (positive direction)",
             homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_pos());
 
-    Carina::VariablePrinter<MapT>::print(
+    CapdUtils::VariablePrinter<MapT>::print(
             "homoclinic_orbit_total_expansion_factor_neg.txt",
             "Total expansion factor along homoclinic orbit (negative direction)",
             homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_neg());

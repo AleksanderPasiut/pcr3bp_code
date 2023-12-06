@@ -31,7 +31,7 @@ VectorT convert(const std::array<double, dimension>& input)
 //! @brief convert RVector to array<float>
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<size_t dimension>
-std::array<float, dimension> convert(const Carina::RVector& vector)
+std::array<float, dimension> convert(const CapdUtils::RVector& vector)
 {
     std::array<float, dimension> ret;
     for (size_t i = 0; i < dimension; ++i)
@@ -45,7 +45,7 @@ std::array<float, dimension> convert(const Carina::RVector& vector)
 //! @brief convert IVector to array<float>
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<size_t dimension>
-std::array<float, dimension> convert(const Carina::IVector& vector)
+std::array<float, dimension> convert(const CapdUtils::IVector& vector)
 {
     std::array<float, dimension> ret;
     for (size_t i = 0; i < dimension; ++i)
@@ -60,7 +60,7 @@ std::array<float, dimension> convert(const Carina::IVector& vector)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<size_t dimension>
 Leo::RulerSet<dimension> convert_to_ruler_set(
-    const Carina::IVector& vector,
+    const CapdUtils::IVector& vector,
     size_t count,
     size_t subcount)
 {
@@ -84,7 +84,7 @@ class CapdSolutionCurveRenderable : public Lyra::ManifoldInterface<1, image_dime
 {
 public:
     CapdSolutionCurveRenderable(
-        const Carina::SolutionCurve<MapT>& curve,
+        const CapdUtils::SolutionCurve<MapT>& curve,
         double minimum,
         double maximum,
         size_t points,
@@ -109,7 +109,7 @@ public:
     }
 
 private:
-    const Carina::SolutionCurve<MapT>& m_curve;
+    const CapdUtils::SolutionCurve<MapT>& m_curve;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ class CapdSolutionCurvePointRenderable : public Lyra::ManifoldInterface<0, image
 public:
     CapdSolutionCurvePointRenderable(
         Lyra::CoreObjects<image_dimension>& objects,
-        const Carina::SolutionCurve<MapT>& curve,
+        const CapdUtils::SolutionCurve<MapT>& curve,
         double minimum,
         double maximum,
         size_t points,
@@ -143,7 +143,7 @@ public:
     }
 
 private:
-    const Carina::SolutionCurve<MapT>& m_curve;
+    const CapdUtils::SolutionCurve<MapT>& m_curve;
 
     Leo::Ruler<> m_ruler;
 };
@@ -157,7 +157,7 @@ class CapdSolutionCurveWithCchngRenderable : public Lyra::ManifoldInterface<1, i
 {
 public:
     CapdSolutionCurveWithCchngRenderable(
-        const Carina::SolutionCurve<MapT>& curve,
+        const CapdUtils::SolutionCurve<MapT>& curve,
         MapT cchng,
         double minimum,
         double maximum,
@@ -185,7 +185,7 @@ public:
 
 private:
     MapT m_cchng;
-    const Carina::SolutionCurve<MapT>& m_curve;
+    const CapdUtils::SolutionCurve<MapT>& m_curve;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +363,7 @@ public:
 
     CapdMapIntervalRenderable(
         MapT& map,
-        const Carina::IVector& ivector,
+        const CapdUtils::IVector& ivector,
         size_t count,
         size_t subcount,
         Leo::Color color)

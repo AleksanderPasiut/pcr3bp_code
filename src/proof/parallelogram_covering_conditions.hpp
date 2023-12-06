@@ -21,8 +21,8 @@ struct ParallelogramCoveringConditions
 
     ParallelogramCoveringConditions(MatrixType mat)
     {
-        phi = Carina::scalar_cast<double>(mat(1,1));
-        theta = Carina::scalar_cast<double>(mat(2,2));
+        phi = CapdUtils::scalar_cast<double>(mat(1,1));
+        theta = CapdUtils::scalar_cast<double>(mat(2,2));
 
         auto abs = [](ScalarType iv) -> double
         {
@@ -73,19 +73,19 @@ struct ParallelogramCoveringConditions
 
         if (fs)
         {
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient phi", phi);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient theta", theta);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient c", c);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient beta", beta);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient p", p);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient phi'", phi_prim);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient theta'", theta_prim);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient c'", c_prim);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient delta", delta);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_min", alpha_min);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha_max", alpha_max);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient alpha", alpha);
-            Carina::VariablePrinter<MapT>::print(fs, "Coefficient b_hat", b_hat);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient phi", phi);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient theta", theta);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient c", c);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient beta", beta);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient p", p);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient phi'", phi_prim);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient theta'", theta_prim);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient c'", c_prim);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient delta", delta);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient alpha_min", alpha_min);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient alpha_max", alpha_max);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient alpha", alpha);
+            CapdUtils::VariablePrinter<MapT>::print(fs, "Coefficient b_hat", b_hat);
 
             fs.close();
         }
