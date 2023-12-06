@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <carina/capd/solution_curve.hpp>
-#include <carina/capd/basic_tools.hpp>
-#include <carina/concat.hpp>
-#include <carina/gauss.hpp>
-#include <carina/type_cast.hpp>
+#include <capd_utils/capd/solution_curve.hpp>
+#include <capd_utils/capd/basic_tools.hpp>
+#include <capd_utils/concat.hpp>
+#include <capd_utils/gauss.hpp>
+#include <capd_utils/type_cast.hpp>
 
 namespace Ursa
 {

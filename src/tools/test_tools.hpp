@@ -5,8 +5,8 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <carina/capd/basic_tools.hpp>
-#include <carina/capd/norm.hpp>
+#include <capd_utils/capd/basic_tools.hpp>
+#include <capd_utils/capd/norm.hpp>
 
 #include "types.hpp"
 

@@ -5,8 +5,8 @@
 #pragma once
 
 #include <lyra/core2d.hpp>
-#include <carina/timemap_wrapper.hpp>
-#include <carina/composite_map.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
+#include <capd_utils/composite_map.hpp>
 
 #include "tools/test_tools.hpp"
 #include "tools/direction.hpp"

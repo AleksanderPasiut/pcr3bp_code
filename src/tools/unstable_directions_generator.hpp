@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <carina/gauss.hpp>
+#include <capd_utils/gauss.hpp>
 
 #include "power_iteration.hpp"
 

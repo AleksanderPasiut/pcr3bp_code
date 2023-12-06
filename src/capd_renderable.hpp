@@ -7,8 +7,8 @@
 #include <lyra/core2d.hpp>
 #include <lyra/core3d.hpp>
 
-#include <carina/capd/basic_types.hpp>
-#include <carina/capd/solution_curve.hpp>
+#include <capd_utils/capd/basic_types.hpp>
+#include <capd_utils/capd/solution_curve.hpp>
 
 namespace Ursa
 {

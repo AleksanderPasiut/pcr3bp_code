@@ -6,8 +6,8 @@
 
 #include "pcr3bp_reg_basic_objects.hpp"
 
-#include <carina/poincare_wrapper.hpp>
-#include <carina/timemap_wrapper.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
 
 #include "homoclinic_orbit_origins_initial.hpp"
 

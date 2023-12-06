@@ -3,8 +3,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "tools/test_tools.hpp"
-#include <carina/capd/norm.hpp>
-#include <carina/timemap_wrapper.hpp>
+#include <capd_utils/capd/norm.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
 #include "pcr3bp_basic/standard_system.hpp"
 
 namespace Ursa

@@ -9,8 +9,8 @@
 
 #include "types.hpp"
 
-#include <carina/type_cast.hpp>
-#include <carina/readable_scalar.hpp>
+#include <capd_utils/type_cast.hpp>
+#include <capd_utils/readable_scalar.hpp>
 
 namespace Carina
 {

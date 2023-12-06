@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <carina/capd/basic_types.hpp>
-#include <carina/map_base.hpp>
+#include <capd_utils/capd/basic_types.hpp>
+#include <capd_utils/map_base.hpp>
 
 namespace Ursa
 {

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <carina/composite_map.hpp>
+#include <capd_utils/composite_map.hpp>
 
 #include <pcr3bp_basic/setup_parameters.hpp>
 #include <pcr3bp_basic/standard_system.hpp>

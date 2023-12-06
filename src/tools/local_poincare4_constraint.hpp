@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <carina/composite_map.hpp>
-#include <carina/affine_map.hpp>
-#include <carina/image_sum.hpp>
-#include <carina/local_poincare_wrapper.hpp>
+#include <capd_utils/composite_map.hpp>
+#include <capd_utils/affine_map.hpp>
+#include <capd_utils/image_sum.hpp>
+#include <capd_utils/local_poincare_wrapper.hpp>
 
 #include "id_with_constraint.hpp"
 

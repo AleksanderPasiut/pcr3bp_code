@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <carina/map_base.hpp>
-#include <carina/poincare_wrapper.hpp>
+#include <capd_utils/map_base.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
 
 #include <pcr3bp_basic/regularized_system.hpp>
 

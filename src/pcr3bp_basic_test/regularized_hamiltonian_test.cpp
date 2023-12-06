@@ -7,7 +7,7 @@
 #include "pcr3bp_basic/standard_system.hpp"
 #include "pcr3bp_basic/regularized_system.hpp"
 
-#include <carina/projection_map.hpp>
+#include <capd_utils/projection_map.hpp>
 
 namespace Ursa
 {

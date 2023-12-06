@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <carina/local_coordinate_system.hpp>
-#include <carina/gauss.hpp>
+#include <capd_utils/local_coordinate_system.hpp>
+#include <capd_utils/gauss.hpp>
 
 namespace Carina
 {

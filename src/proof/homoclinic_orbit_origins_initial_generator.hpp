@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <carina/enp_map.hpp>
-#include <carina/parallel_shooting/parallel_shooting.hpp>
+#include <capd_utils/enp_map.hpp>
+#include <capd_utils/parallel_shooting/parallel_shooting.hpp>
 
 #include <tools/auxiliary_functions.hpp>
 #include "periodic_orbit_coordsys_generator.hpp"

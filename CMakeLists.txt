@@ -12,7 +12,7 @@ function(plot_component SLAVE_NAME SOURCE_FILE)
     add_executable(${SLAVE_NAME} ${SOURCE_FILE})
     target_include_directories(${SLAVE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(${SLAVE_NAME} PRIVATE taurus)
-    target_link_libraries(${SLAVE_NAME} PRIVATE carina)
+    target_link_libraries(${SLAVE_NAME} PRIVATE capd_utils)
 
 endfunction()
 
@@ -43,11 +43,11 @@ list(APPEND SOURCES_LIST ${SOURCES_LIST_PROOF})
 add_executable(${PROJECT_NAME} ${SOURCES_LIST})
 
 add_dependencies(${PROJECT_NAME} gtest)
-add_dependencies(${PROJECT_NAME} carina)
+add_dependencies(${PROJECT_NAME} capd_utils)
 add_dependencies(${PROJECT_NAME} taurus)
 
 add_subdirectory(src/googletest)
-add_subdirectory(src/carina)
+add_subdirectory(src/capd_utils)
 add_subdirectory(src/bluesky)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -59,8 +59,8 @@ link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/lib)
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest)
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest_main)
 
-# link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/carina)
-target_link_libraries(${PROJECT_NAME} PRIVATE carina)
+# link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/capd_utils)
+target_link_libraries(${PROJECT_NAME} PRIVATE capd_utils)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE taurus)
 

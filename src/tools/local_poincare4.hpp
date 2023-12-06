@@ -6,11 +6,11 @@
 
 #include "tools/test_tools.hpp"
 
-#include <carina/poincare_wrapper.hpp>
-#include <carina/timemap_wrapper.hpp>
-#include <carina/extension_map.hpp>
-#include <carina/projection_map.hpp>
-#include <carina/constrained_function.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
+#include <capd_utils/extension_map.hpp>
+#include <capd_utils/projection_map.hpp>
+#include <capd_utils/constrained_function.hpp>
 
 #include "id_with_constraint.hpp"
 #include "affine_poincare_map.hpp"
