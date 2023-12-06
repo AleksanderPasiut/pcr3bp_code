@@ -1,6 +1,3 @@
-[submodule "src/carina"]
-	path = src/carina
-	url = https://github.com/AleksanderPasiut/carina
 [submodule "src/googletest"]
 	path = src/googletest
 	url = https://github.com/google/googletest
