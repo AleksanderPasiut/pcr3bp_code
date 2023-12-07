@@ -47,6 +47,7 @@ public:
         const MatrixType dirs = m_local_coord[0].get_directions_matrix();
         print_var( dirs );
         
+        if (false)
         {
             CapdUtils::TimemapWrapper timemap( m_basic_objects.m_vf_reg_pos2, m_basic_objects.m_lyapunov_orbit_period, m_basic_objects.m_order );
 
@@ -69,6 +70,7 @@ public:
             print_var(unstable_dir_projected);
         }
 
+        if (false)
         {
             CapdUtils::TimemapWrapper timemap_pos( m_basic_objects.m_vf_reg_pos2, m_basic_objects.m_lyapunov_orbit_period / 2, m_basic_objects.m_order );
             CapdUtils::TimemapWrapper timemap_neg( m_basic_objects.m_vf_reg_neg2, m_basic_objects.m_lyapunov_orbit_period / 2, m_basic_objects.m_order );
@@ -94,6 +96,74 @@ public:
             print_var(unstable_dir_projected);
         }
 
+        {
+            CapdUtils::AffinePoincareMap poincare_1_pos(
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(0),
+                m_initial_coordsys.at(1));
+
+            CapdUtils::AffinePoincareMap poincare_2_pos(
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(1),
+                m_initial_coordsys.at(2));
+
+            CapdUtils::AffinePoincareMap poincare_3_pos(
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(2),
+                m_initial_coordsys.at(3));
+            
+            CapdUtils::AffinePoincareMap poincare_0_pos(
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(3),
+                m_initial_coordsys.at(0));
+            
+            CapdUtils::CompositeMap<MapT,
+                decltype(poincare_1_pos)&,
+                decltype(poincare_2_pos)&,
+                decltype(poincare_3_pos)&,
+                decltype(poincare_0_pos)&> poincare_total(
+                    std::ref(poincare_1_pos),
+                    std::ref(poincare_2_pos),
+                    std::ref(poincare_3_pos),
+                    std::ref(poincare_0_pos));
+
+            MatrixType der {};
+            auto x1 = poincare_total( VectorType{ 0.0, 0.0, 0.0, 0.0 }, der );
+            print_var(x1);
+
+            print_var( der );
+
+            const VectorType unstable_dir = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            print_var(unstable_dir);
+
+            const VectorType unstable_dir_aligned = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir;
+            print_var( unstable_dir_aligned );
+
+
+            // VectorType x0 = m_local_coord[0].get_origin();
+            // print_var( x0 );
+
+            // MatrixType der_pos(4, 4);
+            // timemap_pos( x0, der_pos );
+
+            // MatrixType der_neg(4, 4);
+            // timemap_neg( x0, der_neg );
+
+            // const MatrixType der = CapdUtils::gaussInverseMatrix<MapT>(der_neg) * der_pos;
+
+            // const VectorType v3 = CapdUtils::Extract<MapT>::get_vvector(dirs, 3);
+            // const VectorType v4 = CapdUtils::Extract<MapT>::get_vvector(dirs, 4);
+
+            // const VectorType unstable_dir = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            // print_var(unstable_dir);
+
+            // const VectorType unstable_dir_projected = unstable_dir - v3 * capd::vectalg::scalarProduct(v3, unstable_dir) - v4 * capd::vectalg::scalarProduct(v4, unstable_dir);
+            // print_var(unstable_dir_projected);
+        }
 
 
         
