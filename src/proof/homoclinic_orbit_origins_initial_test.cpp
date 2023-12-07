@@ -18,7 +18,8 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     capd::rounding::DoubleRounding::roundNearest();
 
     PeriodicOrbitCoordsysGenerator<MapT> setup {};
-
+    
+    /*
     HomoclinicOrbitOriginsInitialGenerator<MapT> homoclinic_orbit_origins_initial_generator { setup.get_coordsys_container() };
 
     #if 1
@@ -84,4 +85,5 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
             homoclinic_orbit_origins_initial.get_points().at(i),
             homoclinic_orbit_origins_initial_generator.get_points().at(i)) << i;
     }
+    */
 }

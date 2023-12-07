@@ -43,39 +43,94 @@ public:
 
     PeriodicOrbitCoordsysGenerator()
     {
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_total_expansion_factor_pos.txt",
-            "Total expansion factor along periodic orbit (positive direction)",
-            m_unstable_dir_gen.get_expansion_pos_factor());
+        std::cout.precision(15);
+        const MatrixType dirs = m_local_coord[0].get_directions_matrix();
+        print_var( dirs );
+        
+        {
+            CapdUtils::TimemapWrapper timemap( m_basic_objects.m_vf_reg_pos2, m_basic_objects.m_lyapunov_orbit_period, m_basic_objects.m_order );
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_total_expansion_factor_neg.txt",
-            "Total expansion factor along periodic orbit (negative direction)",
-            m_unstable_dir_gen.get_expansion_pos_factor());
+            VectorType x0 = m_local_coord[0].get_origin();
+            print_var( x0 );
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_average_expansion_factor_pos.txt",
-            "Average expansion factor along periodic orbit (positive direction)",
-            m_expansion_factor_pos);
+            MatrixType der(4, 4);
+            auto x1 = timemap( x0, der );
+            print_var( x1 );
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_average_expansion_factor_neg.txt",
-            "Average expansion factor along periodic orbit (negative direction)",
-            m_expansion_factor_neg);
+            print_var( der );
 
-        m_local_poincare_pos.at(0)(VectorType(2));
+            const VectorType v3 = CapdUtils::Extract<MapT>::get_vvector(dirs, 3);
+            const VectorType v4 = CapdUtils::Extract<MapT>::get_vvector(dirs, 4);
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_g_0_1_approx_return_time.txt",
-            "Approximate value of return time on underlying Poincare map of g_01 map",
-            m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
+            const VectorType unstable_dir = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            print_var(unstable_dir);
 
-        m_local_poincare_pos.at(1)(VectorType(2));
+            const VectorType unstable_dir_projected = unstable_dir - v3 * capd::vectalg::scalarProduct(v3, unstable_dir) - v4 * capd::vectalg::scalarProduct(v4, unstable_dir);
+            print_var(unstable_dir_projected);
+        }
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "periodic_orbit_g_1_2_approx_return_time.txt",
-            "Approximate value of return time on underlying Poincare map of g_12 map",
-            m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
+        {
+            CapdUtils::TimemapWrapper timemap_pos( m_basic_objects.m_vf_reg_pos2, m_basic_objects.m_lyapunov_orbit_period / 2, m_basic_objects.m_order );
+            CapdUtils::TimemapWrapper timemap_neg( m_basic_objects.m_vf_reg_neg2, m_basic_objects.m_lyapunov_orbit_period / 2, m_basic_objects.m_order );
+
+            VectorType x0 = m_local_coord[0].get_origin();
+            print_var( x0 );
+
+            MatrixType der_pos(4, 4);
+            timemap_pos( x0, der_pos );
+
+            MatrixType der_neg(4, 4);
+            timemap_neg( x0, der_neg );
+
+            const MatrixType der = CapdUtils::gaussInverseMatrix<MapT>(der_neg) * der_pos;
+
+            const VectorType v3 = CapdUtils::Extract<MapT>::get_vvector(dirs, 3);
+            const VectorType v4 = CapdUtils::Extract<MapT>::get_vvector(dirs, 4);
+
+            const VectorType unstable_dir = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            print_var(unstable_dir);
+
+            const VectorType unstable_dir_projected = unstable_dir - v3 * capd::vectalg::scalarProduct(v3, unstable_dir) - v4 * capd::vectalg::scalarProduct(v4, unstable_dir);
+            print_var(unstable_dir_projected);
+        }
+
+
+
+        
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_total_expansion_factor_pos.txt",
+        //     "Total expansion factor along periodic orbit (positive direction)",
+        //     m_unstable_dir_gen.get_expansion_pos_factor());
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_total_expansion_factor_neg.txt",
+        //     "Total expansion factor along periodic orbit (negative direction)",
+        //     m_unstable_dir_gen.get_expansion_pos_factor());
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_average_expansion_factor_pos.txt",
+        //     "Average expansion factor along periodic orbit (positive direction)",
+        //     m_expansion_factor_pos);
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_average_expansion_factor_neg.txt",
+        //     "Average expansion factor along periodic orbit (negative direction)",
+        //     m_expansion_factor_neg);
+
+        // m_local_poincare_pos.at(0)(VectorType(2));
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_g_0_1_approx_return_time.txt",
+        //     "Approximate value of return time on underlying Poincare map of g_01 map",
+        //     m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
+
+        // m_local_poincare_pos.at(1)(VectorType(2));
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_g_1_2_approx_return_time.txt",
+        //     "Approximate value of return time on underlying Poincare map of g_12 map",
+        //     m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
     }
 
     const std::vector<Coordsys>& get_coordsys_container() const
