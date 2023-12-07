@@ -60,6 +60,11 @@ public:
             EXPECT_EQ(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point());
             EXPECT_EQ(image_point, m_basic_objects.m_parameters.get_image_point());
 
+            {
+                const ScalarType lyapunov_orbit_period_diff = capd::abs( (intermediate_time + m_poincare.get_last_evaluation_return_time())*2 - m_basic_objects.m_lyapunov_orbit_period );
+                EXPECT_LT(lyapunov_orbit_period_diff, 1.3e-13);
+            }
+
             const std::string suffix = std::is_same<IMap, MapT>::value ? ".txt" : ".approx.txt";
 
             CapdUtils::VariablePrinter<MapT>::print(
