@@ -6,7 +6,7 @@
 
 #include "tools/test_tools.hpp"
 
-#include "tools/local_poincare4.hpp"
+#include "tools/affine_poincare_map.hpp"
 #include "tools/coordsys4_alignment.hpp"
 #include "tools/variable_printer.hpp"
 
@@ -28,6 +28,8 @@ public:
     using MatrixType = typename MapT::MatrixType;
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
+
+    using AffinePoincareMap = CapdUtils::AffinePoincareMap<MapT>;
 
     static_assert(std::is_same<MapT, RMap>::value);
 
@@ -78,14 +80,13 @@ private:
         ScalarType total_expansion_factor_pos,
         ScalarType total_expansion_factor_neg)
     {
-        std::list<LocalPoincare4<MapT>> poincare_pos_list {};
+        std::list<AffinePoincareMap> poincare_pos_list {};
         {
             auto it = homoclinic_orbit_coordsys_initial.begin();
             for (auto jt = std::next(it, 1); jt != homoclinic_orbit_coordsys_initial.end(); ++it, ++jt )
             {
                 poincare_pos_list.emplace_back(
                     std::ref(m_basic_objects.m_vf_reg_pos2),
-                    std::ref(m_basic_objects.m_hamiltonian_reg2),
                     m_basic_objects.m_order,
                     *it,
                     *jt
@@ -93,14 +94,13 @@ private:
             }
         }
 
-        std::list<LocalPoincare4<MapT>> poincare_neg_list {};
+        std::list<AffinePoincareMap> poincare_neg_list {};
         {
             auto it = homoclinic_orbit_coordsys_initial.rbegin();
             for (auto jt = std::next(it, 1); jt != homoclinic_orbit_coordsys_initial.rend(); ++it, ++jt )
             {
                 poincare_neg_list.emplace_back(
                     std::ref(m_basic_objects.m_vf_reg_neg2),
-                    std::ref(m_basic_objects.m_hamiltonian_reg2),
                     m_basic_objects.m_order,
                     *it,
                     *jt
@@ -121,8 +121,8 @@ private:
             "Average expansion factor along homoclinic orbit (negative direction)",
             expansion_factor_neg);
 
-        const std::list<VectorType> unstable_dirs_pos_2d = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0 }, expansion_factor_pos);
-        const std::list<VectorType> unstable_dirs_neg_2d = get_unstable_dirs(poincare_neg_list, VectorType{ 0.0, 1.0 }, expansion_factor_neg);
+        const std::list<VectorType> unstable_dirs_pos = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0, 0.0, 0.0 }, expansion_factor_pos);
+        const std::list<VectorType> unstable_dirs_neg = get_unstable_dirs(poincare_neg_list, VectorType{ 0.0, 1.0, 0.0, 0.0 }, expansion_factor_neg);
         
         std::vector<Coordsys> ret {};
         ret.reserve(30);
@@ -132,22 +132,22 @@ private:
 
         size_t index = 1;
 
-        auto it_pos = unstable_dirs_pos_2d.begin();
-        auto it_neg = std::next(unstable_dirs_neg_2d.rbegin(), 1);
+        auto it_pos = unstable_dirs_pos.begin();
+        auto it_neg = std::next(unstable_dirs_neg.rbegin(), 1);
         for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg, ++index)
         {
             const Coordsys& cs_init = *it;
-            const VectorType& p = *it_pos;
-            const VectorType& n = *it_neg;
+            const VectorType& p = cs_init.get_directions_matrix() * (*it_pos);
+            const VectorType& n = cs_init.get_directions_matrix() * (*it_neg);
 
             if (index == 14)
             {
-                Coordsys cs = Coordsys4_Alignment<MapT>::align_with_s_symmetry( cs_init, p );
+                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry( cs_init, p );
                 ret.push_back( cs );
             }
             else
             {
-                Coordsys cs = Coordsys4_Alignment<MapT>::align( cs_init, p, n );
+                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs( cs_init, p, n );
                 ret.push_back( cs );
             }
         }
@@ -157,15 +157,15 @@ private:
         return ret;
     }
 
-    std::list<VectorType> get_unstable_dirs(std::list<LocalPoincare4<MapT>>& poincare_map_list, VectorType v, ScalarType expansion_factor)
+    std::list<VectorType> get_unstable_dirs(std::list<AffinePoincareMap>& poincare_map_list, VectorType v, ScalarType expansion_factor)
     {
         std::list<VectorType> ret {};
         CapdUtils::MaxNorm<MapT> norm {};
 
-        for (LocalPoincare4<MapT>& poincare_map : poincare_map_list)
+        for (AffinePoincareMap& poincare_map : poincare_map_list)
         {
-            MatrixType der(2,2);
-            const VectorType val = poincare_map( VectorType(2), der );
+            MatrixType der(4,4);
+            const VectorType val = poincare_map( VectorType(4), der );
 
             assert_with_exception( norm(val) < 9.7e-12 );
 

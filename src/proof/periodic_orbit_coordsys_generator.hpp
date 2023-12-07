@@ -104,10 +104,8 @@ public:
                 std::ref(poincare_0_pos)
             };
 
-            const VectorType zero4 = VectorType{ 0.0, 0.0, 0.0, 0.0 };
-
             MatrixType der {};
-            auto x1 = poincare_total( zero4, der );
+            auto x1 = poincare_total( VectorType(4), der );
             print_var(x1);
 
             print_var( der );
@@ -131,13 +129,13 @@ public:
             
 
             MatrixType der1 {};
-            print_var( poincare_1_pos(zero4, der1) );
+            print_var( poincare_1_pos(VectorType(4), der1) );
             const VectorType unstable_dir_w1_local = (der1 * unstable_dir_w0_local) / expansion_factor;
             const VectorType unstable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * unstable_dir_w1_local;
             print_var( unstable_dir_w1 );
 
             MatrixType der2 {};
-            print_var( poincare_2_pos(zero4, der2) );
+            print_var( poincare_2_pos(VectorType(4), der2) );
             const VectorType unstable_dir_w2_local = (der2 * unstable_dir_w1_local) / expansion_factor;
             const VectorType unstable_dir_w2 = m_initial_coordsys.at(2).get_directions_matrix() * unstable_dir_w2_local;
             print_var( unstable_dir_w2 );
@@ -152,7 +150,7 @@ public:
             print_var( stable_dir_w2_local );
 
             MatrixType der1_neg {};
-            print_var( poincare_1_neg(zero4, der1_neg) );
+            print_var( poincare_1_neg(VectorType(4), der1_neg) );
             const VectorType stable_dir_w1_local = (der1_neg * stable_dir_w2_local) / expansion_factor;
             const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
             print_var( stable_dir_w1 );
