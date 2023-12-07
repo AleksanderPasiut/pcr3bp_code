@@ -157,7 +157,7 @@ public:
 
             m_local_coord.reserve(4);
             m_local_coord.push_back(
-                Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric(
                     m_initial_coordsys.at(0),
                     unstable_dir_w0));
             
@@ -168,7 +168,7 @@ public:
                     stable_dir_w1));
 
             m_local_coord.push_back(
-                Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric(
                     m_initial_coordsys.at(2),
                     unstable_dir_w2));
 

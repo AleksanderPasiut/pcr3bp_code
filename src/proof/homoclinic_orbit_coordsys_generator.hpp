@@ -142,7 +142,7 @@ private:
 
             if (index == 14)
             {
-                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry( cs_init, p );
+                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric( cs_init, p );
                 ret.push_back( cs );
             }
             else

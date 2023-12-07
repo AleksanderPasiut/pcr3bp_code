@@ -57,7 +57,7 @@ public:
     //! @brief Replace first two vectors (columns) in the coordsys direction matrix with given vectors
     //! @details Ensures that the result coordinate system is s-symmetric
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    static Coordsys replace_unstable_dirs_with_s_symmetry(Coordsys arg, VectorType unstable_pos)
+    static Coordsys replace_unstable_dirs_and_make_S_backsymmetric(Coordsys arg, VectorType unstable_pos)
     {
         assert_with_exception(arg.get_origin().dimension() == 4);
         assert_with_exception(unstable_pos.dimension() == 4);
