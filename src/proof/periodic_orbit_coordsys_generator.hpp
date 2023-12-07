@@ -44,12 +44,12 @@ public:
     PeriodicOrbitCoordsysGenerator()
     {
         std::cout.precision(15);
-        {
-            print_var( m_local_coord[0].get_directions_matrix() );
-            print_var( m_local_coord[1].get_directions_matrix() );
-            print_var( m_local_coord[2].get_directions_matrix() );
-            print_var( m_local_coord[3].get_directions_matrix() );
-        }
+        // {
+        //     print_var( m_local_coord[0].get_directions_matrix() );
+        //     print_var( m_local_coord[1].get_directions_matrix() );
+        //     print_var( m_local_coord[2].get_directions_matrix() );
+        //     print_var( m_local_coord[3].get_directions_matrix() );
+        // }
         
         {
             CapdUtils::AffinePoincareMap poincare_1_pos
@@ -133,7 +133,7 @@ public:
             const VectorType unstable_dir_w0 = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir_w0_local;
             print_var( unstable_dir_w0 );
 
-            print_var( m_unstable_dir_gen.get_expansion_pos_factor() ); 
+            // print_var( m_unstable_dir_gen.get_expansion_pos_factor() ); 
             const VectorType stable_dir_w0 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w0);
             print_var( stable_dir_w0 );
             
@@ -165,8 +165,25 @@ public:
             const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
             print_var( stable_dir_w1 );
 
-
-
+            m_local_coord = std::vector<Coordsys>
+            {
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    m_initial_coordsys.at(0),
+                    unstable_dir_w0,
+                    stable_dir_w0),
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    m_initial_coordsys.at(1),
+                    unstable_dir_w1,
+                    stable_dir_w1),
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    m_initial_coordsys.at(2),
+                    unstable_dir_w2,
+                    stable_dir_w2),
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    m_initial_coordsys.at(3),
+                    AuxiliaryFunctions<MapT>::S_symmetry(stable_dir_w1),
+                    AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w1))
+            };
 
 
 
@@ -236,7 +253,7 @@ public:
     }
 
 private:
-    class UnstableDirsList : public std::list<VectorType>
+    /*class UnstableDirsList : public std::list<VectorType>
     {
     public:
         UnstableDirsList(const std::list<VectorType>& arg)
@@ -244,7 +261,7 @@ private:
             assert_with_exception(arg.size() == 3);
             std::list<VectorType>::operator= (arg);
         }
-    };
+    };*/
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
     RegLyapunovCollisionOrbitParameters<MapT> m_parameters {};
@@ -257,6 +274,7 @@ private:
         Pcr3bp::Reg2_InitialCoordsysGenerator<MapT>::gen(m_basic_objects, m_basic_objects.m_parameters.get_intermediate_point_neg())
     };
 
+    /*
     std::array<LocalPoincare4<MapT>, 3> m_local_poincare_pos
     {
         LocalPoincare4<MapT>
@@ -375,25 +393,25 @@ private:
     const UnstableDirsList m_unstable_neg_dirs_2d
     {
         m_direction_shifting_neg.eval( m_unstable_dir_gen.get_unstable_neg(), { VectorType(2), VectorType(2), VectorType(2) } )
-    };
+    };*/
 
-    const std::vector<Coordsys> m_local_coord
-    {
-        Coordsys4_Alignment<MapT>::align_with_s_symmetry(
-            m_initial_coordsys.at(0),
-            m_unstable_dir_gen.get_unstable_pos()),
-        Coordsys4_Alignment<MapT>::align(
-            m_initial_coordsys.at(1),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 0),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 0)),
-        Coordsys4_Alignment<MapT>::align_with_s_symmetry(
-            m_initial_coordsys.at(2),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 1)),
-        Coordsys4_Alignment<MapT>::align(
-            m_initial_coordsys.at(3),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 2),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 2))
-    };
+    std::vector<Coordsys> m_local_coord {};
+    // {
+    //     Coordsys4_Alignment<MapT>::align_with_s_symmetry(
+    //         m_initial_coordsys.at(0),
+    //         m_unstable_dir_gen.get_unstable_pos()),
+    //     Coordsys4_Alignment<MapT>::align(
+    //         m_initial_coordsys.at(1),
+    //         *std::next(m_unstable_pos_dirs_2d.begin(), 0),
+    //         *std::next(m_unstable_neg_dirs_2d.rbegin(), 0)),
+    //     Coordsys4_Alignment<MapT>::align_with_s_symmetry(
+    //         m_initial_coordsys.at(2),
+    //         *std::next(m_unstable_pos_dirs_2d.begin(), 1)),
+    //     Coordsys4_Alignment<MapT>::align(
+    //         m_initial_coordsys.at(3),
+    //         *std::next(m_unstable_pos_dirs_2d.begin(), 2),
+    //         *std::next(m_unstable_neg_dirs_2d.rbegin(), 2))
+    // };
 };
 
 }
