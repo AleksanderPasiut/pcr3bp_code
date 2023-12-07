@@ -28,6 +28,69 @@ public:
     using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Replace first two vectors (columns) in the coordsys direction matrix with given vectors
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static Coordsys replace_unstable_dirs(Coordsys arg, VectorType unstable_pos, VectorType unstable_neg)
+    {
+        assert_with_exception(arg.get_origin().dimension() == 4);
+        assert_with_exception(unstable_pos.dimension() == 4);
+        assert_with_exception(unstable_neg.dimension() == 4);
+
+        MatrixType new_directions_matrix = CapdUtils::Concat<MapT>::build_matrix_from_vvectors(
+        {
+            unstable_pos,
+            unstable_neg,
+            CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3),
+            CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4)
+        });
+
+        Coordsys ret
+        {
+            arg.get_origin(),
+            new_directions_matrix
+        };
+
+        return ret;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Replace first two vectors (columns) in the coordsys direction matrix with given vectors
+    //! @details Ensures that the result coordinate system is s-symmetric
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static Coordsys replace_unstable_dirs_with_s_symmetry(Coordsys arg, VectorType unstable_pos)
+    {
+        assert_with_exception(arg.get_origin().dimension() == 4);
+        assert_with_exception(unstable_pos.dimension() == 4);
+
+        const VectorType new_origin = { arg.get_origin()[0], 0.0, 0.0, arg.get_origin()[3] };
+
+        const VectorType unstable_neg = AuxiliaryFunctions<MapT>::S_symmetry(unstable_pos);
+
+        const VectorType vf_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
+        const VectorType h_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4);
+
+        const VectorType vf_dir_s_symmetric = { 0.0, vf_dir[1], vf_dir[2], 0.0 };
+        const VectorType h_dir_s_symmetric = { h_dir[0], 0.0, 0.0, h_dir[3] };
+
+        MatrixType new_directions_matrix = CapdUtils::Concat<MapT>::build_matrix_from_vvectors(
+        {
+            unstable_pos,
+            unstable_neg,
+            vf_dir_s_symmetric,
+            h_dir_s_symmetric
+        });
+
+        Coordsys ret
+        {
+            new_origin,
+            new_directions_matrix
+        };
+
+        return ret;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Align the system by replacing first two of its directions with unstable directions
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static Coordsys align(Coordsys arg, VectorType unstable_pos_2d, VectorType unstable_neg_2d)
