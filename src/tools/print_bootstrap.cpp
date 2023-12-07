@@ -17,7 +17,7 @@ void BootstrapPrint<RMap>::print(std::ostream& ostr, const VectorType& vec)
 
     for (int i = 0; ; ++i)
     {
-        ostr << "\tCarina::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<ScalarType>(vec[i])) << "\")";
+        ostr << "\tCapdUtils::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<ScalarType>(vec[i])) << "\")";
 
         if (i+1 < vec.dimension())
         {
@@ -45,7 +45,7 @@ void BootstrapPrint<RMap>::print(std::ostream& ostr, const MatrixType& mat)
     int i = 1;
     for (auto e : mat)
     {
-        ostr << "\tCarina::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<double>(e)) << "\")";
+        ostr << "\tCapdUtils::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<double>(e)) << "\")";
 
         if (i < count)
         {
