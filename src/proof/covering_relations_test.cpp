@@ -413,17 +413,13 @@ private:
                 decltype(poincare)&,
                 decltype(J)&,
                 decltype(Y_inverse)&,
-                decltype(R_inverse)&,
-                decltype(J)&,
-                decltype(J)&> composite
+                decltype(R_inverse)&> composite
             {
                 std::ref(J),
                 std::ref(poincare),
                 std::ref(J),
                 std::ref(Y_inverse),
-                std::ref(R_inverse),
-                std::ref(J),
-                std::ref(J)
+                std::ref(R_inverse)
             };
             
             CoveringRelationCheck cr { composite };
