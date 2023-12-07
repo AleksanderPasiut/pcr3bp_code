@@ -45,64 +45,125 @@ public:
     {
         std::cout.precision(15);
         {
-            const MatrixType dirs = m_local_coord[0].get_directions_matrix();
-            print_var( dirs );
+            print_var( m_local_coord[0].get_directions_matrix() );
+            print_var( m_local_coord[1].get_directions_matrix() );
+            print_var( m_local_coord[2].get_directions_matrix() );
+            print_var( m_local_coord[3].get_directions_matrix() );
         }
         
         {
-            CapdUtils::AffinePoincareMap poincare_1_pos(
+            CapdUtils::AffinePoincareMap poincare_1_pos
+            {
                 m_basic_objects.m_vf_reg_pos2,
                 m_basic_objects.m_order,
                 m_initial_coordsys.at(0),
-                m_initial_coordsys.at(1));
+                m_initial_coordsys.at(1)
+            };
 
-            CapdUtils::AffinePoincareMap poincare_2_pos(
+            CapdUtils::AffinePoincareMap poincare_2_pos
+            {
                 m_basic_objects.m_vf_reg_pos2,
                 m_basic_objects.m_order,
                 m_initial_coordsys.at(1),
-                m_initial_coordsys.at(2));
+                m_initial_coordsys.at(2)
+            };
 
-            CapdUtils::AffinePoincareMap poincare_3_pos(
+            CapdUtils::AffinePoincareMap poincare_3_pos
+            {
                 m_basic_objects.m_vf_reg_pos2,
                 m_basic_objects.m_order,
                 m_initial_coordsys.at(2),
-                m_initial_coordsys.at(3));
+                m_initial_coordsys.at(3)
+            };
             
-            CapdUtils::AffinePoincareMap poincare_0_pos(
+            CapdUtils::AffinePoincareMap poincare_0_pos
+            {
                 m_basic_objects.m_vf_reg_pos2,
                 m_basic_objects.m_order,
                 m_initial_coordsys.at(3),
-                m_initial_coordsys.at(0));
+                m_initial_coordsys.at(0)
+            };
+            
+            CapdUtils::AffinePoincareMap poincare_1_neg
+            {
+                m_basic_objects.m_vf_reg_neg2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(2),
+                m_initial_coordsys.at(1)
+            };
+
+            CapdUtils::AffinePoincareMap poincare_0_neg
+            {
+                m_basic_objects.m_vf_reg_neg2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(1),
+                m_initial_coordsys.at(0)
+            };
             
             CapdUtils::CompositeMap<MapT,
                 CapdUtils::AffinePoincareMap<MapT>&,
                 CapdUtils::AffinePoincareMap<MapT>&,
                 CapdUtils::AffinePoincareMap<MapT>&,
-                CapdUtils::AffinePoincareMap<MapT>&> poincare_total(
-                    std::ref(poincare_1_pos),
-                    std::ref(poincare_2_pos),
-                    std::ref(poincare_3_pos),
-                    std::ref(poincare_0_pos));
+                CapdUtils::AffinePoincareMap<MapT>&> poincare_total
+            {
+                std::ref(poincare_1_pos),
+                std::ref(poincare_2_pos),
+                std::ref(poincare_3_pos),
+                std::ref(poincare_0_pos)
+            };
+
+            const VectorType zero4 = VectorType{ 0.0, 0.0, 0.0, 0.0 };
 
             MatrixType der {};
-            auto x1 = poincare_total( VectorType{ 0.0, 0.0, 0.0, 0.0 }, der );
+            auto x1 = poincare_total( zero4, der );
             print_var(x1);
 
             print_var( der );
 
-            const VectorType unstable_dir = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
-            print_var( unstable_dir );
-            print_var( der * unstable_dir );
+            const VectorType unstable_dir_w0_local = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            print_var( unstable_dir_w0_local );
+            print_var( der * unstable_dir_w0_local );
 
-            print_var( unstable_dir.euclNorm() );
-            print_var( (der * unstable_dir).euclNorm() );
+            print_var( unstable_dir_w0_local.euclNorm() );
+            print_var( (der * unstable_dir_w0_local).euclNorm() );
 
-            const VectorType unstable_dir_aligned = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir;
-            print_var( unstable_dir_aligned );
+            const ScalarType expansion_factor = std::pow( (der * unstable_dir_w0_local).euclNorm(), 0.25 );
+            print_var(expansion_factor);
+
+            const VectorType unstable_dir_w0 = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir_w0_local;
+            print_var( unstable_dir_w0 );
 
             print_var( m_unstable_dir_gen.get_expansion_pos_factor() ); 
-            const VectorType stable_dir_aligned = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_aligned);
-            print_var( stable_dir_aligned );
+            const VectorType stable_dir_w0 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w0);
+            print_var( stable_dir_w0 );
+            
+
+            MatrixType der1 {};
+            print_var( poincare_1_pos(zero4, der1) );
+            const VectorType unstable_dir_w1_local = (der1 * unstable_dir_w0_local) / expansion_factor;
+            const VectorType unstable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * unstable_dir_w1_local;
+            print_var( unstable_dir_w1 );
+
+            MatrixType der2 {};
+            print_var( poincare_2_pos(zero4, der2) );
+            const VectorType unstable_dir_w2_local = (der2 * unstable_dir_w1_local) / expansion_factor;
+            const VectorType unstable_dir_w2 = m_initial_coordsys.at(2).get_directions_matrix() * unstable_dir_w2_local;
+            print_var( unstable_dir_w2 );
+
+            const VectorType stable_dir_w2 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w2);
+            print_var( stable_dir_w2 );
+
+            MatrixType w2_initial_dirs = m_initial_coordsys.at(2).get_directions_matrix();
+            w2_initial_dirs.Transpose();
+
+            const VectorType stable_dir_w2_local = w2_initial_dirs * stable_dir_w2;
+            print_var( stable_dir_w2_local );
+
+            MatrixType der1_neg {};
+            print_var( poincare_1_neg(zero4, der1_neg) );
+            const VectorType stable_dir_w1_local = (der1_neg * stable_dir_w2_local) / expansion_factor;
+            const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
+            print_var( stable_dir_w1 );
 
 
 
