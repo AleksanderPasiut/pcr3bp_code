@@ -12,7 +12,7 @@
 #include <proof/homoclinic_orbit_origins_generator.hpp>
 #include <pcr3bp_basic/levi_civita_coordinate_change.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoordinateSystemsOrigins

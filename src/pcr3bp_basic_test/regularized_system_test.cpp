@@ -12,7 +12,7 @@
 #include "pcr3bp_basic/standard_system.hpp"
 #include "pcr3bp_basic/regularized_system.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,15 +67,15 @@ static void compare_with_standard_flow_at_point()
 
 TEST(Pcr3bp_basic, point_compare_regular_flow_at_1_with_standard_flow)
 {
-    Ursa::compare_with_standard_flow_at_point<1>();
+    Pcr3bpProof::compare_with_standard_flow_at_point<1>();
 }
 
 TEST(Pcr3bp_basic, point_compare_regular_flow_at_2_with_standard_flow)
 {
-    Ursa::compare_with_standard_flow_at_point<2>();
+    Pcr3bpProof::compare_with_standard_flow_at_point<2>();
 }
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ namespace Ursa
 //! @param mu_index index of mass at which the regularization takes place
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<size_t mu_index>
-static void compare_with_standard_flow(Ursa::TimemapTestParams param)
+static void compare_with_standard_flow(Pcr3bpProof::TimemapTestParams param)
 {
     using ScalarType = CapdUtils::Interval;
     using VectorType = CapdUtils::IVector;
@@ -134,95 +134,95 @@ static void compare_with_standard_flow(Ursa::TimemapTestParams param)
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_1)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.1, 0.1, 1.1, 0.0, 0.0 };
     param.time = 0.1;
     param.precision = 1.5e-14;
-    Ursa::compare_with_standard_flow<1>(param);
+    Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_2)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.1, 2.1, 0.1, 1.1, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 1.9e-12;
-    Ursa::compare_with_standard_flow<1>(param);
+    Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_3)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -1.1, 0.5, 0.5, -0.5, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 1.8e-10;
-    Ursa::compare_with_standard_flow<1>(param);
+    Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_4)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = {  0.0, 0.5, 1.5, -1.5, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 2.9e-13;
-    Ursa::compare_with_standard_flow<1>(param);
+    Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_5)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.0, 0.5, 1.0, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 7.0e-13;
-    Ursa::compare_with_standard_flow<1>(param);
+    Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_2_with_standard_flow_1)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.1, 0.1, 1.1, 0.0, 0.0 };
     param.time = 0.1;
     param.precision = 3.2e-14;
-    Ursa::compare_with_standard_flow<2>(param);
+    Pcr3bpProof::compare_with_standard_flow<2>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_2_with_standard_flow_2)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.1, 2.1, 0.1, 1.1, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 4.4e-12;
-    Ursa::compare_with_standard_flow<2>(param);
+    Pcr3bpProof::compare_with_standard_flow<2>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_2_with_standard_flow_3)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -1.1, 0.5, 0.5, -0.5, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 6.9e-12;
-    Ursa::compare_with_standard_flow<2>(param);
+    Pcr3bpProof::compare_with_standard_flow<2>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_2_with_standard_flow_4)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = {  0.0, 0.5, 1.5, -1.5, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 4.6e-12;
-    Ursa::compare_with_standard_flow<2>(param);
+    Pcr3bpProof::compare_with_standard_flow<2>(param);
 }
 
 TEST(Pcr3bp_basic, compare_regular_flow_at_2_with_standard_flow_5)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.0, 0.5, 1.0, 0.0, 0.0 };
     param.time = 0.5;
     param.precision = 8.5e-11;
-    Ursa::compare_with_standard_flow<2>(param);
+    Pcr3bpProof::compare_with_standard_flow<2>(param);
 }
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,7 @@ namespace Ursa
 //! @param mu_index index of mass at which the regularization takes place
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<size_t mu_index>
-void evolve_forward_and_backward(Ursa::TimemapTestParams param)
+void evolve_forward_and_backward(Pcr3bpProof::TimemapTestParams param)
 {
     using ScalarType = CapdUtils::Interval;
     using VectorType = CapdUtils::IVector;
@@ -268,18 +268,18 @@ void evolve_forward_and_backward(Ursa::TimemapTestParams param)
 
 TEST(Pcr3bp_basic, reg_flow_at_1_forward_and_backward_evolution)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.0, 0.5, 1.0, 0.0 };
     param.time = 0.1;
     param.precision = 7.8e-15;
-    Ursa::evolve_forward_and_backward<1>(param);
+    Pcr3bpProof::evolve_forward_and_backward<1>(param);
 }
 
 TEST(Pcr3bp_basic, reg_flow_at_2_forward_and_backward_evolution)
 {
-    Ursa::TimemapTestParams param;
+    Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.1, 0.1, 1.1, 0.0 };
     param.time = 0.1;
     param.precision = 1.3e-14;
-    Ursa::evolve_forward_and_backward<2>(param);
+    Pcr3bpProof::evolve_forward_and_backward<2>(param);
 }

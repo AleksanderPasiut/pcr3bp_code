@@ -17,7 +17,7 @@
 #include "pcr3bp_basic/regularized_system.hpp"
 #include "pcr3bp_basic/levi_civita_coordinate_change.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 struct CurveParam

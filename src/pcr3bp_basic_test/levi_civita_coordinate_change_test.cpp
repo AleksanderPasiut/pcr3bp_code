@@ -8,7 +8,7 @@
 #include "pcr3bp_basic/levi_civita_coordinate_change.hpp"
 #include "pcr3bp_basic/levi_civita_inverse_coordinate_change.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class LeviCivitaCoordinateChangeTest
@@ -51,7 +51,7 @@ private:
 
 TEST(Pcr3bp_basic, coordinate_change_std_to_reg_and_back)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};
@@ -75,7 +75,7 @@ TEST(Pcr3bp_basic, coordinate_change_std_to_reg_and_back)
 
 TEST(Pcr3bp_basic, coordinate_change_reg_to_std_and_back)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};
@@ -99,7 +99,7 @@ TEST(Pcr3bp_basic, coordinate_change_reg_to_std_and_back)
 
 TEST(Pcr3bp_basic, coordinate_change_test)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};

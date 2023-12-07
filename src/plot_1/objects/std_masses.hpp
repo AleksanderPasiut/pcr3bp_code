@@ -10,7 +10,7 @@
 
 #include <pcr3bp_basic/setup_parameters.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class StdMasses

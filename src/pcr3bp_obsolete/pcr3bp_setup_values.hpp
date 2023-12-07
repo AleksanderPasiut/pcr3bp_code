@@ -15,9 +15,9 @@ namespace std
 {
 
 template<>
-struct hash<Ursa::Interval>
+struct hash<Pcr3bpProof::Interval>
 {
-    size_t operator() (const Ursa::Interval& arg) const
+    size_t operator() (const Pcr3bpProof::Interval& arg) const
     {
         std::hash<double> ha {};        
         return ha(arg.leftBound()) + ha(arg.rightBound());
@@ -26,7 +26,7 @@ struct hash<Ursa::Interval>
 
 }
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename ScalarType>

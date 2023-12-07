@@ -9,7 +9,7 @@
 
 #include <capd_utils/projection_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT, size_t mu_index>
@@ -48,7 +48,7 @@ public:
 
 TEST(Pcr3bp_basic, reg_hamiltonian_test_1)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     Pcr3bp::SetupParameters<IMap> setup;
     Pcr3bpRegularizedHamiltonianTest<IMap, 1> test(setup);
@@ -61,7 +61,7 @@ TEST(Pcr3bp_basic, reg_hamiltonian_test_1)
 
 TEST(Pcr3bp_basic, reg_hamiltonian_test_2)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     Pcr3bp::SetupParameters<IMap> setup(0.4);
     Pcr3bpRegularizedHamiltonianTest<IMap, 2> test(setup);

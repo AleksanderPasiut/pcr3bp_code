@@ -13,7 +13,7 @@
 #define print_var(var) std::cout << "" #var " " << (var) << '\n'
 #define assert_with_exception(condition) if (!((condition))) throw std::logic_error("" #condition "");
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

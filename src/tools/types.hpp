@@ -7,7 +7,7 @@
 #include <capd_utils/capd/basic_types.hpp>
 #include <capd_utils/capd/map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 using Real = CapdUtils::Real;

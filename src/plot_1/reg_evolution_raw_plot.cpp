@@ -12,7 +12,7 @@
 #include "objects/reg_masses.hpp"
 #include "objects/reg_evolution.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoreInterior : CoreInteriorBase
@@ -61,9 +61,9 @@ public:
 
 int main(int argc, char* argv[])
 {
-    using Core = Taurus::DefaultCore2d<Ursa::CoreInterior>;
+    using Core = Taurus::DefaultCore2d<Pcr3bpProof::CoreInterior>;
     Serpent::SglHostWindow<Core> window(
-        Ursa::create_window_properties("reg evolution raw"), argc, argv);
+        Pcr3bpProof::create_window_properties("reg evolution raw"), argc, argv);
 
     window.show();
     window.run();

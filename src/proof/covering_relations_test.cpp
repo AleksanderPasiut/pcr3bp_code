@@ -15,7 +15,7 @@
 
 #include "parallelogram_covering_conditions.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>
@@ -506,7 +506,7 @@ private:
 
 TEST(Pcr3bp_proof, homoclinic_coverings)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
 
@@ -517,7 +517,7 @@ TEST(Pcr3bp_proof, homoclinic_coverings)
 
 TEST(Pcr3bp_proof, periodic_coverings)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
 
@@ -528,7 +528,7 @@ TEST(Pcr3bp_proof, periodic_coverings)
 
 TEST(Pcr3bp_proof, jump_coverings)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
 
@@ -539,7 +539,7 @@ TEST(Pcr3bp_proof, jump_coverings)
 
 TEST(Pcr3bp_proof, parallelogram_coverings)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
 

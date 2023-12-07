@@ -10,7 +10,7 @@
 #include "tools/auxiliary_functions.hpp"
 #include "pcr3bp_basic/setup_parameters.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>

@@ -9,7 +9,7 @@
 #include <capd_utils/type_cast.hpp>
 #include <tools/types.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 namespace Pcr3bp
 {

@@ -7,7 +7,7 @@
 
 #include "tools/floating_info.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<unsigned component_offset, typename LabelFunc>
@@ -84,7 +84,7 @@ void print_vector_list_tex(std::string filename, const std::list<RVector>& args,
 
 TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
 

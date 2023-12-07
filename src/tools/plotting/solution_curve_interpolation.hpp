@@ -8,7 +8,7 @@
 #include <capd_utils/capd/solution_curve.hpp>
 #include <leo/interpolation/interpolation.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>

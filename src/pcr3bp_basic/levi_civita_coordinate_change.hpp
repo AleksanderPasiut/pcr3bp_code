@@ -6,7 +6,7 @@
 
 #include "setup_parameters.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 enum class LeviCivitaCoordinateChangeInverseVariant

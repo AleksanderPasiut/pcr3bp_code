@@ -11,7 +11,7 @@
 
 #include <tools/direction.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>

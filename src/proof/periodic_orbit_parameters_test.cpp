@@ -25,7 +25,7 @@
 
 #include "tools/variable_printer.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>
@@ -141,7 +141,7 @@ private:
 
 TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_nonrigorous)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     capd::rounding::DoubleRounding::roundNearest();
     LyapunovOrbitRegCollisionSetup<RMap> setup( 58696.0 / 65536 );
@@ -149,21 +149,21 @@ TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_nonrigorous)
 
 TEST(Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     LyapunovOrbitRegCollisionSetup<IMap> setup( 58696.0 / 65536 );
 }
 
 TEST(Extended_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_2)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     LyapunovOrbitRegCollisionSetup<IMap> setup( 7.0 / 8, false );
 }
 
 TEST(Exteded_Pcr3bp_intermediate, periodic_orbit_parameters_test_rigorous_3)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     LyapunovOrbitRegCollisionSetup<IMap> setup( 1.0 / 2, false );
 }

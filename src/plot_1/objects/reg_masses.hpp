@@ -11,7 +11,7 @@
 #include <pcr3bp_basic/setup_parameters.hpp>
 #include <pcr3bp_basic/levi_civita_inverse_coordinate_change.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class RegMasses

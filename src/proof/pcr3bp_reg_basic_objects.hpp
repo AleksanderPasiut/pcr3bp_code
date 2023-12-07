@@ -12,7 +12,7 @@
 
 #include "periodic_orbit_parameters.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 namespace Pcr3bp
 {

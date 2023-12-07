@@ -7,7 +7,7 @@
 #include "tools/test_tools.hpp"
 #include <capd_utils/c1_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 const Interval I = { -1.0, +1.0 };

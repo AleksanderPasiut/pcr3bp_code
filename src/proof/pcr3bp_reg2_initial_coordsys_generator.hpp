@@ -9,7 +9,7 @@
 
 #include "pcr3bp_reg_basic_objects.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 namespace Pcr3bp
 {

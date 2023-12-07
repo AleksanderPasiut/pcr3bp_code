@@ -10,7 +10,7 @@
 
 TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     using MapT = RMap;
     using ScalarType = MapT::ScalarType;

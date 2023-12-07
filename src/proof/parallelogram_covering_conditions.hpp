@@ -9,7 +9,7 @@
 
 #include <capd_utils/type_cast.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>
