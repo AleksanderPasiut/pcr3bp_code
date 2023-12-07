@@ -89,6 +89,36 @@ public:
         return ret;
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Create coordinate system that is S-backsymmetric to the given one
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static Coordsys create_S_backsymmetric(Coordsys arg)
+    {
+        assert_with_exception(arg.get_origin().dimension() == 4);
+
+        const VectorType u_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 1);
+        const VectorType s_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 2);
+        const VectorType v_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 3);
+        const VectorType h_dir = CapdUtils::Extract<MapT>::get_vvector(arg.get_directions_matrix(), 4);
+
+        MatrixType new_directions_matrix = CapdUtils::Concat<MapT>::build_matrix_from_vvectors(
+        {
+            AuxiliaryFunctions<MapT>::S_symmetry( s_dir ),
+            AuxiliaryFunctions<MapT>::S_symmetry( u_dir ),
+            -AuxiliaryFunctions<MapT>::S_symmetry( v_dir ),
+            AuxiliaryFunctions<MapT>::S_symmetry( h_dir ),
+        });
+
+        Coordsys ret
+        {
+            AuxiliaryFunctions<MapT>::S_symmetry( arg.get_origin() ),
+            new_directions_matrix
+        };
+
+        return ret;
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Align the system by replacing first two of its directions with unstable directions

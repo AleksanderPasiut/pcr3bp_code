@@ -157,25 +157,26 @@ public:
             const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
             print_var( stable_dir_w1 );
 
-            m_local_coord = std::vector<Coordsys>
-            {
-                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+            m_local_coord.reserve(4);
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry(
                     m_initial_coordsys.at(0),
-                    unstable_dir_w0,
-                    stable_dir_w0),
+                    unstable_dir_w0));
+            
+            m_local_coord.push_back(
                 Coordsys4_Alignment<MapT>::replace_unstable_dirs(
                     m_initial_coordsys.at(1),
                     unstable_dir_w1,
-                    stable_dir_w1),
-                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    stable_dir_w1));
+
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_with_s_symmetry(
                     m_initial_coordsys.at(2),
-                    unstable_dir_w2,
-                    stable_dir_w2),
-                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
-                    m_initial_coordsys.at(3),
-                    AuxiliaryFunctions<MapT>::S_symmetry(stable_dir_w1),
-                    AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w1))
-            };
+                    unstable_dir_w2));
+
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::create_S_backsymmetric(
+                    m_local_coord.at(1)));
         }
 
 
