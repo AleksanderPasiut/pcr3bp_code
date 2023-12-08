@@ -60,15 +60,10 @@ private:
             ret.emplace_back(cs);
         }
 
-        // for first and last coordinate system take aligned coordsys from fixed-point coordsys
+        // for first coordinate system take aligned coordsys from fixed-point (w0) coordsys
 
         *(ret.begin()) = Coordsys(
             ret.begin()->get_origin(),
-            m_periodic_orbit_coordsys.at(0).get_directions_matrix()
-        );
-
-        *(ret.rbegin()) = Coordsys(
-            ret.rbegin()->get_origin(),
             m_periodic_orbit_coordsys.at(0).get_directions_matrix()
         );
 
@@ -81,6 +76,7 @@ private:
         ScalarType total_expansion_factor_neg)
     {
         std::list<AffinePoincareMap> poincare_pos_list {};
+        std::list<AffinePoincareMap> poincare_neg_list {};
         {
             auto it = homoclinic_orbit_coordsys_initial.begin();
             for (auto jt = std::next(it, 1); jt != homoclinic_orbit_coordsys_initial.end(); ++it, ++jt )
@@ -91,25 +87,19 @@ private:
                     *it,
                     *jt
                 );
-            }
-        }
 
-        std::list<AffinePoincareMap> poincare_neg_list {};
-        {
-            auto it = homoclinic_orbit_coordsys_initial.rbegin();
-            for (auto jt = std::next(it, 1); jt != homoclinic_orbit_coordsys_initial.rend(); ++it, ++jt )
-            {
                 poincare_neg_list.emplace_back(
                     std::ref(m_basic_objects.m_vf_reg_neg2),
                     m_basic_objects.m_order,
-                    *it,
-                    *jt
+                    *jt,
+                    *it
                 );
             }
+            poincare_neg_list.reverse();
         }
 
-        const ScalarType expansion_factor_pos = std::pow( total_expansion_factor_pos, 1.0 / poincare_pos_list.size() );
-        const ScalarType expansion_factor_neg = std::pow( total_expansion_factor_neg, 1.0 / poincare_neg_list.size() );
+        const ScalarType expansion_factor_pos = std::pow( total_expansion_factor_pos, 0.5 / poincare_pos_list.size() );
+        const ScalarType expansion_factor_neg = std::pow( total_expansion_factor_neg, 0.5 / poincare_neg_list.size() );
 
         CapdUtils::VariablePrinter<MapT>::print(
             "homoclinic_orbit_average_expansion_factor_pos.txt",
@@ -122,7 +112,19 @@ private:
             expansion_factor_neg);
 
         const std::list<VectorType> unstable_dirs_pos = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0, 0.0, 0.0 }, expansion_factor_pos);
-        const std::list<VectorType> unstable_dirs_neg = get_unstable_dirs(poincare_neg_list, VectorType{ 0.0, 1.0, 0.0, 0.0 }, expansion_factor_neg);
+
+        const Coordsys& coordsysK = *(homoclinic_orbit_coordsys_initial.rbegin());
+        const VectorType unstable_dir_pos_wK_local = *(unstable_dirs_pos.rbegin());
+        const VectorType unstable_dir_pos_wK = coordsysK.get_directions_matrix() * unstable_dir_pos_wK_local;
+        const VectorType stable_dir_pos_wK = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_pos_wK);
+
+        MatrixType coordsysK_dirs = coordsysK.get_directions_matrix();
+        coordsysK_dirs.Transpose();
+
+        const VectorType stable_dir_pos_wK_local = coordsysK_dirs * stable_dir_pos_wK;
+
+        std::list<VectorType> unstable_dirs_neg = get_unstable_dirs(poincare_neg_list, stable_dir_pos_wK_local, expansion_factor_neg);
+        unstable_dirs_neg.reverse();
         
         std::vector<Coordsys> ret {};
         ret.reserve(30);
@@ -133,26 +135,23 @@ private:
         size_t index = 1;
 
         auto it_pos = unstable_dirs_pos.begin();
-        auto it_neg = std::next(unstable_dirs_neg.rbegin(), 1);
+        auto it_neg = std::next(unstable_dirs_neg.begin(), 1);
         for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg, ++index)
         {
             const Coordsys& cs_init = *it;
             const VectorType& p = cs_init.get_directions_matrix() * (*it_pos);
             const VectorType& n = cs_init.get_directions_matrix() * (*it_neg);
 
-            if (index == 14)
-            {
-                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric( cs_init, p );
-                ret.push_back( cs );
-            }
-            else
-            {
-                Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs( cs_init, p, n );
-                ret.push_back( cs );
-            }
+            Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs( cs_init, p, n );
+            ret.push_back( cs );
         }
 
-        ret.push_back( *it );
+        {
+            const Coordsys& cs_init = *it;
+            const VectorType& p = cs_init.get_directions_matrix() * (*it_pos);
+            const Coordsys cs = Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric( cs_init, p );
+            ret.push_back( cs );
+        }
 
         return ret;
     }

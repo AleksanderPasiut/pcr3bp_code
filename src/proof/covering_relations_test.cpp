@@ -357,44 +357,6 @@ private:
         MapT J = AuxiliaryFunctions<MapT>::J();
 
         {
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = *( m_homoclinic_orbit_coordsys.rbegin() );
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
-
-            G_Map<MapT> poincare
-            {
-                m_basic_objects.m_vf_reg_pos2,
-                m_basic_objects.m_hamiltonian_reg2,
-                m_basic_objects.m_order,
-                coordsys_src,
-                coordsys_dst,
-                m_gain_factor
-            };
-
-            CapdUtils::CompositeMap<MapT,
-                decltype(poincare)&,
-                decltype(Y_inverse)&,
-                decltype(R_inverse)&
-                > composite
-            {
-                std::ref(poincare),
-                std::ref(Y_inverse),
-                std::ref(R_inverse),
-            };
-            
-            CoveringRelationCheck cr { composite };
-
-            print_var(cr.get_der());
-            print_var( CapdUtils::span_matrix(cr.get_der()) );
-
-            print_var(cr.get_img());
-            print_var(cr.get_img_left());
-            print_var(cr.get_img_right());
-
-            EXPECT_TRUE(cr.contraction_condition());
-            EXPECT_TRUE(cr.expansion_condition());
-        }
-
-        {
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
 

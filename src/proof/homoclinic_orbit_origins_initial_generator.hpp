@@ -70,19 +70,7 @@ private:
 
         const VectorType mid_v = m_poincare_pos_3( CapdUtils::Extract<MapT>::get_vector(root, root.dimension()-3, 3) );
         const VectorType mid_v4 = VectorType{ mid_v[0], 0.0, mid_v[1], mid_v[2] };
-
-        std::list<VectorType> origins_mirror {};
-        for (const VectorType& v : ret)
-        {
-            origins_mirror.push_front( AuxiliaryFunctions<MapT>::S_symmetry(v) );
-        }
-
         ret.push_back(mid_v4);
-
-        for (const VectorType& v : origins_mirror)
-        {
-            ret.push_back( v );
-        }
 
         return ret;
     }
@@ -91,7 +79,7 @@ private:
     {
         VectorType dir = CapdUtils::Extract<MapT>::get_vvector( m_coordsys_0.get_directions_matrix(), 1 );
 
-        for (auto it = m_points.begin(); it != std::prev(m_points.end(), 1); ++it)
+        for (auto it = m_points.begin(); it != m_points.end(); ++it)
         {
             const VectorType origin_src = *it;
 
@@ -101,14 +89,14 @@ private:
             dir = der * dir;
         }
 
-        return dir.euclNorm();
+        return pow(dir.euclNorm(), 2);
     }
 
     ScalarType compute_total_expansion_factor_neg()
     {
         VectorType dir = CapdUtils::Extract<MapT>::get_vvector( m_coordsys_0.get_directions_matrix(), 2 );
 
-        for (auto it = m_points.rbegin(); it != std::prev(m_points.rend(), 1); ++it)
+        for (auto it = m_points.rbegin(); it != m_points.rend(); ++it)
         {
             const VectorType origin_src = *it;
 
@@ -118,7 +106,7 @@ private:
             dir = der * dir;
         }
 
-        return dir.euclNorm();
+        return pow(dir.euclNorm(), 2);
     }
 
     const std::vector<Coordsys>& m_periodic_orbit_coordsys;
