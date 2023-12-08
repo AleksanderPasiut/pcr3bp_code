@@ -13,8 +13,6 @@
 
 #include "g_map.hpp"
 
-#include "parallelogram_covering_conditions.hpp"
-
 namespace Pcr3bpProof
 {
 
@@ -97,13 +95,12 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_parallelogram_coverings()
     {
-        ScalarType alpha0 {};
-        ScalarType p0 {};
-        parallelogram_covering_check(alpha0, p0);
+        const ScalarType L = 0.000105902; // 1.0 / 512;
+        parallelogram_covering_check( L );
 
-        parallelogram_covering_endings_check(alpha0, p0);
+        parallelogram_covering_endings_check( L );
 
-        collision_manifold_derivative(p0);
+        collision_manifold_derivative(L);
     }
 
 private:
@@ -278,57 +275,44 @@ private:
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check parallelogram coverings around fixed point and export alpha0 and p0 parameters
+    //! @brief Check parallelogram coverings around fixed point
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void parallelogram_covering_check(ScalarType& alpha0, ScalarType& p0)
+    void parallelogram_covering_check(const ScalarType& L)
     {
         const VectorType arg = N;
 
         std::list<MatrixType> der_list {};
 
-        MatrixType dj = {{ 0, 1 }, { 1, 0 } };
+        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
+        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
 
         for (int i = 0; i < 4; ++i)
         {
             const int first = i;
             const int second = (i+1) % 4;
             
+            G_Map<MapT> poincare
             {
-                G_Map<MapT> poincare
-                {
-                    m_basic_objects.m_vf_reg_pos2,
-                    m_basic_objects.m_hamiltonian_reg2,
-                    m_basic_objects.m_order,
-                    m_periodic_orbit_coordsys.at(first),
-                    m_periodic_orbit_coordsys.at(second),
-                    m_gain_factor
-                };
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_hamiltonian_reg2,
+                m_basic_objects.m_order,
+                m_periodic_orbit_coordsys.at(first),
+                m_periodic_orbit_coordsys.at(second),
+                m_gain_factor
+            };
 
-                MatrixType der(2,2);
-                poincare(arg, der);
-                print_var(der);
-
-                der_list.emplace_back(der);
-            }
-
+            CapdUtils::CompositeMap<MapT, MapT&, decltype(poincare)&, MapT&> aligned_poincare
             {
-                G_Map<MapT> poincare
-                {
-                    m_basic_objects.m_vf_reg_neg2,
-                    m_basic_objects.m_hamiltonian_reg2,
-                    m_basic_objects.m_order,
-                    m_periodic_orbit_coordsys.at(second),
-                    m_periodic_orbit_coordsys.at(first),
-                    m_gain_factor
-                };
+                std::ref(eta),
+                std::ref(poincare),
+                std::ref(eta_inverse)
+            };
 
-                MatrixType der(2,2);
-                poincare(arg, der);
-                der = dj * der * dj;
-                print_var(der);
+            MatrixType der(2,2);
+            aligned_poincare(arg, der);
+            print_var(der);
 
-                der_list.emplace_back(der);
-            }
+            der_list.emplace_back(der);
         }
 
         auto it = der_list.begin();
@@ -340,13 +324,27 @@ private:
         }
 
         print_var(der_union);
-        ParallelogramCoveringConditions<MapT> parallelogram_covering_conditions { der_union };
 
-        alpha0 = parallelogram_covering_conditions.alpha;
-        p0 = parallelogram_covering_conditions.p;
+        const ScalarType alpha = 5.09;
+        const ScalarType beta = 0.195;
+        const ScalarType rho = 0.197;
+        const ScalarType c = 0.0011;
+
+        EXPECT_TRUE( 0 < beta );
+        EXPECT_TRUE( beta < rho );
+        EXPECT_TRUE( alpha > 2*c + rho );
+        EXPECT_TRUE( c + rho < 1 );
+
+        EXPECT_TRUE( der_union(1,1) > alpha );
+        EXPECT_TRUE( der_union(1,2) < 0 );
+        EXPECT_TRUE( der_union(1,2) > -c );
+        EXPECT_TRUE( der_union(2,1) > 0 );
+        EXPECT_TRUE( der_union(2,1) < c );
+        EXPECT_TRUE( der_union(2,2) < rho );
+        EXPECT_TRUE( der_union(2,2) > beta );
     }
 
-    void parallelogram_covering_endings_check(ScalarType alpha0, ScalarType L )
+    void parallelogram_covering_endings_check( ScalarType L )
     {
         const ScalarType b0 = 1.0 - pow(2.0, -24);
         const ScalarType a0 = 151.0 / 256;
