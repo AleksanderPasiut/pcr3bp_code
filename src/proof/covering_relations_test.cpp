@@ -440,6 +440,9 @@ private:
         const ScalarType fx = der(1,1);
         const ScalarType fy = der(1,2);
 
+        EXPECT_TRUE( fx < 0 );
+        EXPECT_TRUE( fy < 0 );
+
         std::ofstream fs("collision_manifold_parameters.txt");
         if (fs)
         {
