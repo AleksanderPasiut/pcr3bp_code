@@ -5,83 +5,6 @@
 #include "tools/test_tools.hpp"
 #include "covering_relations_setup.hpp"
 
-#include "tools/floating_info.hpp"
-
-namespace Pcr3bpProof
-{
-
-template<unsigned component_offset, typename LabelFunc>
-void print_vector_list_tex(std::ostream& ostr, const std::list<IVector>& args, LabelFunc label_func)
-{
-    ostr << "\\renewcommand{\\arraystretch}{1.2}\n\n";
-    ostr << "\\small\n\n";
-    ostr << "\\begin{tabular}{ c | c | c }\n\n";
-    ostr << "Vector & Component " << component_offset+1 << " & Component " << component_offset+2 << " \\\\\n\n";
-    ostr << "\\hline\n\n";
-    int index = 0;
-    for (const IVector& vec : args)
-    {
-        ostr << "$";
-        label_func(ostr, index);
-        ostr << "$ & ";
-
-        const Interval v0 = vec[component_offset];
-        const Interval v1 = vec[component_offset+1];
-        ostr << "$\\big[" << CapdUtils::FloatingInfo<double>(v0.leftBound()) << ", " << CapdUtils::FloatingInfo<double>(v0.rightBound()) << "\\big]$ & ";
-        ostr << "$\\big[" << CapdUtils::FloatingInfo<double>(v1.leftBound()) << ", " << CapdUtils::FloatingInfo<double>(v1.rightBound()) << "\\big]$ \\\\\n\n";
-        ++index;
-    }
-    ostr << "\\end{tabular}\n\n";
-}
-
-template<typename LabelFunc>
-void print_vector_list_tex(std::ostream& ostr, const std::list<RVector>& args, LabelFunc label_func)
-{
-    ostr << "\\renewcommand{\\arraystretch}{1.2}\n\n";
-    ostr << "\\small\n\n";
-    ostr << "\\begin{tabular}{ c | c | c | c | c }\n\n";
-    ostr << "Vector & Component 1 & Component 2 & Component 3 & Component 4 \\\\\n\n";
-    ostr << "\\hline\n\n";
-    int index = 0;
-    for (const RVector& vec : args)
-    {
-        ostr << "$";
-        label_func(ostr, index);
-        ostr << "$ & ";
-        ostr << "$" << CapdUtils::FloatingInfo<double>(vec[0]) << "$ & ";
-        ostr << "$" << CapdUtils::FloatingInfo<double>(vec[1]) << "$ & ";
-        ostr << "$" << CapdUtils::FloatingInfo<double>(vec[2]) << "$ & ";
-        ostr << "$" << CapdUtils::FloatingInfo<double>(vec[3]) << "$ \\\\\n\n";
-
-        ++index;
-    }
-    ostr << "\\end{tabular}\n\n";
-}
-
-template<unsigned component_offset, typename LabelFunc>
-void print_vector_list_tex(std::string filename, const std::list<IVector>& args, LabelFunc label_func)
-{
-    std::ofstream ostr(filename);
-
-    if (ostr)
-    {
-        print_vector_list_tex<component_offset>(ostr, args, label_func);
-        ostr.close();
-    }
-}
-
-template<typename LabelFunc>
-void print_vector_list_tex(std::string filename, const std::list<RVector>& args, LabelFunc label_func)
-{
-    std::ofstream ostr(filename);
-
-    if (ostr)
-    {
-        print_vector_list_tex(ostr, args, label_func);
-        ostr.close();
-    }
-}
-
 TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 {
     using namespace Pcr3bpProof;
@@ -92,83 +15,55 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
-    std::list<IVector> periodic_orbit_origins {};
-    std::list<RVector> homoclinic_orbit_origins {};
-    std::array<std::list<RVector>, 4> coordsys_directions {};
+    auto export_coordsys = [](std::ostream& ostr, const Coordsys& coordsys, int N)
+    {
+        ostr << "N" << N << ';';
+
+        const auto origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
+        const auto directions_matrix = CapdUtils::matrix_cast<RMatrix>(coordsys.get_directions_matrix());
+        for (int i = 0; i < 4; ++i)
+        {
+            ostr << origin[i] << ';';
+        }
+
+        for (int k = 0; k < 4; ++k)
+        {
+            const RVector direction = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, k+1);
+
+            for (int i = 0; i < 4; ++i)
+            {
+                ostr << direction[i] << ';';
+            }
+        }
+
+        ostr << '\n';
+    };
+
+    std::ofstream ofs("output.csv");
+
+    ofs << "h-set;";
+    ofs << "origin u;origin v;origin pu;origin pv;";
+    ofs << "unstable u;unstable v;unstable pu;unstable pv;";
+    ofs << "stable u;stable v;stable pu;stable pv;";
+    ofs << "flow u;flow v;flow pu;flow pv;";
+    ofs << "grad u;grad v;grad pu;grad pv;\n";
+
+    ASSERT_TRUE( bool(ofs) );
+
+    ofs.precision(16);
+
+    int index = 0;
 
     for (Coordsys coordsys : setup.get_periodic_orbit_coordsys())
     {
-        periodic_orbit_origins.emplace_back( coordsys.get_origin() );
-        
-        const std::array<IVector, 4> directions_iv
-        {
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 1),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 2),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 3),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 4)
-        };
-
-        for (size_t dir_idx = 0; dir_idx < directions_iv.size(); ++dir_idx)
-        {
-            const IVector direction_iv = directions_iv.at(dir_idx);
-            assert_with_exception(CapdUtils::span_vector(direction_iv) == RVector(4));
-
-            coordsys_directions.at(dir_idx).emplace_back( CapdUtils::vector_cast<RVector>(direction_iv) );
-        }
-    };
+        export_coordsys(ofs, coordsys, index);
+        ++index;
+    }
 
     for (Coordsys coordsys : setup.get_homoclinic_orbit_coordsys())
     {
-        const IVector origin_iv = coordsys.get_origin();
-        assert_with_exception(CapdUtils::span_vector(origin_iv) == RVector(4));
-        homoclinic_orbit_origins.emplace_back( CapdUtils::vector_cast<RVector>(origin_iv) );
-
-        const std::array<IVector, 4> directions_iv
-        {
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 1),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 2),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 3),
-            CapdUtils::Extract<IMap>::get_vvector(coordsys.get_directions_matrix(), 4)
-        };
-
-        for (size_t dir_idx = 0; dir_idx < directions_iv.size(); ++dir_idx)
-        {
-            const IVector direction_iv = directions_iv.at(dir_idx);
-            assert_with_exception(CapdUtils::span_vector(direction_iv) == RVector(4));
-
-            coordsys_directions.at(dir_idx).emplace_back( CapdUtils::vector_cast<RVector>(direction_iv) );
-        }
-    };
-
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << index << "}"; };
-        print_vector_list_tex<0>("periodic_orbit_origins_1.tex.generated", periodic_orbit_origins, label_func);
+        export_coordsys(ofs, coordsys, index);
+        ++index;
     }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << index << "}"; };
-        print_vector_list_tex<2>("periodic_orbit_origins_2.tex.generated", periodic_orbit_origins, label_func);
-    }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "w_{" << (index+4) << "}"; };
-        print_vector_list_tex("homoclinic_orbit_origins.tex.generated", homoclinic_orbit_origins, label_func);
-    }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_1"; };
-        print_vector_list_tex("coordsys_directions_1.tex.generated", coordsys_directions.at(0), label_func);
-    }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_2"; };
-        print_vector_list_tex("coordsys_directions_2.tex.generated", coordsys_directions.at(1), label_func);
-    }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_3"; };
-        print_vector_list_tex("coordsys_directions_3.tex.generated", coordsys_directions.at(2), label_func);
-    }
-    {
-        auto label_func = [](std::ostream& ostr, unsigned index) { ostr << "\\hat{w}^{" << index << "}_4"; };
-        print_vector_list_tex("coordsys_directions_4.tex.generated", coordsys_directions.at(3), label_func);
-    }
-}
-
 }
 
