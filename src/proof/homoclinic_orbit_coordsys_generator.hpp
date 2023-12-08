@@ -132,11 +132,9 @@ private:
         auto it = homoclinic_orbit_coordsys_initial.begin();
         ret.push_back( *it++ );
 
-        size_t index = 1;
-
         auto it_pos = unstable_dirs_pos.begin();
         auto it_neg = std::next(unstable_dirs_neg.begin(), 1);
-        for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg, ++index)
+        for (; it != std::prev(homoclinic_orbit_coordsys_initial.end(), 1); ++it, ++it_pos, ++it_neg)
         {
             const Coordsys& cs_init = *it;
             const VectorType& p = cs_init.get_directions_matrix() * (*it_pos);
