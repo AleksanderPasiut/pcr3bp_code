@@ -41,99 +41,25 @@ public:
 		return map;
     }
 
-    static MapT R(ScalarType d, ScalarType a, ScalarType b)
+    static MapT R_Inverse(ScalarType a, ScalarType b)
     {
         using CapdUtils::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& d = param[0];
-            Node& a = param[1];
-            Node& b = param[2];
+            Node& a = param[0];
+            Node& b = param[1];
 
             Node& xi = in[0];
             Node& eta = in[1];
 
-            out[0] = d*(xi+1)/2;
-            out[1] = ( (a+b)+eta*(b-a) )/2;
-        };
-
-        MapT map(func, 2, 2, 3);
-        map.setParameter(0, d);
-        map.setParameter(1, a);
-        map.setParameter(2, b);
-		return map;
-    }
-
-    static MapT R_T(ScalarType d, ScalarType a, ScalarType b)
-    {
-        using CapdUtils::Node;
-
-        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            Node& d = param[0];
-            Node& a = param[1];
-            Node& b = param[2];
-
-            Node& xi = in[1];
-            Node& eta = in[0];
-
-            out[1] = d*(xi+1)/2;
-            out[0] = ( (a+b)+eta*(b-a) )/2;
-        };
-
-        MapT map(func, 2, 2, 3);
-        map.setParameter(0, d);
-        map.setParameter(1, a);
-        map.setParameter(2, b);
-		return map;
-    }
-
-    static MapT R_Inverse(ScalarType d, ScalarType a, ScalarType b)
-    {
-        using CapdUtils::Node;
-
-        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            Node& d = param[0];
-            Node& a = param[1];
-            Node& b = param[2];
-
-            Node& xi = in[0];
-            Node& eta = in[1];
-
-            out[0] = 2*xi / d - 1;
+            out[0] = 2*xi / b - 1;
             out[1] = (2*eta - (a+b)) / (b-a);
         };
 
-        MapT map(func, 2, 2, 3);
-        map.setParameter(0, d);
-        map.setParameter(1, a);
-        map.setParameter(2, b);
-		return map;
-    }
-
-    static MapT R_T_Inverse(ScalarType d, ScalarType a, ScalarType b)
-    {
-        using CapdUtils::Node;
-
-        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            Node& d = param[0];
-            Node& a = param[1];
-            Node& b = param[2];
-
-            Node& xi = in[1];
-            Node& eta = in[0];
-
-            out[1] = 2*xi / d - 1;
-            out[0] = (2*eta - (a+b)) / (b-a);
-        };
-
-        MapT map(func, 2, 2, 3);
-        map.setParameter(0, d);
-        map.setParameter(1, a);
-        map.setParameter(2, b);
+        MapT map(func, 2, 2, 2);
+        map.setParameter(0, a);
+        map.setParameter(1, b);
 		return map;
     }
 

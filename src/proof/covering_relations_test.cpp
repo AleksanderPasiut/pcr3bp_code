@@ -350,9 +350,8 @@ private:
     {
         const ScalarType b0 = 1.0 - pow(2.0, -24);
         const ScalarType a0 = 151.0 / 256;
-        const ScalarType w0 = b0 * alpha0;
 
-        MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
+        MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(a0, b0);
         MapT eta = AuxiliaryFunctions<MapT>::eta( -L );
         MapT J = AuxiliaryFunctions<MapT>::J();
 
