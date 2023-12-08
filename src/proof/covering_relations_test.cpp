@@ -348,6 +348,10 @@ private:
         const ScalarType b0 = 1.0 - pow(2.0, -24);
         const ScalarType a0 = 151.0 / 256;
 
+        EXPECT_TRUE(0 < a0);
+        EXPECT_TRUE(a0 < b0);
+        EXPECT_TRUE(b0 < 1);
+
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(a0, b0);
         MapT eta = AuxiliaryFunctions<MapT>::eta( -L );
         MapT J = AuxiliaryFunctions<MapT>::J();
