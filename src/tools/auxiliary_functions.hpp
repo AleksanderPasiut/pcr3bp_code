@@ -21,43 +21,23 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
     
-    static MapT Y(ScalarType p)
+    static MapT eta(ScalarType L)
     {
         using CapdUtils::Node;
 
         auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
         {
-            Node& p = param[0];
+            Node& L = param[0];
 
             Node& x = in[0];
             Node& y = in[1];
 
-            out[0] = (x - p*y) / (1+p);
-            out[1] = (y - p*x) / (1+p);
+            out[0] = (x - L*y) / (1+L);
+            out[1] = (y - L*x) / (1+L);
         };
 
         MapT map(func, 2, 2, 1);
-        map.setParameter(0, p);
-		return map;
-    }
-
-    static MapT Y_Inverse(ScalarType p)
-    {
-        using CapdUtils::Node;
-
-        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            Node& p = param[0];
-
-            Node& x = in[0];
-            Node& y = in[1];
-
-            out[0] = (x + p*y) / (1-p);
-            out[1] = (y + p*x) / (1-p);
-        };
-
-        MapT map(func, 2, 2, 1);
-        map.setParameter(0, p);
+        map.setParameter(0, L);
 		return map;
     }
 

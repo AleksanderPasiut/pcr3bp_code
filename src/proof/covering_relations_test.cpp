@@ -346,14 +346,14 @@ private:
         p0 = parallelogram_covering_conditions.p;
     }
 
-    void parallelogram_covering_endings_check(ScalarType alpha0, ScalarType p0)
+    void parallelogram_covering_endings_check(ScalarType alpha0, ScalarType L )
     {
         const ScalarType b0 = 1.0 - pow(2.0, -24);
         const ScalarType a0 = 151.0 / 256;
         const ScalarType w0 = b0 * alpha0;
 
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(w0, a0, b0);
-        MapT Y_inverse = AuxiliaryFunctions<MapT>::Y_Inverse(p0);
+        MapT eta = AuxiliaryFunctions<MapT>::eta( -L );
         MapT J = AuxiliaryFunctions<MapT>::J();
 
         {
@@ -374,13 +374,13 @@ private:
                 decltype(J)&,
                 decltype(poincare)&,
                 decltype(J)&,
-                decltype(Y_inverse)&,
+                decltype(eta)&,
                 decltype(R_inverse)&> composite
             {
                 std::ref(J),
                 std::ref(poincare),
                 std::ref(J),
-                std::ref(Y_inverse),
+                std::ref(eta),
                 std::ref(R_inverse)
             };
             
@@ -403,7 +403,7 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void collision_manifold_derivative(ScalarType p0)
     {
-        MapT Y = AuxiliaryFunctions<MapT>::Y(p0);
+        MapT eta = AuxiliaryFunctions<MapT>::eta(p0);
 
         LocalPoincare4_Constraint<MapT> map_E0
         {
@@ -423,11 +423,11 @@ private:
         map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
 
         CapdUtils::CompositeMap<MapT,
-            decltype(Y)&,
+            decltype(eta)&,
             decltype(map_E0)&,
             decltype(map_L0)&,
             decltype(map_C)&> map_C2(
-                std::ref(Y),
+                std::ref(eta),
                 std::ref(map_E0),
                 std::ref(map_L0),
                 std::ref(map_C)
