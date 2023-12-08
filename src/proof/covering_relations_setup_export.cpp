@@ -41,6 +41,13 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 
     std::ofstream ofs("output.csv");
 
+    ofs << "h-set;";
+    ofs << "origin u;origin v;origin pu;origin pv;";
+    ofs << "unstable u;unstable v;unstable pu;unstable pv;";
+    ofs << "stable u;stable v;stable pu;stable pv;";
+    ofs << "flow u;flow v;flow pu;flow pv;";
+    ofs << "grad u;grad v;grad pu;grad pv;\n";
+
     ASSERT_TRUE( bool(ofs) );
 
     ofs.precision(16);
