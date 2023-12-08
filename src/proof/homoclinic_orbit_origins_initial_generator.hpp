@@ -37,8 +37,7 @@ public:
         const VectorType root = newton.get_root();
         m_points = convert_root_into_initial_origins(root);
 
-        m_total_expansion_factor_pos = compute_total_expansion_factor_pos();
-        m_total_expansion_factor_neg = compute_total_expansion_factor_neg();
+        m_total_expansion_factor = compute_total_expansion_factor_pos();
     }
 
     const std::vector<VectorType>& get_points() const noexcept
@@ -46,14 +45,9 @@ public:
         return m_points;
     }
 
-    ScalarType get_total_expansion_factor_pos() const noexcept
+    ScalarType get_total_expansion_factor() const noexcept
     {
-        return m_total_expansion_factor_pos;
-    }
-
-    ScalarType get_total_expansion_factor_neg() const noexcept
-    {
-        return m_total_expansion_factor_neg;
+        return m_total_expansion_factor;
     }
 
 private:
@@ -79,7 +73,7 @@ private:
     {
         VectorType dir = CapdUtils::Extract<MapT>::get_vvector( m_coordsys_0.get_directions_matrix(), 1 );
 
-        for (auto it = m_points.begin(); it != m_points.end(); ++it)
+        for (auto it = m_points.begin(); it != std::prev(m_points.end(), 1); ++it)
         {
             const VectorType origin_src = *it;
 
@@ -89,12 +83,24 @@ private:
             dir = der * dir;
         }
 
-        return pow(dir.euclNorm(), 2);
+        dir = AuxiliaryFunctions<MapT>::S_symmetry(dir);
+
+        for (auto it = m_points.rbegin(); it != std::prev(m_points.rend(), 1); ++it)
+        {
+            const VectorType origin_src = *it;
+
+            MatrixType der(4,4);
+            auto origin_img = m_poincare_neg(origin_src, der);
+
+            dir = der * dir;
+        }
+
+        return dir.euclNorm();
     }
 
     ScalarType compute_total_expansion_factor_neg()
     {
-        VectorType dir = CapdUtils::Extract<MapT>::get_vvector( m_coordsys_0.get_directions_matrix(), 2 );
+        VectorType dir = CapdUtils::Extract<MapT>::get_vvector( m_coordsys_0.get_directions_matrix(), 1 );
 
         for (auto it = m_points.rbegin(); it != m_points.rend(); ++it)
         {
@@ -106,7 +112,7 @@ private:
             dir = der * dir;
         }
 
-        return pow(dir.euclNorm(), 2);
+        return dir.euclNorm();
     }
 
     const std::vector<Coordsys>& m_periodic_orbit_coordsys;
@@ -211,8 +217,7 @@ private:
 
     std::vector<VectorType> m_points {};
 
-    ScalarType m_total_expansion_factor_pos {};
-    ScalarType m_total_expansion_factor_neg {};
+    ScalarType m_total_expansion_factor {};
 };
 
 }

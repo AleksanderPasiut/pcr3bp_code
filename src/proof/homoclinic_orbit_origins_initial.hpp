@@ -30,14 +30,9 @@ public:
         return m_points;
     }
 
-    ScalarType get_total_expansion_factor_pos() const noexcept
+    ScalarType get_total_expansion_factor() const noexcept
     {
-        return m_total_expansion_factor_pos;
-    }
-
-    ScalarType get_total_expansion_factor_neg() const noexcept
-    {
-        return m_total_expansion_factor_neg;
+        return m_total_expansion_factor;
     }
 
 private:
@@ -93,12 +88,7 @@ private:
         }
     };
 
-    ScalarType m_total_expansion_factor_pos
-    {
-        CapdUtils::ReadableScalar<ScalarType>("438b3581527bf5b4")
-    };
-
-    ScalarType m_total_expansion_factor_neg
+    ScalarType m_total_expansion_factor
     {
         CapdUtils::ReadableScalar<ScalarType>("438b3581527bf5c5")
     };

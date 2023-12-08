@@ -36,13 +36,12 @@ public:
     HomoclinicOrbitCoordsysGenerator(
         const std::vector<Coordsys>& periodic_orbit_coordsys,
         const std::vector<VectorType>& homoclinic_orbit_orgins,
-        ScalarType total_expansion_factor_pos,
-        ScalarType total_expansion_factor_neg)
+        ScalarType total_expansion_factor)
             : m_periodic_orbit_coordsys(periodic_orbit_coordsys)
             , m_homoclinic_orbit_origins(homoclinic_orbit_orgins)
     {
         const std::list<Coordsys> homoclinic_orbit_coordsys_initial = build_homoclinic_orbit_coordsys_initial();
-        m_homoclinic_orbit_coordsys = build_homoclinic_orbit_coordsys(homoclinic_orbit_coordsys_initial, total_expansion_factor_pos, total_expansion_factor_neg);
+        m_homoclinic_orbit_coordsys = build_homoclinic_orbit_coordsys(homoclinic_orbit_coordsys_initial, total_expansion_factor);
     }
 
     const std::vector<Coordsys>& get_coordsys_container() const noexcept
@@ -72,8 +71,7 @@ private:
 
     std::vector<Coordsys> build_homoclinic_orbit_coordsys(
         const std::list<Coordsys>& homoclinic_orbit_coordsys_initial,
-        ScalarType total_expansion_factor_pos,
-        ScalarType total_expansion_factor_neg)
+        ScalarType total_expansion_factor)
     {
         std::list<AffinePoincareMap> poincare_pos_list {};
         std::list<AffinePoincareMap> poincare_neg_list {};
@@ -98,20 +96,14 @@ private:
             poincare_neg_list.reverse();
         }
 
-        const ScalarType expansion_factor_pos = std::pow( total_expansion_factor_pos, 0.5 / poincare_pos_list.size() );
-        const ScalarType expansion_factor_neg = std::pow( total_expansion_factor_neg, 0.5 / poincare_neg_list.size() );
+        const ScalarType expansion_factor = std::pow( total_expansion_factor, 0.5 / poincare_pos_list.size() );
 
         CapdUtils::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_average_expansion_factor_pos.txt",
-            "Average expansion factor along homoclinic orbit (positive direction)",
-            expansion_factor_pos);
+            "homoclinic_orbit_average_expansion_factor.txt",
+            "Average expansion factor along homoclinic orbit",
+            expansion_factor);
 
-        CapdUtils::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_average_expansion_factor_neg.txt",
-            "Average expansion factor along homoclinic orbit (negative direction)",
-            expansion_factor_neg);
-
-        const std::list<VectorType> unstable_dirs_pos = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0, 0.0, 0.0 }, expansion_factor_pos);
+        const std::list<VectorType> unstable_dirs_pos = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0, 0.0, 0.0 }, expansion_factor);
 
         const Coordsys& coordsysK = *(homoclinic_orbit_coordsys_initial.rbegin());
         const VectorType unstable_dir_pos_wK_local = *(unstable_dirs_pos.rbegin());
@@ -123,7 +115,7 @@ private:
 
         const VectorType stable_dir_pos_wK_local = coordsysK_dirs * stable_dir_pos_wK;
 
-        std::list<VectorType> unstable_dirs_neg = get_unstable_dirs(poincare_neg_list, stable_dir_pos_wK_local, expansion_factor_neg);
+        std::list<VectorType> unstable_dirs_neg = get_unstable_dirs(poincare_neg_list, stable_dir_pos_wK_local, expansion_factor);
         unstable_dirs_neg.reverse();
         
         std::vector<Coordsys> ret {};

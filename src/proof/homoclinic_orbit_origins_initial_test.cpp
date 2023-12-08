@@ -48,14 +48,9 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     }
 
     CapdUtils::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_total_expansion_factor_pos.txt",
-            "Total expansion factor along homoclinic orbit (positive direction)",
-            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_pos());
-
-    CapdUtils::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_total_expansion_factor_neg.txt",
-            "Total expansion factor along homoclinic orbit (negative direction)",
-            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_neg());
+            "homoclinic_orbit_total_expansion_factor.txt",
+            "Total expansion factor along homoclinic orbit",
+            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor());
 
     for (auto v : homoclinic_orbit_origins_initial_generator.get_points())
     {
@@ -67,12 +62,8 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     HomoclinicOrbitOriginsInitial<MapT> homoclinic_orbit_origins_initial {};
 
     EXPECT_EQ(
-        homoclinic_orbit_origins_initial.get_total_expansion_factor_pos(),
-        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_pos() );
-
-    EXPECT_EQ(
-        homoclinic_orbit_origins_initial.get_total_expansion_factor_neg(),
-        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_neg() );
+        homoclinic_orbit_origins_initial.get_total_expansion_factor(),
+        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor() );
 
     ASSERT_EQ( 
         homoclinic_orbit_origins_initial.get_points().size(),

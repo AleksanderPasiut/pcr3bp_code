@@ -72,14 +72,9 @@ public:
         return m_points;
     }
 
-    ScalarType get_total_expansion_factor_pos() const noexcept
+    ScalarType get_total_expansion_factor() const noexcept
     {
-        return m_total_expansion_factor_pos;
-    }
-
-    ScalarType get_total_expansion_factor_neg() const noexcept
-    {
-        return m_total_expansion_factor_neg;
+        return m_total_expansion_factor;
     }
 
 private:
@@ -111,14 +106,9 @@ private:
 
     std::vector<VectorType> m_points {};
 
-    const ScalarType m_total_expansion_factor_pos
+    const ScalarType m_total_expansion_factor
     {
-        m_homoclinic_orbit_origins_initial.get_total_expansion_factor_pos()
-    };
-
-    const ScalarType m_total_expansion_factor_neg
-    {
-        m_homoclinic_orbit_origins_initial.get_total_expansion_factor_neg()
+        m_homoclinic_orbit_origins_initial.get_total_expansion_factor()
     };
 };
 

@@ -69,8 +69,7 @@ private:
     {
         m_periodic_orbit_coordsys_approx,
         m_homoclinic_orbit_origins_generator.get_points(),
-        m_homoclinic_orbit_origins_generator.get_total_expansion_factor_pos(),
-        m_homoclinic_orbit_origins_generator.get_total_expansion_factor_neg()
+        m_homoclinic_orbit_origins_generator.get_total_expansion_factor()
     };
 };
 
