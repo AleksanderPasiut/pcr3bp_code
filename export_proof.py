@@ -20,6 +20,9 @@ shutil.rmtree('src/pcr3bp_basic_test', ignore_errors=True)
 # remove homoclinic initial test
 remove_file('src/proof/homoclinic_orbit_origins_initial_test.cpp')
 
+# remove extended periodic orbit parameters test
+remove_file('src/proof/periodic_orbit_parameters_test.extended.cpp')
+
 # replace current CMakeLists.txt
 remove_file('CMakeLists.txt')
 shutil.copyfile('CMakeLists.proof_only.txt', 'CMakeLists.txt')
