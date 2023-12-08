@@ -56,11 +56,6 @@ public:
             return true;
         }
 
-        if (m_img_left[0].leftBound() > I.rightBound() && m_img_right[0].rightBound() < I.leftBound())
-        {
-            return true;
-        }
-
         return false;
     }
 
