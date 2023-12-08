@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <carina/projection_map.hpp>
-#include <carina/constrained_function.hpp>
+#include <capd_utils/projection_map.hpp>
+#include <capd_utils/constrained_function.hpp>
 
-namespace Carina
+namespace CapdUtils
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

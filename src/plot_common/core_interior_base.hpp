@@ -7,7 +7,7 @@
 #include <aquila/paramset.hpp>
 #include <aquila/paramset_config.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoreInteriorBase

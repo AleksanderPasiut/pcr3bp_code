@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include <carina/map_base.hpp>
-#include <carina/poincare_wrapper.hpp>
+#include <capd_utils/map_base.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
 
 #include <pcr3bp_basic/regularized_system.hpp>
 
 #include <tools/direction.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>
-class Pcr3bpRegPoincareBase : Carina::MapBase<MapT>
+class Pcr3bpRegPoincareBase : CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -24,7 +24,7 @@ public:
 
     Pcr3bpRegPoincareBase(const MapT& vf_reg, unsigned solver_order)
         : m_vf_reg(vf_reg)
-        , m_poincare_v( m_vf_reg, solver_order, Carina::CoordinateSection<MapT>(m_vf_reg.dimension(), 1, ScalarType(0.0) ) )
+        , m_poincare_v( m_vf_reg, solver_order, CapdUtils::CoordinateSection<MapT>(m_vf_reg.dimension(), 1, ScalarType(0.0) ) )
     {}
 
     VectorType operator() (const VectorType& vec, MatrixType& mat)
@@ -58,7 +58,7 @@ public:
 
 private:
     MapT m_vf_reg;
-    Carina::PoincareWrapper<MapT, Carina::CoordinateSection<MapT>> m_poincare_v;
+    CapdUtils::PoincareWrapper<MapT, CapdUtils::CoordinateSection<MapT>> m_poincare_v;
 };
 
 template<typename MapT, Direction direction>

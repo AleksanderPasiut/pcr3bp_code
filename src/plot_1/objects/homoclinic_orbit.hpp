@@ -8,7 +8,7 @@
 
 #include <proof/homoclinic_orbit_origins_generator.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class HomoclinicOrbit final

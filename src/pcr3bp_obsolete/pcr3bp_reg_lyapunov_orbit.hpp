@@ -4,23 +4,23 @@
 
 #pragma once
 
-#include <carina/map_base.hpp>
-#include <carina/timemap_wrapper.hpp>
-#include <carina/poincare_wrapper.hpp>
-#include <carina/enp_map.hpp>
-#include <carina/pne_map.hpp>
-#include <carina/identity_map.hpp>
+#include <capd_utils/map_base.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
+#include <capd_utils/enp_map.hpp>
+#include <capd_utils/pne_map.hpp>
+#include <capd_utils/identity_map.hpp>
 
 #include <pcr3bp_basic/regularized_system.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! (u0, v0, pu0, pv0, u1, v1, pu1, pv1, u2, v2, pu2, pv2, h0) -> (timemap(U0) - U1, poincare(U1) - U2)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class LyapunovOrbitRegBase : Carina::MapBase<MapT>
+class LyapunovOrbitRegBase : CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -30,22 +30,22 @@ public:
     LyapunovOrbitRegBase(const Pcr3bp::SetupParameters<MapT>& setup, ScalarType t)
         : m_vf_reg( Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField(2, setup, false) )
         , m_timemap_u( m_vf_reg, t, 60)
-        , m_poincare_v( m_vf_reg, 60, Carina::CoordinateSection<MapT>(m_vf_reg.dimension(), 1, ScalarType(0.0)) )
+        , m_poincare_v( m_vf_reg, 60, CapdUtils::CoordinateSection<MapT>(m_vf_reg.dimension(), 1, ScalarType(0.0)) )
         , m_timemap_u_pne(13,
-            Carina::IdxList<size_t>{ 0, 1, 2, 3, 12 },
-            Carina::IdxList<int>::create(10, 0, 5),
+            CapdUtils::IdxList<size_t>{ 0, 1, 2, 3, 12 },
+            CapdUtils::IdxList<int>::create(10, 0, 5),
             std::ref(m_timemap_u))
         , m_poincare_v_pne(13,
-            Carina::IdxList<size_t>{ 4, 5, 6, 7, 12 },
-            Carina::IdxList<int>::create(10, 5, 5),
+            CapdUtils::IdxList<size_t>{ 4, 5, 6, 7, 12 },
+            CapdUtils::IdxList<int>::create(10, 5, 5),
             std::ref(m_poincare_v))
         , m_id_1_pne(13,
-            Carina::IdxList<size_t>{ 4, 5, 6, 7, 12 },
-            Carina::IdxList<int>::create(10, 0, 5),
+            CapdUtils::IdxList<size_t>{ 4, 5, 6, 7, 12 },
+            CapdUtils::IdxList<int>::create(10, 0, 5),
             5)
         , m_id_2_pne(13,
-            Carina::IdxList<size_t>{ 8, 9, 10, 11, 12 },
-            Carina::IdxList<int>::create(10, 5, 5),
+            CapdUtils::IdxList<size_t>{ 8, 9, 10, 11, 12 },
+            CapdUtils::IdxList<int>::create(10, 5, 5),
             5)
     {}
 
@@ -92,18 +92,18 @@ public:
 private:
     MapT m_vf_reg;
 
-    Carina::TimemapWrapper<MapT> m_timemap_u;
-    Carina::PoincareWrapper<MapT, Carina::CoordinateSection<MapT>> m_poincare_v;
+    CapdUtils::TimemapWrapper<MapT> m_timemap_u;
+    CapdUtils::PoincareWrapper<MapT, CapdUtils::CoordinateSection<MapT>> m_poincare_v;
 
-    Carina::PNE<MapT, decltype(m_timemap_u)&> m_timemap_u_pne;
-    Carina::PNE<MapT, decltype(m_poincare_v)&> m_poincare_v_pne;
+    CapdUtils::PNE<MapT, decltype(m_timemap_u)&> m_timemap_u_pne;
+    CapdUtils::PNE<MapT, decltype(m_poincare_v)&> m_poincare_v_pne;
 
-    Carina::PNE<MapT, Carina::IdentityMap<MapT>> m_id_1_pne;
-    Carina::PNE<MapT, Carina::IdentityMap<MapT>> m_id_2_pne;
+    CapdUtils::PNE<MapT, CapdUtils::IdentityMap<MapT>> m_id_1_pne;
+    CapdUtils::PNE<MapT, CapdUtils::IdentityMap<MapT>> m_id_2_pne;
 };
 
 template<typename MapT>
-class LyapunovOrbitRegCollision : public Carina::ENP<MapT, LyapunovOrbitRegBase<MapT>>
+class LyapunovOrbitRegCollision : public CapdUtils::ENP<MapT, LyapunovOrbitRegBase<MapT>>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -111,7 +111,7 @@ public:
     using MatrixType = typename MapT::MatrixType;
 
     LyapunovOrbitRegCollision(const Pcr3bp::SetupParameters<MapT>& setup, ScalarType pv0, ScalarType t = 1.0)
-        : Carina::ENP<MapT, LyapunovOrbitRegBase<MapT>>(
+        : CapdUtils::ENP<MapT, LyapunovOrbitRegBase<MapT>>(
             VectorType{ zero(), zero(), zero(), pv0, zero(), zero(), zero(), zero(), zero(), zero(), zero(), zero(), zero() },
             { -1, -1, -1, -1,
               0,  1,  2,  3,

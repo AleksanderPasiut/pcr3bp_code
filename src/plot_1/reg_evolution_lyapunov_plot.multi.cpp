@@ -20,7 +20,7 @@
 
 #include "proof/periodic_orbit_parameters.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoreInterior : CoreInteriorBase
@@ -150,9 +150,9 @@ private:
 
 int main(int argc, char* argv[])
 {
-    using Core = Taurus::DefaultCore2d<Ursa::CoreInterior>;
+    using Core = Taurus::DefaultCore2d<Pcr3bpProof::CoreInterior>;
     Serpent::SglHostWindow<Core> window(
-        Ursa::create_window_properties("reg lyapunov orbit multi"),
+        Pcr3bpProof::create_window_properties("reg lyapunov orbit multi"),
         argc,
         argv,
         Leo::Color(1.0, 1.0, 1.0),

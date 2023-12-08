@@ -8,7 +8,7 @@
 #include "pcr3bp_basic/levi_civita_coordinate_change.hpp"
 #include "pcr3bp_basic/levi_civita_inverse_coordinate_change.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class LeviCivitaCoordinateChangeTest
@@ -44,14 +44,14 @@ private:
     LeviCivitaInverseCoordinateChange<MapT> m_rci{ m_setup.get_x(2) };
     MapT m_rcf { LeviCivitaCoordinateChange<MapT>::create(2, m_setup, true, true, false) };
 
-    Carina::MaxNorm<MapT> m_norm {};
+    CapdUtils::MaxNorm<MapT> m_norm {};
 };
 
 }
 
 TEST(Pcr3bp_basic, coordinate_change_std_to_reg_and_back)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};
@@ -75,7 +75,7 @@ TEST(Pcr3bp_basic, coordinate_change_std_to_reg_and_back)
 
 TEST(Pcr3bp_basic, coordinate_change_reg_to_std_and_back)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};
@@ -99,7 +99,7 @@ TEST(Pcr3bp_basic, coordinate_change_reg_to_std_and_back)
 
 TEST(Pcr3bp_basic, coordinate_change_test)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     std::mt19937_64 rng {};
     std::normal_distribution<double> dist {};
@@ -112,7 +112,7 @@ TEST(Pcr3bp_basic, coordinate_change_test)
 
     MapT m_lcf { LeviCivitaCoordinateChange<MapT>::create(2, m_setup, true, false, false) };
 
-    Carina::MaxNorm<MapT> m_norm {};
+    CapdUtils::MaxNorm<MapT> m_norm {};
 
     auto test = [m_norm, m_lcf](MapT m_lci, VectorType U, ScalarType precision)
     {

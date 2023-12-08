@@ -12,7 +12,7 @@
 #include <proof/homoclinic_orbit_origins_generator.hpp>
 #include <pcr3bp_basic/levi_civita_coordinate_change.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoordinateSystemsOrigins
@@ -44,7 +44,7 @@ public:
         }
         else
         {
-            using Carina::Node;
+            using CapdUtils::Node;
             RMap coord_change( LeviCivitaCoordinateChange<RMap>::create(2, setup, true, false, false) );
             RMap magnify( [](Node, Node in[], int, Node out[], int, Node param[], int) -> void
             {
@@ -53,7 +53,7 @@ public:
                 
             }, 4, 2, 0);
 
-            Carina::CompositeMap<RMap, RMap&, RMap&> composite { std::ref(coord_change), std::ref(magnify) };
+            CapdUtils::CompositeMap<RMap, RMap&, RMap&> composite { std::ref(coord_change), std::ref(magnify) };
 
             for (auto point : generator.get_points())
             {

@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <carina/local_coordinate_system.hpp>
-#include <carina/gauss.hpp>
+#include <capd_utils/local_coordinate_system.hpp>
+#include <capd_utils/gauss.hpp>
 
-namespace Carina
+namespace CapdUtils
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,14 +47,14 @@ public:
     using MatrixType = typename MapT::MatrixType;
 
     template<typename MapU>
-    static std::vector<Carina::LocalCoordinateSystem<MapT>> convert( const std::vector<Carina::LocalCoordinateSystem<MapU>>& arg )
+    static std::vector<CapdUtils::LocalCoordinateSystem<MapT>> convert( const std::vector<CapdUtils::LocalCoordinateSystem<MapU>>& arg )
     {
-        std::vector<Carina::LocalCoordinateSystem<MapT>> ret {};
+        std::vector<CapdUtils::LocalCoordinateSystem<MapT>> ret {};
         ret.reserve(arg.size());
 
         for (const auto& c : arg)
         {
-            ret.emplace_back( Carina::LocalCoordinateSystem<MapT>::convert_from(c));
+            ret.emplace_back( CapdUtils::LocalCoordinateSystem<MapT>::convert_from(c));
         }
 
         return ret;

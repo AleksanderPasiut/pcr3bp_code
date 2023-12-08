@@ -10,7 +10,7 @@
 
 TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     using MapT = RMap;
     using ScalarType = MapT::ScalarType;
@@ -18,7 +18,7 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     capd::rounding::DoubleRounding::roundNearest();
 
     PeriodicOrbitCoordsysGenerator<MapT> setup {};
-
+    
     HomoclinicOrbitOriginsInitialGenerator<MapT> homoclinic_orbit_origins_initial_generator { setup.get_coordsys_container() };
 
     #if 1
@@ -30,7 +30,7 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
         const auto& homoclinic_orbit_points = homoclinic_orbit_origins_initial_generator.get_points();
         for (auto it = homoclinic_orbit_points.begin(); ;)
         {
-            Carina::BootstrapPrint<MapT>::print(ostr, *it);
+            CapdUtils::BootstrapPrint<MapT>::print(ostr, *it);
 
             ++it;
             if (it != homoclinic_orbit_points.end())
@@ -47,15 +47,10 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
         ostr.close();
     }
 
-    Carina::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_total_expansion_factor_pos.txt",
-            "Total expansion factor along homoclinic orbit (positive direction)",
-            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_pos());
-
-    Carina::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_total_expansion_factor_neg.txt",
-            "Total expansion factor along homoclinic orbit (negative direction)",
-            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_neg());
+    CapdUtils::VariablePrinter<MapT>::print(
+            "homoclinic_orbit_total_expansion_factor.txt",
+            "Total expansion factor along homoclinic orbit",
+            homoclinic_orbit_origins_initial_generator.get_total_expansion_factor());
 
     for (auto v : homoclinic_orbit_origins_initial_generator.get_points())
     {
@@ -67,12 +62,8 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     HomoclinicOrbitOriginsInitial<MapT> homoclinic_orbit_origins_initial {};
 
     EXPECT_EQ(
-        homoclinic_orbit_origins_initial.get_total_expansion_factor_pos(),
-        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_pos() );
-
-    EXPECT_EQ(
-        homoclinic_orbit_origins_initial.get_total_expansion_factor_neg(),
-        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor_neg() );
+        homoclinic_orbit_origins_initial.get_total_expansion_factor(),
+        homoclinic_orbit_origins_initial_generator.get_total_expansion_factor() );
 
     ASSERT_EQ( 
         homoclinic_orbit_origins_initial.get_points().size(),

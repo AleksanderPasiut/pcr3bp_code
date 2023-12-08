@@ -6,14 +6,14 @@
 
 #include "pcr3bp_reg_basic_objects.hpp"
 
-#include <carina/poincare_wrapper.hpp>
-#include <carina/timemap_wrapper.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
 
 #include "homoclinic_orbit_origins_initial.hpp"
 
 #include <vector>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,6 @@ public:
     {
         const std::vector<VectorType>& initial_origins = homoclinic_orbit_origins_initial.get_points();
 
-        // const double t_inter_1 = 0.895631;
         const double t_inter_2 = 0.0133115509;
         const double t_inter_3 = 1.041086989;
 
@@ -66,20 +65,6 @@ public:
         m_points.push_back( move_pt( initial_origins.at(5), +t_inter_2 + t_inter_3/2 ) );
         m_points.push_back( initial_origins.at(6) ); // ---------------------- w17
         m_points.push_back( initial_origins.at(7) ); // ---------------------- w18
-        m_points.push_back( initial_origins.at(8) ); // ---------------------- w19
-        m_points.push_back( move_pt( initial_origins.at(9), -t_inter_2 - t_inter_3/2 ) );
-        m_points.push_back( move_pt( initial_origins.at(9), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(9) ); // ---------------------- w22
-        m_points.push_back( move_pt( initial_origins.at(9), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(10) ); // ---------------------- w24
-        m_points.push_back( move_pt( initial_origins.at(11), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(11) ); // ---------------------- w26
-        m_points.push_back( move_pt( initial_origins.at(11), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(12) ); // ---------------------- w28
-        m_points.push_back( move_pt( initial_origins.at(13), -t_inter_2 ) );
-        m_points.push_back( initial_origins.at(13) ); // ---------------------- w30
-        m_points.push_back( move_pt( initial_origins.at(13), +t_inter_2 ) );
-        m_points.push_back( initial_origins.at(14) ); // ---------------------- w32
     }
 
     const std::vector<VectorType>& get_points() const noexcept
@@ -87,14 +72,9 @@ public:
         return m_points;
     }
 
-    ScalarType get_total_expansion_factor_pos() const noexcept
+    ScalarType get_total_expansion_factor() const noexcept
     {
-        return m_total_expansion_factor_pos;
-    }
-
-    ScalarType get_total_expansion_factor_neg() const noexcept
-    {
-        return m_total_expansion_factor_neg;
+        return m_total_expansion_factor;
     }
 
 private:
@@ -102,22 +82,22 @@ private:
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    Carina::CoordinateSection<MapT> m_v_section { 4, 1, ScalarType(0.0) };
-    Carina::PoincareWrapper<MapT, decltype(m_v_section)> m_poincare_pos
+    CapdUtils::CoordinateSection<MapT> m_v_section { 4, 1, ScalarType(0.0) };
+    CapdUtils::PoincareWrapper<MapT, decltype(m_v_section)> m_poincare_pos
     {
         m_basic_objects.m_vf_reg_pos2,
         m_basic_objects.m_order,
         m_v_section
     };
 
-    Carina::TimemapWrapper<MapT> m_timemap_pos
+    CapdUtils::TimemapWrapper<MapT> m_timemap_pos
     {
         m_basic_objects.m_vf_reg_pos2,
         0.0,
         m_basic_objects.m_order
     };
 
-    Carina::TimemapWrapper<MapT> m_timemap_neg
+    CapdUtils::TimemapWrapper<MapT> m_timemap_neg
     {
         m_basic_objects.m_vf_reg_neg2,
         0.0,
@@ -126,14 +106,9 @@ private:
 
     std::vector<VectorType> m_points {};
 
-    const ScalarType m_total_expansion_factor_pos
+    const ScalarType m_total_expansion_factor
     {
-        m_homoclinic_orbit_origins_initial.get_total_expansion_factor_pos()
-    };
-
-    const ScalarType m_total_expansion_factor_neg
-    {
-        m_homoclinic_orbit_origins_initial.get_total_expansion_factor_neg()
+        m_homoclinic_orbit_origins_initial.get_total_expansion_factor()
     };
 };
 

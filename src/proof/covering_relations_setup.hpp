@@ -11,7 +11,7 @@
 
 #include "tools/coordsys_utilities.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,40 +20,40 @@ namespace Ursa
 class CoveringRelationsSetup
 {
 public:
-    std::vector<Carina::LocalCoordinateSystem<IMap>> get_periodic_orbit_coordsys() const
+    std::vector<CapdUtils::LocalCoordinateSystem<IMap>> get_periodic_orbit_coordsys() const
     {
         RegLyapunovCollisionOrbitParameters<IMap> m_parameters {};
 
-        std::vector<Carina::LocalCoordinateSystem<IMap>> periodic_orbit_coordsys(4);
+        std::vector<CapdUtils::LocalCoordinateSystem<IMap>> periodic_orbit_coordsys(4);
 
-        periodic_orbit_coordsys.at(0) = Carina::LocalCoordinateSystem<IMap>(
+        periodic_orbit_coordsys.at(0) = CapdUtils::LocalCoordinateSystem<IMap>(
             m_parameters.get_initial_point(),
-            Carina::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(0).get_directions_matrix()) );
+            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(0).get_directions_matrix()) );
         
-        periodic_orbit_coordsys.at(1) = Carina::LocalCoordinateSystem<IMap>(
+        periodic_orbit_coordsys.at(1) = CapdUtils::LocalCoordinateSystem<IMap>(
             m_parameters.get_intermediate_point(),
-            Carina::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(1).get_directions_matrix()) );
+            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(1).get_directions_matrix()) );
         
-        periodic_orbit_coordsys.at(2) = Carina::LocalCoordinateSystem<IMap>(
+        periodic_orbit_coordsys.at(2) = CapdUtils::LocalCoordinateSystem<IMap>(
             m_parameters.get_image_point(),
-            Carina::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(2).get_directions_matrix()) );
+            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(2).get_directions_matrix()) );
         
-        periodic_orbit_coordsys.at(3) = Carina::LocalCoordinateSystem<IMap>(
+        periodic_orbit_coordsys.at(3) = CapdUtils::LocalCoordinateSystem<IMap>(
             m_parameters.get_intermediate_point_neg(),
-            Carina::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(3).get_directions_matrix()) );
+            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(3).get_directions_matrix()) );
 
         return periodic_orbit_coordsys;
     }
 
-    std::vector<Carina::LocalCoordinateSystem<IMap>> get_homoclinic_orbit_coordsys() const
+    std::vector<CapdUtils::LocalCoordinateSystem<IMap>> get_homoclinic_orbit_coordsys() const
     {
-        return Carina::CoordsysVec<IMap>::convert( m_homoclinic_orbit_coordsys_generator.get_coordsys_container() );
+        return CapdUtils::CoordsysVec<IMap>::convert( m_homoclinic_orbit_coordsys_generator.get_coordsys_container() );
     }
 
 private:
     PeriodicOrbitCoordsysGenerator<RMap> m_periodic_orbit_coordsys_generator_approx {};
 
-    std::vector<Carina::LocalCoordinateSystem<RMap>> m_periodic_orbit_coordsys_approx
+    std::vector<CapdUtils::LocalCoordinateSystem<RMap>> m_periodic_orbit_coordsys_approx
     {
         m_periodic_orbit_coordsys_generator_approx.get_coordsys_container()
     };
@@ -69,8 +69,7 @@ private:
     {
         m_periodic_orbit_coordsys_approx,
         m_homoclinic_orbit_origins_generator.get_points(),
-        m_homoclinic_orbit_origins_generator.get_total_expansion_factor_pos(),
-        m_homoclinic_orbit_origins_generator.get_total_expansion_factor_neg()
+        m_homoclinic_orbit_origins_generator.get_total_expansion_factor()
     };
 };
 

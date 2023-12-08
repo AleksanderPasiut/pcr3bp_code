@@ -5,15 +5,15 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <carina/capd/basic_tools.hpp>
-#include <carina/capd/norm.hpp>
+#include <capd_utils/capd/basic_tools.hpp>
+#include <capd_utils/capd/norm.hpp>
 
 #include "types.hpp"
 
 #define print_var(var) std::cout << "" #var " " << (var) << '\n'
 #define assert_with_exception(condition) if (!((condition))) throw std::logic_error("" #condition "");
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

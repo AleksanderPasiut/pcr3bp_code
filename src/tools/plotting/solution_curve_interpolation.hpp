@@ -5,10 +5,10 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include <carina/capd/solution_curve.hpp>
+#include <capd_utils/capd/solution_curve.hpp>
 #include <leo/interpolation/interpolation.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>
@@ -19,7 +19,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    SolutionCurveInterpolation(const Carina::SolutionCurve<MapT>& solution, size_t nodes_count)
+    SolutionCurveInterpolation(const CapdUtils::SolutionCurve<MapT>& solution, size_t nodes_count)
         : m_interpolation(get_nodes(solution, nodes_count))
     {}
 
@@ -30,7 +30,7 @@ public:
 
 private:
     Leo::CubicInterpolationNodesList<ScalarType, VectorType> get_nodes(
-        const Carina::SolutionCurve<MapT>& solution,
+        const CapdUtils::SolutionCurve<MapT>& solution,
         size_t nodes_count)
     {
         Leo::CubicInterpolationNodesList<ScalarType, VectorType> nodes;

@@ -7,9 +7,9 @@
 #include "pcr3bp_basic/standard_system.hpp"
 #include "pcr3bp_basic/regularized_system.hpp"
 
-#include <carina/projection_map.hpp>
+#include <capd_utils/projection_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT, size_t mu_index>
@@ -28,7 +28,7 @@ private:
 public:
     Pcr3bpRegularizedHamiltonianTest(const Pcr3bp::SetupParameters<MapT>& setup)
         : m_hamiltonian( Pcr3bp::StandardSystem<MapT>::createHamiltonian(setup) )
-        , m_R5toR4( Carina::ProjectionMap<MapT>::create(5, {0, 1, 2, 3}) )
+        , m_R5toR4( CapdUtils::ProjectionMap<MapT>::create(5, {0, 1, 2, 3}) )
         , m_reg_change5( LeviCivitaCoordinateChange<MapT>::create(mu_index, setup, true, true, false) )
         , m_ghv_condition_equation( Pcr3bp::RegularizedSystem<MapT>::createHamiltonian(mu_index, setup) )
     {}
@@ -38,7 +38,7 @@ public:
         const VectorType H0 = m_hamiltonian(m_R5toR4(m_reg_change5(U0)));
         const VectorType U1 = { U0[0], U0[1], U0[2], U0[3], H0[0] };
 
-        Carina::MaxNorm<MapT> norm;
+        CapdUtils::MaxNorm<MapT> norm;
         const VectorType V = m_ghv_condition_equation(U1);
         EXPECT_LT( norm( V ), precision );
     }
@@ -48,7 +48,7 @@ public:
 
 TEST(Pcr3bp_basic, reg_hamiltonian_test_1)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     Pcr3bp::SetupParameters<IMap> setup;
     Pcr3bpRegularizedHamiltonianTest<IMap, 1> test(setup);
@@ -61,7 +61,7 @@ TEST(Pcr3bp_basic, reg_hamiltonian_test_1)
 
 TEST(Pcr3bp_basic, reg_hamiltonian_test_2)
 {
-    using namespace Ursa;
+    using namespace Pcr3bpProof;
 
     Pcr3bp::SetupParameters<IMap> setup(0.4);
     Pcr3bpRegularizedHamiltonianTest<IMap, 2> test(setup);

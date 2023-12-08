@@ -5,9 +5,9 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include <carina/c1_map.hpp>
+#include <capd_utils/c1_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 const Interval I = { -1.0, +1.0 };
@@ -30,7 +30,7 @@ public:
         assert_with_exception(map.dimension() == 2);
         assert_with_exception(map.imageDimension() == 2);
 
-        Carina::C1_Map<MapT, MapU&> c1_map
+        CapdUtils::C1_Map<MapT, MapU&> c1_map
         {
             std::ref(map)
         };
@@ -49,14 +49,14 @@ public:
         return m_img[1].subset( I );
     }
 
-    bool right_expansion_condition() const noexcept
+    bool expansion_condition() const noexcept
     {
-        return m_img_right[0].leftBound() > I.rightBound();
-    }
+        if (m_img_right[0].leftBound() > I.rightBound() && m_img_left[0].rightBound() < I.leftBound())
+        {
+            return true;
+        }
 
-    bool left_expansion_condition() const noexcept
-    {
-        return m_img_left[0].rightBound() < I.leftBound();
+        return false;
     }
 
     const VectorType get_img() const noexcept

@@ -2,12 +2,12 @@
 // Author: Aleksander M. Pasiut
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <carina/capd/map.hpp>
-#include <carina/readable_scalar.hpp>
+#include <capd_utils/capd/map.hpp>
+#include <capd_utils/readable_scalar.hpp>
 
 #include "print_bootstrap.hpp"
 
-namespace Carina
+namespace CapdUtils
 {
 
 template<>
@@ -17,7 +17,7 @@ void BootstrapPrint<RMap>::print(std::ostream& ostr, const VectorType& vec)
 
     for (int i = 0; ; ++i)
     {
-        ostr << "\tCarina::ReadableScalar<ScalarType>(\"" << std::string(Carina::ReadableScalar<ScalarType>(vec[i])) << "\")";
+        ostr << "\tCapdUtils::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<ScalarType>(vec[i])) << "\")";
 
         if (i+1 < vec.dimension())
         {
@@ -45,7 +45,7 @@ void BootstrapPrint<RMap>::print(std::ostream& ostr, const MatrixType& mat)
     int i = 1;
     for (auto e : mat)
     {
-        ostr << "\tCarina::ReadableScalar<ScalarType>(\"" << std::string(Carina::ReadableScalar<double>(e)) << "\")";
+        ostr << "\tCapdUtils::ReadableScalar<ScalarType>(\"" << std::string(CapdUtils::ReadableScalar<double>(e)) << "\")";
 
         if (i < count)
         {

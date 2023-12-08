@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <carina/composite_map.hpp>
+#include <capd_utils/composite_map.hpp>
 
 #include <pcr3bp_basic/setup_parameters.hpp>
 #include <pcr3bp_basic/standard_system.hpp>
@@ -12,7 +12,7 @@
 
 #include "periodic_orbit_parameters.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 namespace Pcr3bp
 {
@@ -40,6 +40,8 @@ public:
     MapT m_vf_reg_neg2 { Pcr3bp::RegularizedSystem<MapT>::createNegativeVectorField4(2, m_setup, m_h0) };
 
     unsigned m_order { 60 };
+
+    ScalarType m_lyapunov_orbit_period { 0.908942551524734 * 2 };
 };
 
 }

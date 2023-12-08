@@ -7,23 +7,22 @@
 #include "pcr3bp_reg_basic_objects.hpp"
 #include "pcr3bp_reg2_initial_coordsys_generator.hpp"
 
-#include <carina/poincare_wrapper.hpp>
-#include <carina/timemap_wrapper.hpp>
-#include <carina/composite_map.hpp>
-#include <carina/extension_map.hpp>
-#include <carina/projection_map.hpp>
-#include <carina/affine_map.hpp>
-#include <carina/constrained_function.hpp>
-#include <carina/parallel_shooting/parallel_shooting_init.hpp>
+#include <capd_utils/poincare_wrapper.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
+#include <capd_utils/composite_map.hpp>
+#include <capd_utils/extension_map.hpp>
+#include <capd_utils/projection_map.hpp>
+#include <capd_utils/affine_map.hpp>
+#include <capd_utils/constrained_function.hpp>
+#include <capd_utils/parallel_shooting/parallel_shooting_init.hpp>
 
-#include "tools/local_poincare4.hpp"
+#include "tools/affine_poincare_map.hpp"
 #include "tools/coordsys4_alignment.hpp"
-#include "tools/unstable_directions_generator.hpp"
-#include "tools/direction_shifting.hpp"
+#include "tools/power_iteration.hpp"
 #include "tools/auxiliary_functions.hpp"
 #include "tools/variable_printer.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,45 +36,183 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    using Coordsys = Carina::LocalCoordinateSystem<MapT>;
+    using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
     static_assert(std::is_same<MapT, RMap>::value);
 
     PeriodicOrbitCoordsysGenerator()
     {
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_total_expansion_factor_pos.txt",
-            "Total expansion factor along periodic orbit (positive direction)",
-            m_unstable_dir_gen.get_expansion_pos_factor());
+        std::cout.precision(15);
+        {
+            CapdUtils::AffinePoincareMap poincare_1_pos
+            {
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(0),
+                m_initial_coordsys.at(1)
+            };
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_total_expansion_factor_neg.txt",
-            "Total expansion factor along periodic orbit (negative direction)",
-            m_unstable_dir_gen.get_expansion_pos_factor());
+            CapdUtils::AffinePoincareMap poincare_2_pos
+            {
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(1),
+                m_initial_coordsys.at(2)
+            };
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_average_expansion_factor_pos.txt",
-            "Average expansion factor along periodic orbit (positive direction)",
-            m_expansion_factor_pos);
+            CapdUtils::AffinePoincareMap poincare_3_pos
+            {
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(2),
+                m_initial_coordsys.at(3)
+            };
+            
+            CapdUtils::AffinePoincareMap poincare_0_pos
+            {
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(3),
+                m_initial_coordsys.at(0)
+            };
+            
+            CapdUtils::AffinePoincareMap poincare_1_neg
+            {
+                m_basic_objects.m_vf_reg_neg2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(2),
+                m_initial_coordsys.at(1)
+            };
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_average_expansion_factor_neg.txt",
-            "Average expansion factor along periodic orbit (negative direction)",
-            m_expansion_factor_neg);
+            CapdUtils::AffinePoincareMap poincare_0_neg
+            {
+                m_basic_objects.m_vf_reg_neg2,
+                m_basic_objects.m_order,
+                m_initial_coordsys.at(1),
+                m_initial_coordsys.at(0)
+            };
+            
+            CapdUtils::CompositeMap<MapT,
+                CapdUtils::AffinePoincareMap<MapT>&,
+                CapdUtils::AffinePoincareMap<MapT>&,
+                CapdUtils::AffinePoincareMap<MapT>&,
+                CapdUtils::AffinePoincareMap<MapT>&> poincare_total
+            {
+                std::ref(poincare_1_pos),
+                std::ref(poincare_2_pos),
+                std::ref(poincare_3_pos),
+                std::ref(poincare_0_pos)
+            };
 
-        m_local_poincare_pos.at(0)(VectorType(2));
+            MatrixType der {};
+            auto x1 = poincare_total( VectorType(4), der );
+            print_var(x1);
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_g_0_1_approx_return_time.txt",
-            "Approximate value of return time on underlying Poincare map of g_01 map",
-            m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
+            print_var( der );
 
-        m_local_poincare_pos.at(1)(VectorType(2));
+            const VectorType unstable_dir_w0_local = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
+            print_var( unstable_dir_w0_local );
+            print_var( der * unstable_dir_w0_local );
 
-        Carina::VariablePrinter<MapT>::print(
-            "periodic_orbit_g_1_2_approx_return_time.txt",
-            "Approximate value of return time on underlying Poincare map of g_12 map",
-            m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
+            print_var( unstable_dir_w0_local.euclNorm() );
+            print_var( (der * unstable_dir_w0_local).euclNorm() );
+
+            const ScalarType expansion_factor = std::pow( (der * unstable_dir_w0_local).euclNorm(), 0.25 );
+            print_var(expansion_factor);
+
+            const VectorType unstable_dir_w0 = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir_w0_local;
+            print_var( unstable_dir_w0 );
+
+            // print_var( m_unstable_dir_gen.get_expansion_pos_factor() ); 
+            const VectorType stable_dir_w0 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w0);
+            print_var( stable_dir_w0 );
+            
+
+            MatrixType der1 {};
+            print_var( poincare_1_pos(VectorType(4), der1) );
+            const VectorType unstable_dir_w1_local = (der1 * unstable_dir_w0_local) / expansion_factor;
+            const VectorType unstable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * unstable_dir_w1_local;
+            print_var( unstable_dir_w1 );
+
+            MatrixType der2 {};
+            print_var( poincare_2_pos(VectorType(4), der2) );
+            const VectorType unstable_dir_w2_local = (der2 * unstable_dir_w1_local) / expansion_factor;
+            const VectorType unstable_dir_w2 = m_initial_coordsys.at(2).get_directions_matrix() * unstable_dir_w2_local;
+            print_var( unstable_dir_w2 );
+
+            const VectorType stable_dir_w2 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w2);
+            print_var( stable_dir_w2 );
+
+            MatrixType w2_initial_dirs = m_initial_coordsys.at(2).get_directions_matrix();
+            w2_initial_dirs.Transpose();
+
+            const VectorType stable_dir_w2_local = w2_initial_dirs * stable_dir_w2;
+            print_var( stable_dir_w2_local );
+
+            MatrixType der1_neg {};
+            print_var( poincare_1_neg(VectorType(4), der1_neg) );
+            const VectorType stable_dir_w1_local = (der1_neg * stable_dir_w2_local) / expansion_factor;
+            const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
+            print_var( stable_dir_w1 );
+
+            m_local_coord.reserve(4);
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric(
+                    m_initial_coordsys.at(0),
+                    unstable_dir_w0));
+            
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs(
+                    m_initial_coordsys.at(1),
+                    unstable_dir_w1,
+                    stable_dir_w1));
+
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::replace_unstable_dirs_and_make_S_backsymmetric(
+                    m_initial_coordsys.at(2),
+                    unstable_dir_w2));
+
+            m_local_coord.push_back(
+                Coordsys4_Alignment<MapT>::create_S_backsymmetric(
+                    m_local_coord.at(1)));
+        }
+
+
+        
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_total_expansion_factor_pos.txt",
+        //     "Total expansion factor along periodic orbit (positive direction)",
+        //     m_unstable_dir_gen.get_expansion_pos_factor());
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_total_expansion_factor_neg.txt",
+        //     "Total expansion factor along periodic orbit (negative direction)",
+        //     m_unstable_dir_gen.get_expansion_pos_factor());
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_average_expansion_factor_pos.txt",
+        //     "Average expansion factor along periodic orbit (positive direction)",
+        //     m_expansion_factor_pos);
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_average_expansion_factor_neg.txt",
+        //     "Average expansion factor along periodic orbit (negative direction)",
+        //     m_expansion_factor_neg);
+
+        // m_local_poincare_pos.at(0)(VectorType(2));
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_g_0_1_approx_return_time.txt",
+        //     "Approximate value of return time on underlying Poincare map of g_01 map",
+        //     m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
+
+        // m_local_poincare_pos.at(1)(VectorType(2));
+
+        // CapdUtils::VariablePrinter<MapT>::print(
+        //     "periodic_orbit_g_1_2_approx_return_time.txt",
+        //     "Approximate value of return time on underlying Poincare map of g_12 map",
+        //     m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
     }
 
     const std::vector<Coordsys>& get_coordsys_container() const
@@ -84,16 +221,6 @@ public:
     }
 
 private:
-    class UnstableDirsList : public std::list<VectorType>
-    {
-    public:
-        UnstableDirsList(const std::list<VectorType>& arg)
-        {
-            assert_with_exception(arg.size() == 3);
-            std::list<VectorType>::operator= (arg);
-        }
-    };
-
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
     RegLyapunovCollisionOrbitParameters<MapT> m_parameters {};
 
@@ -105,144 +232,7 @@ private:
         Pcr3bp::Reg2_InitialCoordsysGenerator<MapT>::gen(m_basic_objects, m_basic_objects.m_parameters.get_intermediate_point_neg())
     };
 
-    std::array<LocalPoincare4<MapT>, 3> m_local_poincare_pos
-    {
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_pos2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(0),
-            m_initial_coordsys.at(1)
-        },
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_pos2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(1),
-            m_initial_coordsys.at(2)
-        },
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_pos2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(2),
-            m_initial_coordsys.at(3)
-        }
-    };
-
-    std::array<LocalPoincare4<MapT>, 3> m_local_poincare_neg
-    {
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_neg2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(0),
-            m_initial_coordsys.at(3)
-        },
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_neg2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(3),
-            m_initial_coordsys.at(2)
-        },
-        LocalPoincare4<MapT>
-        {
-            m_basic_objects.m_vf_reg_neg2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            m_initial_coordsys.at(2),
-            m_initial_coordsys.at(1)
-        }
-    };
-
-    Carina::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_pos_dual
-    {
-        std::ref(m_local_poincare_pos.at(0)),
-        std::ref(m_local_poincare_pos.at(1))
-    };
-
-    Carina::CompositeMap<MapT, LocalPoincare4<MapT>&, LocalPoincare4<MapT>&> m_local_poincare_neg_dual
-    {
-        std::ref(m_local_poincare_neg.at(0)),
-        std::ref(m_local_poincare_neg.at(1))
-    };
-
-    Carina::UnstableDirectionsGenerator<MapT,
-        decltype(m_local_poincare_pos_dual)&,
-        decltype(m_local_poincare_neg_dual)&> m_unstable_dir_gen
-    {
-        std::ref(m_local_poincare_pos_dual),
-        std::ref(m_local_poincare_neg_dual),
-        VectorType{ 1.0, 0.0 },
-        50
-    };
-
-    ScalarType const m_expansion_factor_pos
-    {
-        std::pow(static_cast<double>(m_unstable_dir_gen.get_expansion_pos_factor()), 0.25)
-    };
-
-    ScalarType const m_expansion_factor_neg
-    {
-        std::pow(static_cast<double>(m_unstable_dir_gen.get_expansion_neg_factor()), 0.25)
-    };
-
-    Carina::DirectionShifting<MapT,
-        LocalPoincare4<MapT>&,
-        LocalPoincare4<MapT>&,
-        LocalPoincare4<MapT>&> m_direction_shifting_pos
-    {
-        m_expansion_factor_pos,
-        std::ref(m_local_poincare_pos.at(0)),
-        std::ref(m_local_poincare_pos.at(1)),
-        std::ref(m_local_poincare_pos.at(2))
-    };
-
-    Carina::DirectionShifting<MapT,
-        LocalPoincare4<MapT>&,
-        LocalPoincare4<MapT>&,
-        LocalPoincare4<MapT>&> m_direction_shifting_neg
-    {
-        m_expansion_factor_neg,
-        std::ref(m_local_poincare_neg.at(0)),
-        std::ref(m_local_poincare_neg.at(1)),
-        std::ref(m_local_poincare_neg.at(2))
-    };
-
-    const UnstableDirsList m_unstable_pos_dirs_2d 
-    {
-        m_direction_shifting_pos.eval( m_unstable_dir_gen.get_unstable_pos(), { VectorType(2), VectorType(2), VectorType(2) } )
-    };
-
-    const UnstableDirsList m_unstable_neg_dirs_2d
-    {
-        m_direction_shifting_neg.eval( m_unstable_dir_gen.get_unstable_neg(), { VectorType(2), VectorType(2), VectorType(2) } )
-    };
-
-    const std::vector<Coordsys> m_local_coord
-    {
-        Coordsys4_Alignment<MapT>::align_with_s_symmetry(
-            m_initial_coordsys.at(0),
-            m_unstable_dir_gen.get_unstable_pos()),
-        Coordsys4_Alignment<MapT>::align(
-            m_initial_coordsys.at(1),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 0),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 0)),
-        Coordsys4_Alignment<MapT>::align(
-            m_initial_coordsys.at(2),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 1),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 1)),
-        Coordsys4_Alignment<MapT>::align(
-            m_initial_coordsys.at(3),
-            *std::next(m_unstable_pos_dirs_2d.begin(), 2),
-            *std::next(m_unstable_neg_dirs_2d.rbegin(), 2))
-    };
+    std::vector<Coordsys> m_local_coord {};
 };
 
 }
