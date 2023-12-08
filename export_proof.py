@@ -1,3 +1,4 @@
+import os
 import shutil
 
 # remove plotting related code
@@ -12,3 +13,6 @@ shutil.rmtree('src/capd_renderable.hpp', ignore_errors=True)
 # remove basic test code
 shutil.rmtree('src/pcr3bp_basic_test', ignore_errors=True)
 
+# replace current CMakeLists.txt
+os.remove('CMakeLists.txt')
+shutil.copyfile('CMakeLists.proof_only.txt', 'CMakeLists.txt')
