@@ -36,8 +36,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_homoclinic_coverings()
     {
-        // for (size_t i = 1; i < m_homoclinic_orbit_coordsys.size(); ++i)
-        for (size_t i = 1; i <= 14; ++i)
+        for (size_t i = 1; i < m_homoclinic_orbit_coordsys.size(); ++i)
         {
             const size_t src_idx = i-1;
             const size_t dst_idx = i;
