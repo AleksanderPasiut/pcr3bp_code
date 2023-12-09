@@ -194,6 +194,25 @@ public:
         return createVectorFieldInternal4(mu_index, setup, ScalarType(-1.0), h);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! Create collision condition map
+    //!
+    //! @param mu_index index of mass at which the regularization takes place
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static MapT createCollisionCondition(size_t mu_index, const Pcr3bp::SetupParameters<MapT>& setup)
+    {
+        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
+        {
+            out[0] = in[0];
+            out[1] = in[1];
+            out[2] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
+        };
+
+        MapT collision_condition(func, 4, 3, 1);
+        collision_condition.setParameter(0, setup.get_mu(mu_index) );
+        return collision_condition;
+    }
+
 private:
     static MapT createVectorFieldInternal(size_t mu_index, const Pcr3bp::SetupParameters<MapT>& setup, ScalarType direction, bool t_coordinate)
     {

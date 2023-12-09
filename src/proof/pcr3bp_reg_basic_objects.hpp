@@ -39,6 +39,8 @@ public:
     MapT m_vf_reg_pos2 { Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField4(2, m_setup, m_h0) };
     MapT m_vf_reg_neg2 { Pcr3bp::RegularizedSystem<MapT>::createNegativeVectorField4(2, m_setup, m_h0) };
 
+    MapT m_collision_condition { Pcr3bp::RegularizedSystem<MapT>::createCollisionCondition(2, m_setup) };
+
     unsigned m_order { 60 };
 
     ScalarType m_lyapunov_orbit_period { 0.908942551524734 * 2 };

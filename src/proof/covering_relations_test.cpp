@@ -206,30 +206,23 @@ public:
 
         CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
 
-        using CapdUtils::Node;
-        auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
-        };
-
-        MapT map_C(collision_condition_f, 4, 1, 1);
-        map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
+        MapT& map_C = m_basic_objects.m_collision_condition;
 
         CapdUtils::CompositeMap<MapT,
             decltype(eta)&,
             decltype(map_E0)&,
             decltype(map_L0)&,
-            decltype(map_C)&> map_C2(
+            decltype(map_C)&> map_chi(
                 std::ref(eta),
                 std::ref(map_E0),
                 std::ref(map_L0),
                 std::ref(map_C)
             );
 
-        MatrixType der(1, 2);
-        map_C2(N * m_gain_factor, der);
-        const ScalarType fx = der(1,1);
-        const ScalarType fy = der(1,2);
+        MatrixType der(3, 2);
+        map_chi(N * m_gain_factor, der);
+        const ScalarType fx = der(3,1);
+        const ScalarType fy = der(3,2);
 
         EXPECT_TRUE( fx < 0 );
         EXPECT_TRUE( fy < 0 );
@@ -341,57 +334,44 @@ private:
             std::ref(coordsys_dst)
         };
 
+        CapdUtils::MaxNorm<MapT> norm {};
+
+        const VectorType expected_collision = m_basic_objects.m_parameters.get_initial_point();
+        if ( norm(coordsys_src.get_origin() - expected_collision) < norm(coordsys_dst.get_origin() - expected_collision) )
         {
-            using CapdUtils::Node;
-            auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
+            G_Map<MapT> f_pos
             {
-                out[0] = in[0];
-                out[1] = in[1];
-                out[2] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
+                std::ref(m_basic_objects.m_vf_reg_pos2),
+                std::ref(m_basic_objects.m_hamiltonian_reg2),
+                m_basic_objects.m_order,
+                coordsys_src,
+                coordsys_dst,
+                m_gain_factor
             };
 
-            MapT collision_condition(collision_condition_f, 4, 3, 1);
-            collision_condition.setParameter(0, m_basic_objects.m_setup.get_mu(2));
+            SolutionCurveWithConditionCheck<MapT> solution_curve {};
+            f_pos(N, time_span, solution_curve);
 
-            CapdUtils::MaxNorm<MapT> norm {};
-
-            const VectorType expected_collision = m_basic_objects.m_parameters.get_initial_point();
-            if ( norm(coordsys_src.get_origin() - expected_collision) < norm(coordsys_dst.get_origin() - expected_collision) )
+            bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( m_basic_objects.m_collision_condition );
+            EXPECT_TRUE(solution_curve_condition);
+        }
+        else
+        {
+            G_Map<MapT> f_neg
             {
-                G_Map<MapT> f_pos
-                {
-                    std::ref(m_basic_objects.m_vf_reg_pos2),
-                    std::ref(m_basic_objects.m_hamiltonian_reg2),
-                    m_basic_objects.m_order,
-                    coordsys_src,
-                    coordsys_dst,
-                    m_gain_factor
-                };
+                std::ref(m_basic_objects.m_vf_reg_neg2),
+                std::ref(m_basic_objects.m_hamiltonian_reg2),
+                m_basic_objects.m_order,
+                coordsys_dst,
+                coordsys_src,
+                m_gain_factor
+            };
 
-                SolutionCurveWithConditionCheck<MapT> solution_curve {};
-                f_pos(N, time_span, solution_curve);
+            SolutionCurveWithConditionCheck<MapT> solution_curve {};
+            f_neg(N, time_span, solution_curve);
 
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
-                EXPECT_TRUE(solution_curve_condition);
-            }
-            else
-            {
-                G_Map<MapT> f_neg
-                {
-                    std::ref(m_basic_objects.m_vf_reg_neg2),
-                    std::ref(m_basic_objects.m_hamiltonian_reg2),
-                    m_basic_objects.m_order,
-                    coordsys_dst,
-                    coordsys_src,
-                    m_gain_factor
-                };
-
-                SolutionCurveWithConditionCheck<MapT> solution_curve {};
-                f_neg(N, time_span, solution_curve);
-
-                bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( collision_condition );
-                EXPECT_TRUE(solution_curve_condition);
-            }
+            bool const solution_curve_condition = solution_curve.is_condition_never_satisfied( m_basic_objects.m_collision_condition );
+            EXPECT_TRUE(solution_curve_condition);
         }
     }
 
