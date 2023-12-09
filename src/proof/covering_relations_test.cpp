@@ -122,13 +122,6 @@ private:
 
         const ScalarType time_span = f.get_last_evaluation_return_time();
 
-        print_var(cr.get_der());
-        print_var( CapdUtils::span_matrix(cr.get_der()) );
-
-        print_var(cr.get_img());
-        print_var(cr.get_img_left());
-        print_var(cr.get_img_right());
-
         EXPECT_TRUE(cr.contraction_condition());
         EXPECT_TRUE(cr.expansion_condition());
 
@@ -174,13 +167,6 @@ private:
         CoveringRelationCheck cr { jfj };
 
         const ScalarType time_span = f.get_last_evaluation_return_time();
-
-        print_var(cr.get_der());
-        print_var( CapdUtils::span_matrix(cr.get_der()) );
-
-        print_var(cr.get_img());
-        print_var(cr.get_img_left());
-        print_var(cr.get_img_right());
 
         EXPECT_TRUE(cr.contraction_condition());
         EXPECT_TRUE(cr.expansion_condition());
@@ -355,46 +341,37 @@ private:
         MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
         MapT J = AuxiliaryFunctions<MapT>::J();
 
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+
+        G_Map<MapT> poincare
         {
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+            m_basic_objects.m_vf_reg_neg2,
+            m_basic_objects.m_hamiltonian_reg2,
+            m_basic_objects.m_order,
+            coordsys_dst,
+            coordsys_src,
+            m_gain_factor
+        };
 
-            G_Map<MapT> poincare
-            {
-                m_basic_objects.m_vf_reg_neg2,
-                m_basic_objects.m_hamiltonian_reg2,
-                m_basic_objects.m_order,
-                coordsys_dst,
-                coordsys_src,
-                m_gain_factor
-            };
+        CapdUtils::CompositeMap<MapT,
+            decltype(J)&,
+            decltype(poincare)&,
+            decltype(J)&,
+            decltype(eta_inverse)&,
+            decltype(R_inverse)&> composite
+        {
+            std::ref(J),
+            std::ref(poincare),
+            std::ref(J),
+            std::ref(eta_inverse),
+            std::ref(R_inverse)
+        };
+        
+        CoveringRelationCheck cr { composite };
 
-            CapdUtils::CompositeMap<MapT,
-                decltype(J)&,
-                decltype(poincare)&,
-                decltype(J)&,
-                decltype(eta_inverse)&,
-                decltype(R_inverse)&> composite
-            {
-                std::ref(J),
-                std::ref(poincare),
-                std::ref(J),
-                std::ref(eta_inverse),
-                std::ref(R_inverse)
-            };
-            
-            CoveringRelationCheck cr { composite };
-
-            print_var(cr.get_der());
-            print_var( CapdUtils::span_matrix(cr.get_der()) );
-
-            print_var(cr.get_img());
-            print_var(cr.get_img_left());
-            print_var(cr.get_img_right());
-
-            EXPECT_TRUE(cr.contraction_condition());
-            EXPECT_TRUE(cr.expansion_condition());
-        }
+        EXPECT_TRUE(cr.contraction_condition());
+        EXPECT_TRUE(cr.expansion_condition());
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

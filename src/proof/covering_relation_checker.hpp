@@ -42,6 +42,14 @@ public:
 
         const VectorType right = VectorType{ N[0].right(), N[1] };
         m_img_right = c1_map(right);
+
+
+        print_var( m_der );
+        print_var( CapdUtils::span_matrix( m_der ) );
+
+        print_var( m_img );
+        print_var( m_img_left );
+        print_var( m_img_right );
     }
 
     bool contraction_condition() const noexcept
@@ -62,21 +70,6 @@ public:
     const VectorType get_img() const noexcept
     {
         return m_img;
-    }
-
-    const MatrixType get_der() const noexcept
-    {
-        return m_der;
-    }
-
-    const VectorType get_img_left() const noexcept
-    {
-        return m_img_left;
-    }
-
-    const VectorType get_img_right() const noexcept
-    {
-        return m_img_right;
     }
 
 private:
