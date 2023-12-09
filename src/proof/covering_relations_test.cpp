@@ -94,12 +94,9 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_parallelogram_coverings()
     {
-        const ScalarType L = 0.000105902; // 1.0 / 512;
-        parallelogram_covering_check( L );
-
-        parallelogram_covering_endings_check( L );
-
-        collision_manifold_derivative(L);
+        parallelogram_covering_check();
+        parallelogram_covering_endings_check();
+        collision_manifold_derivative();
     }
 
 private:
@@ -276,9 +273,10 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Check parallelogram coverings around fixed point
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void parallelogram_covering_check(const ScalarType& L)
+    void parallelogram_covering_check()
     {
         const VectorType arg = N;
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
 
         std::list<MatrixType> der_list {};
 
@@ -343,17 +341,18 @@ private:
         EXPECT_TRUE( der_union(2,2) > beta );
     }
 
-    void parallelogram_covering_endings_check( ScalarType L )
+    void parallelogram_covering_endings_check()
     {
-        const ScalarType b0 = 1.0 - pow(2.0, -24);
-        const ScalarType a0 = 151.0 / 256;
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
+        const ScalarType b0 = m_basic_objects.m_parallelogram_coverings_parameters.b0;
+        const ScalarType a0 = m_basic_objects.m_parallelogram_coverings_parameters.a0;
 
         EXPECT_TRUE(0 < a0);
         EXPECT_TRUE(a0 < b0);
         EXPECT_TRUE(b0 < 1);
 
         MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(a0, b0);
-        MapT eta = AuxiliaryFunctions<MapT>::eta( -L );
+        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
         MapT J = AuxiliaryFunctions<MapT>::J();
 
         {
@@ -374,13 +373,13 @@ private:
                 decltype(J)&,
                 decltype(poincare)&,
                 decltype(J)&,
-                decltype(eta)&,
+                decltype(eta_inverse)&,
                 decltype(R_inverse)&> composite
             {
                 std::ref(J),
                 std::ref(poincare),
                 std::ref(J),
-                std::ref(eta),
+                std::ref(eta_inverse),
                 std::ref(R_inverse)
             };
             
@@ -401,9 +400,11 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Check collision manifold derivative
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void collision_manifold_derivative(ScalarType p0)
+    void collision_manifold_derivative()
     {
-        MapT eta = AuxiliaryFunctions<MapT>::eta(p0);
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
+
+        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
 
         LocalPoincare4_Constraint<MapT> map_E0
         {
