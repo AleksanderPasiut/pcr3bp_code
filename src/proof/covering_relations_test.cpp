@@ -78,15 +78,12 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_jump_coverings()
     {
-        {
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+        std::cout << "periodic (3) <= first homoclinic covering\n";
 
-            std::cout << "periodic (3) <= first homoclinic covering\n";
-
-            const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
-            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
-        }
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+        const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
+        simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,8 +225,6 @@ public:
                 std::ref(map_L0),
                 std::ref(map_C)
             );
-
-        std::cout.precision(20);
 
         MatrixType der(1, 2);
         map_C2(N * m_gain_factor, der);
