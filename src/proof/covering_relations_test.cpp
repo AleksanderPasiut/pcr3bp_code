@@ -90,13 +90,157 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check parallelogram covering relations
+    //! @brief Check parallelogram coverings around fixed point
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void check_parallelogram_coverings()
+    void parallelogram_covering_derivative_check()
     {
-        parallelogram_covering_check();
-        parallelogram_covering_endings_check();
-        collision_manifold_derivative();
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
+
+        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
+        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
+
+        std::list<MatrixType> der_list {};
+        for (int i = 0; i < 4; ++i)
+        {
+            const int first = i;
+            const int second = (i+1) % 4;
+            
+            G_Map<MapT> poincare
+            {
+                m_basic_objects.m_vf_reg_pos2,
+                m_basic_objects.m_hamiltonian_reg2,
+                m_basic_objects.m_order,
+                m_periodic_orbit_coordsys.at(first),
+                m_periodic_orbit_coordsys.at(second),
+                m_gain_factor
+            };
+
+            CapdUtils::CompositeMap<MapT, MapT&, decltype(poincare)&, MapT&> aligned_poincare
+            {
+                std::ref(eta),
+                std::ref(poincare),
+                std::ref(eta_inverse)
+            };
+
+            MatrixType der(2,2);
+            aligned_poincare(N, der);
+            print_var(der);
+
+            der_list.emplace_back(der);
+        }
+
+        auto it = der_list.begin();
+
+        MatrixType der_union = *it;
+        for (++it; it != der_list.end(); ++it)
+        {
+            der_union = capd::vectalg::intervalHull(*it, der_union);
+        }
+
+        print_var(der_union);
+
+        ParallelogramCoveringChecker<MapT> parallelogram_covering_checker( der_union );
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Check first parallelogram covering
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void parallelogram_covering_beginning_check()
+    {
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
+        const ScalarType b0 = m_basic_objects.m_parallelogram_coverings_parameters.b0;
+        const ScalarType a0 = m_basic_objects.m_parallelogram_coverings_parameters.a0;
+
+        EXPECT_TRUE(0 < a0);
+        EXPECT_TRUE(a0 < b0);
+        EXPECT_TRUE(b0 < 1);
+
+        MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(a0, b0);
+        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
+        MapT J = AuxiliaryFunctions<MapT>::J();
+
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
+        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
+
+        G_Map<MapT> poincare
+        {
+            m_basic_objects.m_vf_reg_neg2,
+            m_basic_objects.m_hamiltonian_reg2,
+            m_basic_objects.m_order,
+            coordsys_dst,
+            coordsys_src,
+            m_gain_factor
+        };
+
+        CapdUtils::CompositeMap<MapT,
+            decltype(J)&,
+            decltype(poincare)&,
+            decltype(J)&,
+            decltype(eta_inverse)&,
+            decltype(R_inverse)&> composite
+        {
+            std::ref(J),
+            std::ref(poincare),
+            std::ref(J),
+            std::ref(eta_inverse),
+            std::ref(R_inverse)
+        };
+        
+        CoveringRelationCheck cr { composite };
+
+        EXPECT_TRUE(cr.contraction_condition());
+        EXPECT_TRUE(cr.expansion_condition());
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //! @brief Check collision manifold derivative
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void collision_manifold_derivative_check()
+    {
+        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
+
+        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
+
+        LocalPoincare4_Constraint<MapT> map_E0
+        {
+            std::ref(m_basic_objects.m_hamiltonian_reg2),
+            std::ref( m_periodic_orbit_coordsys.at(0) )
+        };
+
+        CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
+
+        using CapdUtils::Node;
+        auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
+        {
+            out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
+        };
+
+        MapT map_C(collision_condition_f, 4, 1, 1);
+        map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
+
+        CapdUtils::CompositeMap<MapT,
+            decltype(eta)&,
+            decltype(map_E0)&,
+            decltype(map_L0)&,
+            decltype(map_C)&> map_C2(
+                std::ref(eta),
+                std::ref(map_E0),
+                std::ref(map_L0),
+                std::ref(map_C)
+            );
+
+        std::cout.precision(20);
+
+        MatrixType der(1, 2);
+        map_C2(N * m_gain_factor, der);
+        const ScalarType fx = der(1,1);
+        const ScalarType fy = der(1,2);
+
+        EXPECT_TRUE( fx < 0 );
+        EXPECT_TRUE( fy < 0 );
+
+        print_var ( fx );
+        print_var ( fy );
     }
 
 private:
@@ -256,157 +400,6 @@ private:
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check parallelogram coverings around fixed point
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void parallelogram_covering_check()
-    {
-        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
-
-        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
-        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
-
-        std::list<MatrixType> der_list {};
-        for (int i = 0; i < 4; ++i)
-        {
-            const int first = i;
-            const int second = (i+1) % 4;
-            
-            G_Map<MapT> poincare
-            {
-                m_basic_objects.m_vf_reg_pos2,
-                m_basic_objects.m_hamiltonian_reg2,
-                m_basic_objects.m_order,
-                m_periodic_orbit_coordsys.at(first),
-                m_periodic_orbit_coordsys.at(second),
-                m_gain_factor
-            };
-
-            CapdUtils::CompositeMap<MapT, MapT&, decltype(poincare)&, MapT&> aligned_poincare
-            {
-                std::ref(eta),
-                std::ref(poincare),
-                std::ref(eta_inverse)
-            };
-
-            MatrixType der(2,2);
-            aligned_poincare(N, der);
-            print_var(der);
-
-            der_list.emplace_back(der);
-        }
-
-        auto it = der_list.begin();
-
-        MatrixType der_union = *it;
-        for (++it; it != der_list.end(); ++it)
-        {
-            der_union = capd::vectalg::intervalHull(*it, der_union);
-        }
-
-        print_var(der_union);
-
-        ParallelogramCoveringChecker<MapT> parallelogram_covering_checker( der_union );
-    }
-
-    void parallelogram_covering_endings_check()
-    {
-        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
-        const ScalarType b0 = m_basic_objects.m_parallelogram_coverings_parameters.b0;
-        const ScalarType a0 = m_basic_objects.m_parallelogram_coverings_parameters.a0;
-
-        EXPECT_TRUE(0 < a0);
-        EXPECT_TRUE(a0 < b0);
-        EXPECT_TRUE(b0 < 1);
-
-        MapT R_inverse = AuxiliaryFunctions<MapT>::R_Inverse(a0, b0);
-        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
-        MapT J = AuxiliaryFunctions<MapT>::J();
-
-        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(3);
-        const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( m_homoclinic_orbit_coordsys.begin() );
-
-        G_Map<MapT> poincare
-        {
-            m_basic_objects.m_vf_reg_neg2,
-            m_basic_objects.m_hamiltonian_reg2,
-            m_basic_objects.m_order,
-            coordsys_dst,
-            coordsys_src,
-            m_gain_factor
-        };
-
-        CapdUtils::CompositeMap<MapT,
-            decltype(J)&,
-            decltype(poincare)&,
-            decltype(J)&,
-            decltype(eta_inverse)&,
-            decltype(R_inverse)&> composite
-        {
-            std::ref(J),
-            std::ref(poincare),
-            std::ref(J),
-            std::ref(eta_inverse),
-            std::ref(R_inverse)
-        };
-        
-        CoveringRelationCheck cr { composite };
-
-        EXPECT_TRUE(cr.contraction_condition());
-        EXPECT_TRUE(cr.expansion_condition());
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check collision manifold derivative
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void collision_manifold_derivative()
-    {
-        const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
-
-        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
-
-        LocalPoincare4_Constraint<MapT> map_E0
-        {
-            std::ref(m_basic_objects.m_hamiltonian_reg2),
-            std::ref( m_periodic_orbit_coordsys.at(0) )
-        };
-
-        CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
-
-        using CapdUtils::Node;
-        auto collision_condition_f = [](Node, Node in[], int, Node out[], int, Node param[], int)
-        {
-            out[0] = sqr(in[2]) + sqr(in[3]) - 8 * param[0];
-        };
-
-        MapT map_C(collision_condition_f, 4, 1, 1);
-        map_C.setParameter(0, m_basic_objects.m_setup.get_mu(2));
-
-        CapdUtils::CompositeMap<MapT,
-            decltype(eta)&,
-            decltype(map_E0)&,
-            decltype(map_L0)&,
-            decltype(map_C)&> map_C2(
-                std::ref(eta),
-                std::ref(map_E0),
-                std::ref(map_L0),
-                std::ref(map_C)
-            );
-
-        std::cout.precision(20);
-
-        MatrixType der(1, 2);
-        map_C2(N * m_gain_factor, der);
-        const ScalarType fx = der(1,1);
-        const ScalarType fy = der(1,2);
-
-        EXPECT_TRUE( fx < 0 );
-        EXPECT_TRUE( fy < 0 );
-
-        print_var ( fx );
-        print_var ( fy );
-    }
-
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
     const std::vector<Coordsys> m_periodic_orbit_coordsys;
@@ -450,7 +443,7 @@ TEST(Pcr3bp_proof, jump_coverings)
     test.check_jump_coverings();
 }
 
-TEST(Pcr3bp_proof, parallelogram_coverings)
+TEST(Pcr3bp_proof, parallelogram_coverings_derivative)
 {
     using namespace Pcr3bpProof;
 
@@ -458,5 +451,27 @@ TEST(Pcr3bp_proof, parallelogram_coverings)
 
     CoveringRelationsSetup setup {};
     CoveringRelationsTest<IMap> test { setup };
-    test.check_parallelogram_coverings();
+    test.parallelogram_covering_derivative_check();
+}
+
+TEST(Pcr3bp_proof, parallelogram_coverings_beginning)
+{
+    using namespace Pcr3bpProof;
+
+    capd::rounding::DoubleRounding::roundNearest();
+
+    CoveringRelationsSetup setup {};
+    CoveringRelationsTest<IMap> test { setup };
+    test.parallelogram_covering_beginning_check();
+}
+
+TEST(Pcr3bp_proof, parallelogram_coverings_collision)
+{
+    using namespace Pcr3bpProof;
+
+    capd::rounding::DoubleRounding::roundNearest();
+
+    CoveringRelationsSetup setup {};
+    CoveringRelationsTest<IMap> test { setup };
+    test.collision_manifold_derivative_check();
 }
