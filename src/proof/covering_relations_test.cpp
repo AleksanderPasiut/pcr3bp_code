@@ -421,21 +421,9 @@ private:
         EXPECT_TRUE( fx < 0 );
         EXPECT_TRUE( fy < 0 );
 
-        std::ofstream fs("collision_manifold_parameters.txt");
-        if (fs)
-        {
-            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fx", fx);
-            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative fy", fy);
-            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddy/ddx", -fy / fx);
-            CapdUtils::VariablePrinter<MapT>::print(fs, "Collision manifold derivative -ddx/ddy", -fx / fy);
-            fs.close();
-        }
-        else
-        {
-            throw std::logic_error("Failed to export collision manifold parameters!");
-        }
+        print_var ( fx );
+        print_var ( fy );
     }
-
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
