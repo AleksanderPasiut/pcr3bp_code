@@ -4,12 +4,12 @@
 
 #include "tools/test_tools.hpp"
 
-#include "tools/coordsys_utilities.hpp"
 #include "tools/solution_curve_with_condition_check.hpp"
 #include "tools/auxiliary_functions.hpp"
 
 #include "covering_relations_setup.hpp"
 #include "covering_relation_checker.hpp"
+#include "parallelogram_covering_checker.hpp"
 
 #include "g_map.hpp"
 
@@ -261,14 +261,12 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void parallelogram_covering_check()
     {
-        const VectorType arg = N;
         const ScalarType L = m_basic_objects.m_parallelogram_coverings_parameters.L;
-
-        std::list<MatrixType> der_list {};
 
         MapT eta = AuxiliaryFunctions<MapT>::eta( L );
         MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
 
+        std::list<MatrixType> der_list {};
         for (int i = 0; i < 4; ++i)
         {
             const int first = i;
@@ -292,7 +290,7 @@ private:
             };
 
             MatrixType der(2,2);
-            aligned_poincare(arg, der);
+            aligned_poincare(N, der);
             print_var(der);
 
             der_list.emplace_back(der);
@@ -308,23 +306,7 @@ private:
 
         print_var(der_union);
 
-        const ScalarType alpha = 5.09;
-        const ScalarType beta = 0.195;
-        const ScalarType rho = 0.197;
-        const ScalarType c = 0.0011;
-
-        EXPECT_TRUE( 0 < beta );
-        EXPECT_TRUE( beta < rho );
-        EXPECT_TRUE( alpha > 2*c + rho );
-        EXPECT_TRUE( c + rho < 1 );
-
-        EXPECT_TRUE( der_union(1,1) > alpha );
-        EXPECT_TRUE( der_union(1,2) < 0 );
-        EXPECT_TRUE( der_union(1,2) > -c );
-        EXPECT_TRUE( der_union(2,1) > 0 );
-        EXPECT_TRUE( der_union(2,1) < c );
-        EXPECT_TRUE( der_union(2,2) < rho );
-        EXPECT_TRUE( der_union(2,2) > beta );
+        ParallelogramCoveringChecker<MapT> parallelogram_covering_checker( der_union );
     }
 
     void parallelogram_covering_endings_check()
