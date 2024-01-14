@@ -20,13 +20,13 @@
 #include "tools/coordsys4_alignment.hpp"
 #include "tools/power_iteration.hpp"
 #include "tools/auxiliary_functions.hpp"
-#include "tools/variable_printer.hpp"
 
 namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Compute coordinate systems in fixed point and in 3 other points that are approximately located on periodic orbit.
+//! @brief Compute coordinate systems in the fixed point and in 3 other points that are approximately located on
+//!        the collision/ejection orbit.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
 class PeriodicOrbitCoordsysGenerator
