@@ -104,56 +104,65 @@ public:
                 std::ref(poincare_0_pos)
             };
 
-            MatrixType der {};
-            auto x1 = poincare_total( VectorType(4), der );
-            print_var(x1);
+            CapdUtils::MaxNorm<MapT> norm {};
 
-            print_var( der );
+            MatrixType der {};
+            {
+                const ScalarType epsilon = norm( poincare_total( VectorType(4), der ) );
+                if (epsilon > 1.4e-12)
+                {
+                    std::cout << "WARNING at line " << __LINE__ << ": Result norm exceeds threshold! (epsilon = " << epsilon << ")";
+                }
+            }
 
             const VectorType unstable_dir_w0_local = CapdUtils::PowerIteration<MapT>::evaluate( der, VectorType{ 1.0, 0.0, 0.0, 0.0 }, 100 );
-            print_var( unstable_dir_w0_local );
-            print_var( der * unstable_dir_w0_local );
-
-            print_var( unstable_dir_w0_local.euclNorm() );
-            print_var( (der * unstable_dir_w0_local).euclNorm() );
-
             const ScalarType expansion_factor = std::pow( (der * unstable_dir_w0_local).euclNorm(), 0.25 );
-            print_var(expansion_factor);
 
             const VectorType unstable_dir_w0 = m_initial_coordsys.at(0).get_directions_matrix() * unstable_dir_w0_local;
-            print_var( unstable_dir_w0 );
-
-            // print_var( m_unstable_dir_gen.get_expansion_pos_factor() ); 
             const VectorType stable_dir_w0 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w0);
-            print_var( stable_dir_w0 );
-            
 
             MatrixType der1 {};
-            print_var( poincare_1_pos(VectorType(4), der1) );
+            {
+                const ScalarType epsilon = norm( poincare_1_pos(VectorType(4), der1) );
+                if (epsilon > 2.9e-15)
+                {
+                    std::cout << "WARNING at line " << __LINE__ << ": Result norm exceeds threshold! (epsilon = " << epsilon << ")\n";
+                }
+            }
+
             const VectorType unstable_dir_w1_local = (der1 * unstable_dir_w0_local) / expansion_factor;
             const VectorType unstable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * unstable_dir_w1_local;
-            print_var( unstable_dir_w1 );
 
             MatrixType der2 {};
-            print_var( poincare_2_pos(VectorType(4), der2) );
+            {
+                const ScalarType epsilon = norm( poincare_2_pos(VectorType(4), der2) );
+                if (epsilon > 1.2e-16)
+                {
+                    std::cout << "WARNING at line " << __LINE__ << ": Result norm exceeds threshold! (epsilon = " << epsilon << ")\n";
+                }
+            }
+
             const VectorType unstable_dir_w2_local = (der2 * unstable_dir_w1_local) / expansion_factor;
             const VectorType unstable_dir_w2 = m_initial_coordsys.at(2).get_directions_matrix() * unstable_dir_w2_local;
-            print_var( unstable_dir_w2 );
 
             const VectorType stable_dir_w2 = AuxiliaryFunctions<MapT>::S_symmetry(unstable_dir_w2);
-            print_var( stable_dir_w2 );
 
             MatrixType w2_initial_dirs = m_initial_coordsys.at(2).get_directions_matrix();
             w2_initial_dirs.Transpose();
 
             const VectorType stable_dir_w2_local = w2_initial_dirs * stable_dir_w2;
-            print_var( stable_dir_w2_local );
 
             MatrixType der1_neg {};
-            print_var( poincare_1_neg(VectorType(4), der1_neg) );
+            {
+                const ScalarType epsilon = norm( poincare_1_neg(VectorType(4), der1_neg) );
+                if (epsilon > 7.2e-14)
+                {
+                    std::cout << "WARNING at line " << __LINE__ << ": Result norm exceeds threshold! (epsilon = " << epsilon << ")\n";
+                }
+            }
+
             const VectorType stable_dir_w1_local = (der1_neg * stable_dir_w2_local) / expansion_factor;
             const VectorType stable_dir_w1 = m_initial_coordsys.at(1).get_directions_matrix() * stable_dir_w1_local;
-            print_var( stable_dir_w1 );
 
             m_local_coord.reserve(4);
             m_local_coord.push_back(
@@ -176,43 +185,6 @@ public:
                 Coordsys4_Alignment<MapT>::create_S_backsymmetric(
                     m_local_coord.at(1)));
         }
-
-
-        
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_total_expansion_factor_pos.txt",
-        //     "Total expansion factor along periodic orbit (positive direction)",
-        //     m_unstable_dir_gen.get_expansion_pos_factor());
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_total_expansion_factor_neg.txt",
-        //     "Total expansion factor along periodic orbit (negative direction)",
-        //     m_unstable_dir_gen.get_expansion_pos_factor());
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_average_expansion_factor_pos.txt",
-        //     "Average expansion factor along periodic orbit (positive direction)",
-        //     m_expansion_factor_pos);
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_average_expansion_factor_neg.txt",
-        //     "Average expansion factor along periodic orbit (negative direction)",
-        //     m_expansion_factor_neg);
-
-        // m_local_poincare_pos.at(0)(VectorType(2));
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_g_0_1_approx_return_time.txt",
-        //     "Approximate value of return time on underlying Poincare map of g_01 map",
-        //     m_local_poincare_pos.at(0).get_last_evaluation_return_time() );
-
-        // m_local_poincare_pos.at(1)(VectorType(2));
-
-        // CapdUtils::VariablePrinter<MapT>::print(
-        //     "periodic_orbit_g_1_2_approx_return_time.txt",
-        //     "Approximate value of return time on underlying Poincare map of g_12 map",
-        //     m_local_poincare_pos.at(1).get_last_evaluation_return_time() );
     }
 
     const std::vector<Coordsys>& get_coordsys_container() const
