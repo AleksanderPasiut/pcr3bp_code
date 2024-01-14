@@ -15,55 +15,64 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
-    auto export_coordsys = [](std::ostream& ostr, const Coordsys& coordsys, int N)
+    struct Data
     {
-        ostr << "N" << N << ';';
+        RVector origin {};
+        RVector unstable {};
+        RVector stable {};
 
-        const auto origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
-        const auto directions_matrix = CapdUtils::matrix_cast<RMatrix>(coordsys.get_directions_matrix());
-        for (int i = 0; i < 4; ++i)
+        Data(const Coordsys& coordsys)
         {
-            ostr << origin[i] << ';';
+            const auto directions_matrix = CapdUtils::matrix_cast<RMatrix>(coordsys.get_directions_matrix());
+            origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
+            unstable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 1);
+            stable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 2);
         }
-
-        for (int k = 0; k < 4; ++k)
-        {
-            const RVector direction = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, k+1);
-
-            for (int i = 0; i < 4; ++i)
-            {
-                ostr << direction[i] << ';';
-            }
-        }
-
-        ostr << '\n';
     };
 
-    std::ofstream ofs("output.csv");
+    std::vector<Data> exported_data {};
+    exported_data.reserve(18);
 
-    ofs << "h-set;";
-    ofs << "origin u;origin v;origin pu;origin pv;";
-    ofs << "unstable u;unstable v;unstable pu;unstable pv;";
-    ofs << "stable u;stable v;stable pu;stable pv;";
-    ofs << "flow u;flow v;flow pu;flow pv;";
-    ofs << "grad u;grad v;grad pu;grad pv;\n";
-
-    ASSERT_TRUE( bool(ofs) );
-
-    ofs.precision(16);
-
-    int index = 0;
-
-    for (Coordsys coordsys : setup.get_periodic_orbit_coordsys())
+    for (const Coordsys& coordsys : setup.get_periodic_orbit_coordsys())
     {
-        export_coordsys(ofs, coordsys, index);
-        ++index;
+        exported_data.emplace_back(std::cref(coordsys));
     }
 
-    for (Coordsys coordsys : setup.get_homoclinic_orbit_coordsys())
+    for (const Coordsys& coordsys : setup.get_homoclinic_orbit_coordsys())
     {
-        export_coordsys(ofs, coordsys, index);
-        ++index;
+        exported_data.emplace_back(std::cref(coordsys));
     }
+
+    auto get_origin = [](const Data& data) -> RVector { return data.origin; };
+    auto get_unstable = [](const Data& data) -> RVector { return data.unstable; };
+    auto get_stable = [](const Data& data) -> RVector { return data.stable; };
+
+    auto export_latex_table = [&exported_data](
+        const std::string& filename,
+        std::function<RVector(const Data&)> getter,
+        const std::string& label)
+    {
+        std::ofstream ofs(filename);
+        ASSERT_TRUE(ofs);
+        ofs.precision(6);
+
+        int idx = 0;
+        for (const Data& data : exported_data)
+        {
+            const RVector& v = getter(data);
+            ofs << "$" << label << "_{" << idx << "}$ & $";
+            ofs << v[0] << "$ & $";
+            ofs << v[1] << "$ & $";
+            ofs << v[2] << "$ & $";
+            ofs << v[3] << "$ \\\\\n";
+            ofs << "\\hline\n";
+            ++idx;
+        }
+
+        ofs.close();
+    };
+
+    export_latex_table("output.origin.tex", get_origin, "w");
+    export_latex_table("output.unstable.tex", get_unstable, "\\hat{u}");
+    export_latex_table("output.stable.tex", get_stable, "\\hat{s}");
 }
-
