@@ -15,7 +15,17 @@ namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @todo
+//! @brief Implementation of the psi function 
+//! @details Implementation of function \psi(z) = Lambda(z, E(z)), where function E satisfies:
+//!
+//!    constraint( Lambda(z, E(z)) ) = 0
+//!
+//! and
+//! 
+//!    Lambda(z, E(z)) belongs to section Sigma,
+//!
+//! where Sigma is the section that contains origin of the provided coordinate system and is normal to third vector of the
+//! direction matrix of that coordinate system.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
 class LocalPoincare4_Constraint : public CapdUtils::MapBase<MapT>
@@ -62,7 +72,10 @@ private:
     
     const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys;
 
-    CapdUtils::AffineMap<MapT> m_linear_src { m_src_coordsys };
+    CapdUtils::AffineMap<MapT> m_linear_src
+    {
+        m_src_coordsys
+    };
 
     CapdUtils::AffineMap2<MapT> m_affine_section_constraint
     {
