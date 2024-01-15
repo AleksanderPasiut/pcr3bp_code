@@ -20,6 +20,8 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
         RVector origin {};
         RVector unstable {};
         RVector stable {};
+        RVector vector_field {};
+        RVector energy {};
 
         Data(const Coordsys& coordsys)
         {
@@ -27,6 +29,8 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
             origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
             unstable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 1);
             stable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 2);
+            vector_field = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 3);
+            energy = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 4);
         }
     };
 
@@ -46,6 +50,8 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
     auto get_origin = [](const Data& data) -> RVector { return data.origin; };
     auto get_unstable = [](const Data& data) -> RVector { return data.unstable; };
     auto get_stable = [](const Data& data) -> RVector { return data.stable; };
+    auto get_vector_field = [](const Data& data) -> RVector { return data.vector_field; };
+    auto get_energy = [](const Data& data) -> RVector { return data.energy; };
 
     auto export_latex_table = [&exported_data](
         const std::string& filename,
@@ -75,4 +81,6 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
     export_latex_table("output.origin.tex", get_origin, "w");
     export_latex_table("output.unstable.tex", get_unstable, "\\hat{u}");
     export_latex_table("output.stable.tex", get_stable, "\\hat{s}");
+    export_latex_table("output.flow.tex", get_vector_field, "\\hat{v}");
+    export_latex_table("output.energy.tex", get_energy, "\\hat{h}");
 }
