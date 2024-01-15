@@ -107,10 +107,19 @@ private:
         m_dst_coordsys,
     };
 
-    LocalPoincare4_Constraint<MapT> m_extension_to_4
+    using LocalPoincare4_Constraint_Type = LocalPoincare4_Constraint<MapT>;
+
+    std::unique_ptr<LocalPoincare4_Constraint_Type> m_extension_to_4_ptr
     {
-        std::ref(m_constraint),
-        std::ref(m_src_coordsys)
+        std::make_unique<LocalPoincare4_Constraint_Type>(
+            std::ref(m_constraint),
+            std::ref(m_src_coordsys)
+        )
+    };
+
+    LocalPoincare4_Constraint_Type& m_extension_to_4
+    {
+        *m_extension_to_4_ptr
     };
 
     MapT m_projection_to_2

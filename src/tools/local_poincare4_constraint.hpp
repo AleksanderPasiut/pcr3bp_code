@@ -9,6 +9,7 @@
 #include <capd_utils/image_sum.hpp>
 #include <capd_utils/local_poincare_wrapper.hpp>
 
+#include "local_poincare4_constraint_base.hpp"
 #include "id_with_constraint.hpp"
 
 namespace Pcr3bpProof
@@ -28,7 +29,7 @@ namespace Pcr3bpProof
 //! direction matrix of that coordinate system.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class LocalPoincare4_Constraint : public CapdUtils::MapBase<MapT>
+class LocalPoincare4_Constraint : public LocalPoincare4_Constraint_Base<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -38,7 +39,8 @@ public:
     LocalPoincare4_Constraint(
         MapT& constraint,
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys)
-            : m_constraint(constraint)
+            : LocalPoincare4_Constraint_Base<MapT>(constraint, src_coordsys)
+            , m_constraint(constraint)
             , m_src_coordsys(src_coordsys)
     {
         assert_with_exception(m_constraint.dimension() == 4);
