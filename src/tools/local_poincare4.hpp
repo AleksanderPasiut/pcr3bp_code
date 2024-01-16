@@ -16,6 +16,7 @@
 #include "affine_poincare_map.hpp"
 
 #include "local_poincare4_constraint.hpp"
+#include "local_poincare4_constraint_spec.hpp"
 
 namespace Pcr3bpProof
 {
