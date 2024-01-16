@@ -198,11 +198,16 @@ public:
 
         MapT eta = AuxiliaryFunctions<MapT>::eta( L );
 
-        LocalPoincare4_Constraint<MapT> map_E0
+        LocalPoincare4_Constraint_Spec<MapT> map_E0
         {
             std::ref(m_basic_objects.m_hamiltonian_reg2),
             std::ref( m_periodic_orbit_coordsys.at(0) )
         };
+
+        MatrixType out(4, 2);
+        map_E0( VectorType(2), out );
+
+        print_var(out);
 
         CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
 
