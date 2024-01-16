@@ -87,8 +87,8 @@ private:
         const VectorType origin = VectorType(2);
         MatrixType directions(2,2);
         directions(1,1) =  d1;
-        directions(1,2) =  d2;
-        directions(2,1) =  d1;
+        directions(1,2) =  d1;
+        directions(2,1) =  d2;
         directions(2,2) = -d2;
 
         return CapdUtils::LocalCoordinateSystem<MapT>(origin, directions);
