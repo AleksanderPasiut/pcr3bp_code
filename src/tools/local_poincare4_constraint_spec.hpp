@@ -84,6 +84,9 @@ private:
         const ScalarType d1 = d_coeff[0];
         const ScalarType d2 = d_coeff[1];
 
+        print_var(d1);
+        print_var(d2);
+
         const VectorType origin = VectorType(2);
         MatrixType directions(2,2);
         directions(1,1) =  d1;
