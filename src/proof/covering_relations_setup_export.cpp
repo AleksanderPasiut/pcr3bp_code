@@ -58,20 +58,32 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
         std::function<RVector(const Data&)> getter,
         const std::string& label)
     {
+        auto phantom = [](std::ostream& ofs, double value) -> std::ostream&
+        {
+            if (value >= 0)
+            {
+                ofs << "\\phantom{-}" << value;
+            }
+            else
+            {
+                ofs << value;
+            }
+            return ofs;
+        };
+
         std::ofstream ofs(filename);
         ASSERT_TRUE(ofs);
-        ofs.precision(6);
+        ofs.precision(12);
 
         int idx = 0;
         for (const Data& data : exported_data)
         {
             const RVector& v = getter(data);
             ofs << "$" << label << "_{" << idx << "}$ & $";
-            ofs << v[0] << "$ & $";
-            ofs << v[1] << "$ & $";
-            ofs << v[2] << "$ & $";
-            ofs << v[3] << "$ \\\\\n";
-            ofs << "\\hline\n";
+            phantom(ofs, v[0]) << "$ & $";
+            phantom(ofs, v[1]) << "$ & $";
+            phantom(ofs, v[2]) << "$ & $";
+            phantom(ofs, v[3]) << "$ \\\\\n";
             ++idx;
         }
 
