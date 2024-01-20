@@ -5,8 +5,8 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include "tools/print_bootstrap.hpp"
 #include "tools/floating_info.hpp"
+#include "tools/variable_printer.hpp"
 
 #include <capd_utils/map_base.hpp>
 #include <capd_utils/pne_map.hpp>
@@ -24,8 +24,6 @@
 #include <capd_utils/parallel_shooting/parallel_shooting_init.hpp>
 
 #include "pcr3bp_reg_basic_objects.hpp"
-
-#include "tools/variable_printer.hpp"
 
 namespace Pcr3bpProof
 {
