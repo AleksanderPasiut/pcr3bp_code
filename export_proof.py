@@ -71,6 +71,13 @@ remove_file('src/proof/homoclinic_orbit_origins_initial_test.cpp')
 trace.info("Removing extended periodic orbit parameters test...")
 remove_file('src/proof/periodic_orbit_parameters_test.extended.cpp')
 
+trace.info("Removing collision manifold derivative check...")
+remove_file('src/proof/covering_relations_test.collision_manifold_derivative_check.cpp')
+remove_file('src/proof/covering_relations_test.collision_manifold_derivative_check.hpp')
+
+trace.info("Remove covering relations setup export...")
+remove_file('src/proof/covering_relations_setup_export.cpp')
+
 trace.info("Replacing current CMakeLists.txt ...")
 remove_file('CMakeLists.txt')
 shutil.copyfile('CMakeLists.proof_only.txt', 'CMakeLists.txt')
