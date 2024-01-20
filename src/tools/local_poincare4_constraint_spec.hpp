@@ -7,6 +7,7 @@
 #include <capd_utils/composite_map.hpp>
 #include <capd_utils/local_map.hpp>
 #include <capd_utils/gauss.hpp>
+#include <capd_utils/extract.hpp>
 
 #include "local_poincare4_constraint_base.hpp"
 #include "psi0_specialized.hpp"
