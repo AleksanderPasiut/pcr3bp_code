@@ -12,7 +12,7 @@
 #include "covering_relation_checker.hpp"
 #include "parallelogram_covering_checker.hpp"
 
-#include "g_map.hpp"
+#include "scaled_local_poincare4_map.hpp"
 
 namespace Pcr3bpProof
 {
@@ -47,7 +47,7 @@ public:
             const int first = i;
             const int second = (i+1) % 4;
             
-            G_Map<MapT> poincare
+            ScaledLocalPoincare4_Map<MapT> poincare
             {
                 this->m_basic_objects.m_vf_reg_pos2,
                 this->m_basic_objects.m_hamiltonian_reg2,
