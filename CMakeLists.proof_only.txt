@@ -7,9 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 ################################################################################
 # primary component build
 ################################################################################
-set(SOURCES_LIST
-    src/tools/variable_printer.cpp
-    src/tools/print_bootstrap.cpp)
+file(GLOB SOURCES_LIST src/tools/*.cpp)
 
 file(GLOB SOURCES_LIST_PROOF src/proof/*.cpp)
 list(APPEND SOURCES_LIST ${SOURCES_LIST_PROOF})
