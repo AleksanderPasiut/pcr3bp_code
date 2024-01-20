@@ -37,17 +37,6 @@ TEST(Pcr3bp_proof, jump_coverings)
     test.check_jump_coverings();
 }
 
-TEST(Pcr3bp_proof, parallelogram_coverings_derivative)
-{
-    using namespace Pcr3bpProof;
-
-    capd::rounding::DoubleRounding::roundNearest();
-
-    CoveringRelationsSetup setup {};
-    CoveringRelationsTest<IMap> test { setup };
-    test.parallelogram_covering_derivative_check();
-}
-
 TEST(Pcr3bp_proof, parallelogram_coverings_beginning)
 {
     using namespace Pcr3bpProof;

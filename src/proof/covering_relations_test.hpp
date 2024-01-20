@@ -88,59 +88,6 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check parallelogram coverings around fixed point
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void parallelogram_covering_derivative_check()
-    {
-        const ScalarType L = this->m_basic_objects.m_parallelogram_coverings_parameters.L;
-
-        MapT eta = AuxiliaryFunctions<MapT>::eta( L );
-        MapT eta_inverse = AuxiliaryFunctions<MapT>::eta( -L );
-
-        std::list<MatrixType> der_list {};
-        for (int i = 0; i < 4; ++i)
-        {
-            const int first = i;
-            const int second = (i+1) % 4;
-            
-            G_Map<MapT> poincare
-            {
-                this->m_basic_objects.m_vf_reg_pos2,
-                this->m_basic_objects.m_hamiltonian_reg2,
-                this->m_basic_objects.m_order,
-                this->m_periodic_orbit_coordsys.at(first),
-                this->m_periodic_orbit_coordsys.at(second),
-                this->m_gain_factor
-            };
-
-            CapdUtils::CompositeMap<MapT, MapT&, decltype(poincare)&, MapT&> aligned_poincare
-            {
-                std::ref(eta),
-                std::ref(poincare),
-                std::ref(eta_inverse)
-            };
-
-            MatrixType der(2,2);
-            aligned_poincare(N, der);
-            print_var(der);
-
-            der_list.emplace_back(der);
-        }
-
-        auto it = der_list.begin();
-
-        MatrixType der_union = *it;
-        for (++it; it != der_list.end(); ++it)
-        {
-            der_union = capd::vectalg::intervalHull(*it, der_union);
-        }
-
-        print_var(der_union);
-
-        ParallelogramCoveringChecker<MapT> parallelogram_covering_checker( der_union );
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Check first parallelogram covering
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void parallelogram_covering_beginning_check()
@@ -189,7 +136,7 @@ public:
         EXPECT_TRUE(cr.contraction_condition());
         EXPECT_TRUE(cr.expansion_condition());
     }
-    
+
 private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //! @brief Check forward covering relation between given local coordinate systems

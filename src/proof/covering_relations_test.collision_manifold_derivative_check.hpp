@@ -16,7 +16,7 @@ namespace Pcr3bpProof
 {
 
 template<typename MapT>
-class CoveringRelationsTest : public CoveringRelationsTestBase<MapT>
+class CoveringRelationsTest_CollisionManifoldDerivativeCheck : public CoveringRelationsTestBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
@@ -25,7 +25,7 @@ public:
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<MapT>;
 
-    CoveringRelationsTest(const CoveringRelationsSetup& setup)
+    CoveringRelationsTest_CollisionManifoldDerivativeCheck(const CoveringRelationsSetup& setup)
         : CoveringRelationsTestBase<MapT>(setup)
     {}
 
