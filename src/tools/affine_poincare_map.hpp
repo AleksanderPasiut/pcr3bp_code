@@ -13,7 +13,13 @@ namespace CapdUtils
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @todo
+//! @brief Affine Poincare map
+//! @details This component implements the map y = f(x) of the form:
+//!
+//!           y = (dst_coordsys^{-1} \circ P \circ src_coordsys) (x),
+//!
+//!          where P is the Poincare map along the given vector field and onto section Sigma. Secion Sigma contains the origin
+//!          of the dst_coordsys and is perpendicular to the third column vector of its directions matrix.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
 class AffinePoincareMap : public MapBase<MapT>

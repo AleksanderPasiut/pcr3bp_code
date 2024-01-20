@@ -27,13 +27,15 @@ public:
         unsigned order,
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys,
-        ScalarType input_gain)
+        ScalarType input_gain,
+        bool specialized = false)
             : m_local_poincare4(
                 vector_field,
                 constraint,
                 order,
                 src_coordsys,
-                dst_coordsys)
+                dst_coordsys,
+                specialized)
             , m_input_gain(input_gain, m_local_poincare4.dimension())
             , m_output_gain(ScalarType(1.0) / input_gain, m_local_poincare4.imageDimension())
     {}

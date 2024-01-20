@@ -60,7 +60,7 @@ public:
 
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = m_periodic_orbit_coordsys.at(0);
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = m_periodic_orbit_coordsys.at(1);
-            check_covering_relation_forward(coordsys_src, coordsys_dst);
+            check_covering_relation_forward(coordsys_src, coordsys_dst, true);
         }
 
         {
@@ -198,11 +198,16 @@ public:
 
         MapT eta = AuxiliaryFunctions<MapT>::eta( L );
 
-        LocalPoincare4_Constraint<MapT> map_E0
+        LocalPoincare4_Constraint_Spec<MapT> map_E0
         {
             std::ref(m_basic_objects.m_hamiltonian_reg2),
             std::ref( m_periodic_orbit_coordsys.at(0) )
         };
+
+        MatrixType out(4, 2);
+        map_E0( VectorType(2), out );
+
+        print_var(out);
 
         CapdUtils::AffineMap<MapT> map_L0 { m_periodic_orbit_coordsys.at(0) };
 
@@ -238,7 +243,8 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ScalarType check_covering_relation_forward(
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
-        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst)
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
+        bool specialized = false)
     {
         G_Map<MapT> f
         {
@@ -247,7 +253,8 @@ private:
             m_basic_objects.m_order,
             coordsys_src,
             coordsys_dst,
-            m_gain_factor
+            m_gain_factor,
+            specialized
         };
 
         CoveringRelationCheck cr { f };

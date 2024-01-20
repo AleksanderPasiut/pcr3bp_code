@@ -16,12 +16,18 @@
 #include "affine_poincare_map.hpp"
 
 #include "local_poincare4_constraint.hpp"
+#include "local_poincare4_constraint_spec.hpp"
 
 namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @todo
+//! @brief Implementation of local Poincare evaluation 
+//! @details Implementation of the function:
+//!
+//!     \psi_m^{-1} \circ P \circ \psi_k
+//!
+//! where indices k and m are implicitly specified with source and destination coordinate systems.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
 class LocalPoincare4 : public CapdUtils::MapBase<MapT>
@@ -36,12 +42,14 @@ public:
         MapT& constraint,
         unsigned order,
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
-        const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys)
+        const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys,
+        bool specialized)
             : m_vector_field(vector_field)
             , m_constraint(constraint)
             , m_order(order)
             , m_src_coordsys(src_coordsys)
             , m_dst_coordsys(dst_coordsys)
+            , m_specialized(specialized)
     {
         assert_with_exception(m_vector_field.dimension() == 4);
         assert_with_exception(m_vector_field.imageDimension() == 4);
@@ -94,6 +102,8 @@ private:
     const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys;
     const CapdUtils::LocalCoordinateSystem<MapT> m_dst_coordsys;
 
+    const bool m_specialized;
+
     CapdUtils::AffinePoincareMap<MapT> m_affine_poincare
     {
         m_vector_field,
@@ -102,10 +112,30 @@ private:
         m_dst_coordsys,
     };
 
-    LocalPoincare4_Constraint<MapT> m_extension_to_4
+    using LocalPoincare4_Constraint_BaseType = LocalPoincare4_Constraint_Base<MapT>;
+    using LocalPoincare4_Constraint_BaseTypePtr = std::unique_ptr<LocalPoincare4_Constraint_BaseType>;
+    using LocalPoincare4_Constraint_Type = LocalPoincare4_Constraint<MapT>;
+    using LocalPoincare4_Constraint_SpecType = LocalPoincare4_Constraint_Spec<MapT>;
+
+    LocalPoincare4_Constraint_BaseTypePtr m_extension_to_4_ptr
     {
-        std::ref(m_constraint),
-        std::ref(m_src_coordsys)
+        [this]() -> LocalPoincare4_Constraint_BaseTypePtr
+        {
+            return m_specialized ?
+                LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_SpecType>(
+                    std::ref(m_constraint),
+                    std::ref(m_src_coordsys)
+                )) :
+                LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_Type>(
+                    std::ref(m_constraint),
+                    std::ref(m_src_coordsys)
+                ));
+        }()
+    };
+
+    LocalPoincare4_Constraint_BaseType& m_extension_to_4
+    {
+        *m_extension_to_4_ptr
     };
 
     MapT m_projection_to_2

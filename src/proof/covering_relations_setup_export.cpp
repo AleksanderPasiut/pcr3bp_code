@@ -15,55 +15,84 @@ TEST(Pcr3bp_proof, export_covering_relations_setup_data)
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
-    auto export_coordsys = [](std::ostream& ostr, const Coordsys& coordsys, int N)
+    struct Data
     {
-        ostr << "N" << N << ';';
+        RVector origin {};
+        RVector unstable {};
+        RVector stable {};
+        RVector vector_field {};
+        RVector energy {};
 
-        const auto origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
-        const auto directions_matrix = CapdUtils::matrix_cast<RMatrix>(coordsys.get_directions_matrix());
-        for (int i = 0; i < 4; ++i)
+        Data(const Coordsys& coordsys)
         {
-            ostr << origin[i] << ';';
+            const auto directions_matrix = CapdUtils::matrix_cast<RMatrix>(coordsys.get_directions_matrix());
+            origin = CapdUtils::vector_cast<RVector>(coordsys.get_origin());
+            unstable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 1);
+            stable = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 2);
+            vector_field = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 3);
+            energy = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, 4);
         }
-
-        for (int k = 0; k < 4; ++k)
-        {
-            const RVector direction = CapdUtils::Extract<RMap>::get_vvector(directions_matrix, k+1);
-
-            for (int i = 0; i < 4; ++i)
-            {
-                ostr << direction[i] << ';';
-            }
-        }
-
-        ostr << '\n';
     };
 
-    std::ofstream ofs("output.csv");
+    std::vector<Data> exported_data {};
+    exported_data.reserve(18);
 
-    ofs << "h-set;";
-    ofs << "origin u;origin v;origin pu;origin pv;";
-    ofs << "unstable u;unstable v;unstable pu;unstable pv;";
-    ofs << "stable u;stable v;stable pu;stable pv;";
-    ofs << "flow u;flow v;flow pu;flow pv;";
-    ofs << "grad u;grad v;grad pu;grad pv;\n";
-
-    ASSERT_TRUE( bool(ofs) );
-
-    ofs.precision(16);
-
-    int index = 0;
-
-    for (Coordsys coordsys : setup.get_periodic_orbit_coordsys())
+    for (const Coordsys& coordsys : setup.get_periodic_orbit_coordsys())
     {
-        export_coordsys(ofs, coordsys, index);
-        ++index;
+        exported_data.emplace_back(std::cref(coordsys));
     }
 
-    for (Coordsys coordsys : setup.get_homoclinic_orbit_coordsys())
+    for (const Coordsys& coordsys : setup.get_homoclinic_orbit_coordsys())
     {
-        export_coordsys(ofs, coordsys, index);
-        ++index;
+        exported_data.emplace_back(std::cref(coordsys));
     }
+
+    auto get_origin = [](const Data& data) -> RVector { return data.origin; };
+    auto get_unstable = [](const Data& data) -> RVector { return data.unstable; };
+    auto get_stable = [](const Data& data) -> RVector { return data.stable; };
+    auto get_vector_field = [](const Data& data) -> RVector { return data.vector_field; };
+    auto get_energy = [](const Data& data) -> RVector { return data.energy; };
+
+    auto export_latex_table = [&exported_data](
+        const std::string& filename,
+        std::function<RVector(const Data&)> getter,
+        const std::string& label)
+    {
+        auto phantom = [](std::ostream& ofs, double value) -> std::ostream&
+        {
+            if (value >= 0)
+            {
+                ofs << "\\phantom{-}" << value;
+            }
+            else
+            {
+                ofs << value;
+            }
+            return ofs;
+        };
+
+        std::ofstream ofs(filename);
+        ASSERT_TRUE(ofs);
+        ofs.precision(12);
+
+        int idx = 0;
+        for (const Data& data : exported_data)
+        {
+            const RVector& v = getter(data);
+            ofs << "$" << label << "_{" << idx << "}$ & $";
+            phantom(ofs, v[0]) << "$ & $";
+            phantom(ofs, v[1]) << "$ & $";
+            phantom(ofs, v[2]) << "$ & $";
+            phantom(ofs, v[3]) << "$ \\\\\n";
+            ++idx;
+        }
+
+        ofs.close();
+    };
+
+    export_latex_table("output.origin.tex", get_origin, "w");
+    export_latex_table("output.unstable.tex", get_unstable, "\\hat{u}");
+    export_latex_table("output.stable.tex", get_stable, "\\hat{s}");
+    export_latex_table("output.flow.tex", get_vector_field, "\\hat{v}");
+    export_latex_table("output.energy.tex", get_energy, "\\hat{h}");
 }
-

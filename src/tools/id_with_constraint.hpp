@@ -11,7 +11,16 @@ namespace CapdUtils
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @todo
+//! @brief Implementation of constrained identity function
+//! @details Implementation of the function
+//!
+//!     (x_1, ..., x_n) -> (x_1, ..., x_{n+k}),
+//!
+//! where
+//!
+//!     constraint(x_1, ..., x_{n+k}) = 0.
+//!
+//! Image dimension of constraint function must be equal k.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT, typename ConstraintT>
 class IdWithConstraint : public MapBase<MapT>
