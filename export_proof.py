@@ -75,8 +75,13 @@ trace.info("Removing collision manifold derivative check...")
 remove_file('src/proof/covering_relations_test.collision_manifold_derivative_check.cpp')
 remove_file('src/proof/covering_relations_test.collision_manifold_derivative_check.hpp')
 
-trace.info("Remove covering relations setup export...")
+trace.info("Removing covering relations setup export...")
 remove_file('src/proof/covering_relations_setup_export.cpp')
+
+trace.info("Removing print bootstrap utility...")
+remove_file('src/tools/print_bootstrap.hpp')
+remove_file('src/tools/print_bootstrap.cpp')
+
 
 trace.info("Replacing current CMakeLists.txt ...")
 remove_file('CMakeLists.txt')
