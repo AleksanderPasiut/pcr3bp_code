@@ -26,9 +26,9 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    static Psi0_Coefficients& get(const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys)
+    static Psi0_Coefficients& get()
     {
-        static Psi0_Coefficients s_instance { src_coordsys };
+        static Psi0_Coefficients s_instance {};
         return s_instance;
     }
     
@@ -43,13 +43,15 @@ public:
     }
 
 private:
-    Psi0_Coefficients(const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys) : m_src_coordsys_4_dim(src_coordsys)
+    Psi0_Coefficients()
     {}
 
     static std::array<ScalarType, 2> compute_d_coeffs(
         MapT& internal_map,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys)
     {
+        // print_var( dst_coordsys.get_directions_matrix() );
+
         const VectorType unstable_dir = CapdUtils::Extract<MapT>::get_vvector(dst_coordsys.get_directions_matrix(), 1);
         print_var(unstable_dir);
 
@@ -70,6 +72,9 @@ private:
         const VectorType unstable_dir_reg = dd2 * unstable_dir;
         const VectorType d_coeff = CapdUtils::gauss<MapT>(ddx, unstable_dir_reg);
 
+        print_var( d_coeff[0] );
+        print_var( d_coeff[1] );
+
         return std::array<ScalarType, 2>
         {
             d_coeff[0],
@@ -84,7 +89,21 @@ private:
         Psi0_specialized<MapT>::create( m_basic_objects.m_h0, m_basic_objects.m_setup )
     };
 
-    const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys_4_dim;
+    PeriodicOrbitCoordsysGenerator<RMap> m_periodic_orbit_coordsys_generator_approx {};
+
+    std::vector<CapdUtils::LocalCoordinateSystem<RMap>> m_periodic_orbit_coordsys_approx
+    {
+        m_periodic_orbit_coordsys_generator_approx.get_coordsys_container()
+    };
+
+    RegLyapunovCollisionOrbitParameters<IMap> m_parameters {};
+
+    const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys_4_dim
+    {
+        CapdUtils::LocalCoordinateSystem<IMap>(
+            m_parameters.get_initial_point(),
+            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(0).get_directions_matrix()) )
+    };
 
     const std::array<ScalarType, 2> m_d
     {

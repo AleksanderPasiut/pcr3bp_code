@@ -59,7 +59,7 @@ private:
 
     MapT& m_internal_map
     {
-        Psi0_Coefficients<MapT>::get(m_src_coordsys_4_dim).get_internal_map_ref()
+        Psi0_Coefficients<MapT>::get().get_internal_map_ref()
     };
 
     static CapdUtils::LocalCoordinateSystem<MapT> create_src_coordsys(std::array<ScalarType, 2> d)
@@ -67,8 +67,8 @@ private:
         const ScalarType d1 = d.at(0);
         const ScalarType d2 = d.at(1);
 
-        print_var(d1);
-        print_var(d2);
+        // print_var(d1);
+        // print_var(d2);
 
         const VectorType origin = VectorType(2);
         MatrixType directions(2,2);
@@ -82,7 +82,7 @@ private:
 
     const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys_2_dim
     {
-        create_src_coordsys( Psi0_Coefficients<MapT>::get(m_src_coordsys_4_dim).get_d_coeffs() )
+        create_src_coordsys( Psi0_Coefficients<MapT>::get().get_d_coeffs() )
     };
     
     CapdUtils::LocalMap<MapT,
