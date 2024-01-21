@@ -72,23 +72,6 @@ public:
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
-
-        {
-            std::cout << "periodic orbit covering 2 <= 3\n";
-
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(2);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(3);
-            const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
-            simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
-        }
-
-        {
-            std::cout << "periodic orbit covering 3 <= 0\n";
-
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(0);
-            check_covering_relation_backward(coordsys_src, coordsys_dst, false, true);
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,17 +79,12 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_jump_coverings()
     {
-        std::cout << "periodic (3) <= first homoclinic covering\n";
+        std::cout << "periodic (3) => first homoclinic covering\n";
 
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( this->m_homoclinic_orbit_coordsys.begin() );
         const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
         simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
-
-        std::cout << "periodic (3) => first homoclinic covering\n";
-        {
-            check_covering_relation_forward(coordsys_src, coordsys_dst);
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
