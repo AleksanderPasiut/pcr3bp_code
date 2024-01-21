@@ -33,4 +33,4 @@ In order to build and launch the program the following commands have to be execu
     make
     ./pcr3bp_code
 
-Another approach is to download the .zip file with the code from this github repository. In such case the first three commands from the list above can be skipped.
+Another approach is to download the .zip file with the code from this github repository. In such case the first two commands from the list above can be skipped.
