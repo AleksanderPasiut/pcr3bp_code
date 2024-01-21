@@ -34,8 +34,7 @@ public:
         unsigned order,
         LocalCoordinateSystem<MapT> src_coordsys,
         LocalCoordinateSystem<MapT> dst_coordsys)
-            : m_src_linear_map( src_coordsys )
-            , m_dst_section( gen_section(dst_coordsys) )
+            : m_dst_section( gen_section(dst_coordsys) )
             , m_poincare( vector_field, order, m_dst_section, src_coordsys, dst_coordsys )
     {
         assert_with_exception(vector_field.dimension() == src_coordsys.get_origin().dimension());
@@ -75,7 +74,6 @@ private:
         return AffineSection<MapT>(coordsys.get_origin(), vector_field_dir);            
     }
 
-    AffineMap<MapT> m_src_linear_map;
     AffineSection<MapT> m_dst_section;
 
     LocalPoincareWrapper<MapT, AffineSection<MapT>> m_poincare;

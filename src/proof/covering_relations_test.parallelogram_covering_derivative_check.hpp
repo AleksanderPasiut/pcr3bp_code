@@ -54,7 +54,9 @@ public:
                 this->m_basic_objects.m_order,
                 this->m_periodic_orbit_coordsys.at(first),
                 this->m_periodic_orbit_coordsys.at(second),
-                this->m_gain_factor
+                this->m_gain_factor,
+                first == 0,
+                second == 0
             };
 
             CapdUtils::CompositeMap<MapT, MapT&, decltype(poincare)&, MapT&> aligned_poincare

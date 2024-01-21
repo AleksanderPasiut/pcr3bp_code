@@ -25,7 +25,7 @@ TEST(Pcr3bp_proof, homoclinic_coverings)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Part of interval arithmetic validation of the proof of Theorem 8, where we assert the existence of covering
-//!        relations N_0 => N_1 => N_2
+//!        relations N_0 => N_1 => N_2 <= N_3 <= N_0
 //!
 //!        In this computation we also perform a part of interval arithmetic validation of the proof of Lemma 8, where we
 //!        assert that the trajectories shadowing the covering relations described above, do not intersect with the collision
