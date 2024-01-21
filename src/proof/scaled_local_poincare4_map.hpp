@@ -28,8 +28,8 @@ public:
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys,
         ScalarType input_gain,
-        bool src_specialized = false,
-        bool dst_specialized = false)
+        bool src_specialized,
+        bool dst_specialized)
             : m_local_poincare4(
                 vector_field,
                 constraint,
