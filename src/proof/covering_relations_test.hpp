@@ -76,8 +76,8 @@ public:
         {
             std::cout << "periodic orbit covering 2 => 3\n";
 
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(1);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(2);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(2);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(3);
             const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
@@ -85,9 +85,9 @@ public:
         {
             std::cout << "periodic orbit covering 3 => 0\n";
 
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(1);
-            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(2);
-            check_covering_relation_forward(coordsys_src, coordsys_dst);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
+            const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(0);
+            check_covering_relation_forward(coordsys_src, coordsys_dst, false, true);
         }
     }
 
@@ -167,7 +167,8 @@ private:
     ScalarType check_covering_relation_forward(
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
-        bool specialized = false)
+        bool src_specialized = false,
+        bool dst_specialized = false)
     {
         ScaledLocalPoincare4_Map<MapT> f
         {
@@ -177,7 +178,8 @@ private:
             coordsys_src,
             coordsys_dst,
             this->m_gain_factor,
-            specialized
+            src_specialized,
+            dst_specialized
         };
 
         CoveringRelationCheck cr { f };

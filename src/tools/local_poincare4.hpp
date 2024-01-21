@@ -43,20 +43,35 @@ public:
         unsigned order,
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys,
-        bool specialized)
+        bool src_specialized,
+        bool dst_specialized)
             : m_vector_field(vector_field)
             , m_constraint(constraint)
             , m_order(order)
             , m_src_coordsys(src_coordsys)
             , m_dst_coordsys(dst_coordsys)
-            , m_specialized(specialized)
+            , m_src_specialized(src_specialized)
+            , m_dst_specialized(dst_specialized)
     {
         assert_with_exception(m_vector_field.dimension() == 4);
         assert_with_exception(m_vector_field.imageDimension() == 4);
         assert_with_exception(m_constraint.dimension() == 4);
         assert_with_exception(m_constraint.imageDimension() == 1);
         assert_with_exception(m_src_coordsys.get_origin().dimension() == 4);
-        assert_with_exception(m_src_coordsys.get_origin().dimension() == 4);
+        assert_with_exception(m_dst_coordsys.get_origin().dimension() == 4);
+
+        auto is_u_v_pu_zero = [](VectorType origin) -> bool
+        {
+            return origin[0] == 0.0 && origin[1] == 0.0 && origin[2] == 0.0;
+        };
+
+        assert_with_exception(src_specialized == is_u_v_pu_zero(m_src_coordsys.get_origin()));
+        assert_with_exception(dst_specialized == is_u_v_pu_zero(m_dst_coordsys.get_origin()));
+
+        print_var(src_specialized);
+        print_var(dst_specialized);
+        print_var(m_src_coordsys.get_origin());
+        print_var(m_dst_coordsys.get_origin());
     }
 
     VectorType operator() (const VectorType& vec) override
@@ -102,7 +117,8 @@ private:
     const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys;
     const CapdUtils::LocalCoordinateSystem<MapT> m_dst_coordsys;
 
-    const bool m_specialized;
+    const bool m_src_specialized;
+    const bool m_dst_specialized;
 
     CapdUtils::AffinePoincareMap<MapT> m_affine_poincare
     {
@@ -121,7 +137,7 @@ private:
     {
         [this]() -> LocalPoincare4_Constraint_BaseTypePtr
         {
-            return m_specialized ?
+            return m_src_specialized ?
                 LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_SpecType>(
                     std::ref(m_constraint),
                     std::ref(m_src_coordsys)
@@ -140,7 +156,12 @@ private:
 
     MapT m_projection_to_2
     {
-        CapdUtils::ProjectionMap<MapT>::create( 4, { 0, 1 } )
+        [this]() -> MapT
+        {
+            return m_dst_specialized ?
+                AuxiliaryFunctions<MapT>::create_psi0_inverse( Psi0_Coefficients<MapT>::get(m_dst_coordsys).get_d_coeffs() ) :
+                CapdUtils::ProjectionMap<MapT>::create( 4, { 0, 1 } );
+        }()
     };
 
     CapdUtils::CompositeMap<MapT,
