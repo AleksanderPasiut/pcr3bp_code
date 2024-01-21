@@ -88,6 +88,28 @@ public:
             throw std::logic_error("Unexpected vector dimension!");
         }
     }
+
+    static MapT create_psi0_inverse(const std::array<ScalarType, 2>& d)
+    {
+        using CapdUtils::Node;
+
+        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
+        {
+            Node& d1 = param[0];
+            Node& d2 = param[1];
+
+            Node& u = in[0];
+            Node& pu = in[2];
+
+            out[0] = (u/d1 + pu/d2) / 2;
+            out[1] = (u/d1 - pu/d2) / 2;
+        };
+
+        MapT map(func, 4, 2, 2);
+        map.setParameter(0, d.at(0));
+        map.setParameter(1, d.at(1));
+		return map;
+    }
 };
 
 }
