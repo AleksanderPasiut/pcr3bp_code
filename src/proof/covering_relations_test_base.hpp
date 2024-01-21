@@ -30,7 +30,7 @@ protected:
     const std::vector<Coordsys> m_periodic_orbit_coordsys;
     const std::vector<Coordsys> m_homoclinic_orbit_coordsys;
 
-    const ScalarType m_gain_factor { 75e-11 };
+    const ScalarType m_gain_factor { 85e-11 };
 };
 
 }
