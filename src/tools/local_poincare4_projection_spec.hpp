@@ -27,17 +27,11 @@ public:
 
     virtual VectorType operator() (const VectorType& vec) override
     {
-        print_var(vec);
-        print_var( m_affine_map(vec) );
-
         return m_internal(vec);
     }
 
     virtual VectorType operator() (const VectorType& vec, MatrixType& der) override
     {
-        print_var(vec);
-        print_var( m_affine_map(vec) );
-
         return m_internal(vec, der);
     }
 

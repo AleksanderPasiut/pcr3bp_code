@@ -70,11 +70,6 @@ public:
 
         assert_with_exception(src_specialized == is_u_v_pu_zero(m_src_coordsys.get_origin()));
         assert_with_exception(dst_specialized == is_u_v_pu_zero(m_dst_coordsys.get_origin()));
-
-        print_var(src_specialized);
-        print_var(dst_specialized);
-        print_var(m_src_coordsys.get_origin());
-        print_var(m_dst_coordsys.get_origin());
     }
 
     VectorType operator() (const VectorType& vec) override
