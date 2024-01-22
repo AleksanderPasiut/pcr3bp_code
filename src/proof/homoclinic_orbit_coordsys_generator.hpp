@@ -8,7 +8,6 @@
 
 #include "tools/affine_poincare_map.hpp"
 #include "tools/coordsys4_alignment.hpp"
-#include "tools/variable_printer.hpp"
 
 #include "pcr3bp_reg_basic_objects.hpp"
 #include "pcr3bp_reg2_initial_coordsys_generator.hpp"
@@ -97,11 +96,6 @@ private:
         }
 
         const ScalarType expansion_factor = std::pow( total_expansion_factor, 0.5 / poincare_pos_list.size() );
-
-        CapdUtils::VariablePrinter<MapT>::print(
-            "homoclinic_orbit_average_expansion_factor.txt",
-            "Average expansion factor along homoclinic orbit",
-            expansion_factor);
 
         const std::list<VectorType> unstable_dirs_pos = get_unstable_dirs(poincare_pos_list, VectorType{ 1.0, 0.0, 0.0, 0.0 }, expansion_factor);
 

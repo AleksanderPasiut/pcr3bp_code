@@ -11,7 +11,6 @@
 
 #include "covering_relations_test_base.hpp"
 #include "covering_relation_checker.hpp"
-#include "parallelogram_covering_checker.hpp"
 
 #include "scaled_local_poincare4_map.hpp"
 
@@ -177,57 +176,6 @@ private:
         };
 
         extension_to_4_dst(cr.get_img() * this->m_gain_factor);
-        // print_var( extension_to_4_dst(img) );
-
-        return time_span;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //! @brief Check backward covering relation between given local coordinate systems
-    //! @return Return interval of time of evolved solution
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ScalarType check_covering_relation_backward(
-        CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
-        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
-        bool src_specialized = false,
-        bool dst_specialized = false)
-    {
-        ScaledLocalPoincare4_Map<MapT> f
-        {
-            std::ref(this->m_basic_objects.m_vf_reg_neg2),
-            std::ref(this->m_basic_objects.m_hamiltonian_reg2),
-            this->m_basic_objects.m_order,
-            coordsys_dst,
-            coordsys_src,
-            this->m_gain_factor,
-            dst_specialized,
-            src_specialized
-        };
-
-        MapT J = AuxiliaryFunctions<MapT>::J();
-        CapdUtils::CompositeMap<MapT, decltype(J)&, decltype(f)&, decltype(J)&> jfj
-        {
-            std::ref(J),
-            std::ref(f),
-            std::ref(J)
-        };
-
-        CoveringRelationCheck cr { jfj };
-
-        const ScalarType time_span = f.get_last_evaluation_return_time();
-
-        EXPECT_TRUE(cr.contraction_condition());
-        EXPECT_TRUE(cr.expansion_condition());
-
-        // check that image is properly covered by its coordinate system
-        LocalPoincare4_Constraint<MapT> extension_to_4_dst
-        {
-            std::ref(this->m_basic_objects.m_hamiltonian_reg2),
-            std::ref(coordsys_dst)
-        };
-
-        extension_to_4_dst(cr.get_img() * this->m_gain_factor);
-        // print_var( extension_to_4_dst(img) );
 
         return time_span;
     }

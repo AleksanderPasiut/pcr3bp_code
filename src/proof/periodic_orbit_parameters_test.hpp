@@ -5,8 +5,6 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include "tools/floating_info.hpp"
-#include "tools/variable_printer.hpp"
 
 #include <capd_utils/map_base.hpp>
 #include <capd_utils/pne_map.hpp>
@@ -38,7 +36,7 @@ public:
 
     LyapunovOrbitRegCollisionSetup(ScalarType intermediate_time, bool full_test = true) : m_intermediate_time(intermediate_time)
     {
-        std::cout << "Intermediate time: " << intermediate_time << '\n';
+        print_var(intermediate_time);
 
         const VectorType h0 = VectorType{ -0.711059 };
         const VectorType v = m_parallel_shooting_init(h0);
@@ -60,33 +58,8 @@ public:
             EXPECT_EQ(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point());
             EXPECT_EQ(image_point, m_basic_objects.m_parameters.get_image_point());
 
-            {
-                const ScalarType lyapunov_orbit_period_diff = capd::abs( (intermediate_time + m_poincare.get_last_evaluation_return_time())*2 - m_basic_objects.m_lyapunov_orbit_period );
-                EXPECT_LT(lyapunov_orbit_period_diff, 1.3e-13);
-            }
-
-            const std::string suffix = std::is_same<IMap, MapT>::value ? ".txt" : ".approx.txt";
-
-            CapdUtils::VariablePrinter<MapT>::print(
-                "periodic_orbit_initial_point" + suffix,
-                "Initial point on periodic orbit, (u,v,pu,pv) components",
-                m_initial_point);
-
-            CapdUtils::VariablePrinter<MapT>::print(
-                "periodic_orbit_intermediate_point" + suffix,
-                "Intermediate point on periodic orbit, (u,v,pu,pv) components",
-                intermediate_point);
-
-            CapdUtils::VariablePrinter<MapT>::print(
-                "periodic_orbit_image_point" + suffix,
-                "Image point on periodic orbit, (u,v,pu,pv) components",
-                image_point);
-
-            const ScalarType energy = root[4];
-            CapdUtils::VariablePrinter<MapT>::print(
-                "collision_energy" + suffix,
-                "Energy of Lyapunov orbit that passes through regularized collision",
-                energy);
+            const ScalarType lyapunov_orbit_period_diff = capd::abs( (intermediate_time + m_poincare.get_last_evaluation_return_time())*2 - m_basic_objects.m_lyapunov_orbit_period );
+            EXPECT_LT(lyapunov_orbit_period_diff, 1.3e-13);
         }
     }
 
