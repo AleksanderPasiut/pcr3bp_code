@@ -82,6 +82,11 @@ trace.info("Removing print bootstrap utility...")
 remove_file('src/tools/print_bootstrap.hpp')
 remove_file('src/tools/print_bootstrap.cpp')
 
+trace.info("Remove variable printer utility...")
+remove_file('src/tools/variable_printer.hpp')
+remove_file('src/tools/variable_printer.cpp')
+remove_file('src/tools/floating_info.hpp')
+
 
 trace.info("Replacing current CMakeLists.txt ...")
 remove_file('CMakeLists.txt')
