@@ -13,7 +13,7 @@
 #include "covering_relation_checker.hpp"
 #include "parallelogram_covering_checker.hpp"
 
-#include "g_map.hpp"
+#include "scaled_local_poincare4_map.hpp"
 
 namespace Pcr3bpProof
 {
@@ -107,7 +107,7 @@ public:
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( this->m_homoclinic_orbit_coordsys.begin() );
 
-        G_Map<MapT> poincare
+        ScaledLocalPoincare4_Map<MapT> poincare
         {
             this->m_basic_objects.m_vf_reg_neg2,
             this->m_basic_objects.m_hamiltonian_reg2,
@@ -147,7 +147,7 @@ private:
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
         bool specialized = false)
     {
-        G_Map<MapT> f
+        ScaledLocalPoincare4_Map<MapT> f
         {
             std::ref(this->m_basic_objects.m_vf_reg_pos2),
             std::ref(this->m_basic_objects.m_hamiltonian_reg2),
@@ -186,7 +186,7 @@ private:
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst)
     {
-        G_Map<MapT> f
+        ScaledLocalPoincare4_Map<MapT> f
         {
             std::ref(this->m_basic_objects.m_vf_reg_neg2),
             std::ref(this->m_basic_objects.m_hamiltonian_reg2),
@@ -247,7 +247,7 @@ private:
         const VectorType expected_collision = this->m_basic_objects.m_parameters.get_initial_point();
         if ( norm(coordsys_src.get_origin() - expected_collision) < norm(coordsys_dst.get_origin() - expected_collision) )
         {
-            G_Map<MapT> f_pos
+            ScaledLocalPoincare4_Map<MapT> f_pos
             {
                 std::ref(this->m_basic_objects.m_vf_reg_pos2),
                 std::ref(this->m_basic_objects.m_hamiltonian_reg2),
@@ -265,7 +265,7 @@ private:
         }
         else
         {
-            G_Map<MapT> f_neg
+            ScaledLocalPoincare4_Map<MapT> f_neg
             {
                 std::ref(this->m_basic_objects.m_vf_reg_neg2),
                 std::ref(this->m_basic_objects.m_hamiltonian_reg2),
