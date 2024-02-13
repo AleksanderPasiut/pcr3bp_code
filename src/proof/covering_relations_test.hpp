@@ -177,7 +177,6 @@ private:
         };
 
         extension_to_4_dst(cr.get_img() * this->m_gain_factor);
-        // print_var( extension_to_4_dst(img) );
 
         return time_span;
     }
@@ -227,7 +226,6 @@ private:
         };
 
         extension_to_4_dst(cr.get_img() * this->m_gain_factor);
-        // print_var( extension_to_4_dst(img) );
 
         return time_span;
     }

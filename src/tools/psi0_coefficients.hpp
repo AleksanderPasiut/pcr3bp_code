@@ -50,10 +50,7 @@ private:
         MapT& internal_map,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys)
     {
-        // print_var( dst_coordsys.get_directions_matrix() );
-
         const VectorType unstable_dir = CapdUtils::Extract<MapT>::get_vvector(dst_coordsys.get_directions_matrix(), 1);
-        print_var(unstable_dir);
 
         MatrixType dd(4, 2);
         internal_map( VectorType(2), dd );
@@ -71,9 +68,6 @@ private:
 
         const VectorType unstable_dir_reg = dd2 * unstable_dir;
         const VectorType d_coeff = CapdUtils::gauss<MapT>(ddx, unstable_dir_reg);
-
-        print_var( d_coeff[0] );
-        print_var( d_coeff[1] );
 
         return std::array<ScalarType, 2>
         {
