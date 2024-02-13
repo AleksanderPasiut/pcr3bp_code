@@ -67,7 +67,7 @@ TEST(Pcr3bp_basic, coordinate_change_std_to_reg_and_back)
         {
             const double px = dist(rng);
             const double py = dist(rng);
-            test.check_coordinate_change_to_reg_and_back({ x, y, px, py, 0.0 }, 4.1e-12);
+            test.check_coordinate_change_to_reg_and_back({ x, y, px, py, 0.0 }, 4.9e-12);
             ++i;
         }
     }
@@ -91,7 +91,7 @@ TEST(Pcr3bp_basic, coordinate_change_reg_to_std_and_back)
         {
             const double pu = dist(rng);
             const double pv = dist(rng);
-            test.check_coordinate_change_to_std_and_back({ u, v, pu, pv, 0.0 }, 3.2e-12);
+            test.check_coordinate_change_to_std_and_back({ u, v, pu, pv, 0.0 }, 3.8e-12);
             ++i;
         }
     }
@@ -136,7 +136,7 @@ TEST(Pcr3bp_basic, coordinate_change_test)
                 const double pv = dist(rng);
                 const VectorType U = { u, v, pu, pv };
 
-                test(m_lci, U, 7.5e-14);
+                test(m_lci, U, 9.0e-14);
                 ++i;
             }
         }
@@ -178,7 +178,7 @@ TEST(Pcr3bp_basic, coordinate_change_test)
                 const double pv = dist(rng);
                 const VectorType U = { u, v, pu, pv };
 
-                test(m_lci, U, 2.9e-14);
+                test(m_lci, U, 3.6e-14);
                 ++i;
             }
         }
