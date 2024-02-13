@@ -2,14 +2,19 @@
 // Author: Aleksander M. Pasiut
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "periodic_orbit_parameters_test.hpp"
+#include "covering_relations_test.parallelogram_covering_derivative_check.hpp"
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Interval arithmetic validation for the proof of Theorem 7
+//! @brief Interval arithmetic validation of the proof of Lemma 10
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(Pcr3bp_proof, periodic_orbit_parameters_test_rigorous)
+TEST(Pcr3bp_proof, parallelogram_coverings_derivative)
 {
     using namespace Pcr3bpProof;
 
-    LyapunovOrbitRegCollisionSetup<IMap> setup( 58696.0 / 65536 );
+    capd::rounding::DoubleRounding::roundNearest();
+
+    CoveringRelationsSetup setup {};
+    CoveringRelationsTest_ParallelogramCoveringDerivativeCheck<IMap> test { setup };
+    test.parallelogram_covering_derivative_check();
 }
