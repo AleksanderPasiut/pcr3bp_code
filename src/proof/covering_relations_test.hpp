@@ -79,11 +79,11 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_jump_coverings()
     {
-        std::cout << "periodic (3) <= first homoclinic covering\n";
+        std::cout << "periodic (3) => first homoclinic covering\n";
 
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( this->m_homoclinic_orbit_coordsys.begin() );
-        const ScalarType time_span = check_covering_relation_backward(coordsys_src, coordsys_dst);
+        const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
         simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
     }
 
@@ -114,7 +114,9 @@ public:
             this->m_basic_objects.m_order,
             coordsys_dst,
             coordsys_src,
-            this->m_gain_factor
+            this->m_gain_factor,
+            false,
+            false
         };
 
         CapdUtils::CompositeMap<MapT,
@@ -145,7 +147,8 @@ private:
     ScalarType check_covering_relation_forward(
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
-        bool specialized = false)
+        bool src_specialized = false,
+        bool dst_specialized = false)
     {
         ScaledLocalPoincare4_Map<MapT> f
         {
@@ -155,7 +158,8 @@ private:
             coordsys_src,
             coordsys_dst,
             this->m_gain_factor,
-            specialized
+            src_specialized,
+            dst_specialized
         };
 
         CoveringRelationCheck cr { f };
@@ -184,7 +188,9 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ScalarType check_covering_relation_backward(
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
-        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst)
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
+        bool src_specialized = false,
+        bool dst_specialized = false)
     {
         ScaledLocalPoincare4_Map<MapT> f
         {
@@ -193,7 +199,9 @@ private:
             this->m_basic_objects.m_order,
             coordsys_dst,
             coordsys_src,
-            this->m_gain_factor
+            this->m_gain_factor,
+            dst_specialized,
+            src_specialized
         };
 
         MapT J = AuxiliaryFunctions<MapT>::J();
@@ -254,7 +262,9 @@ private:
                 this->m_basic_objects.m_order,
                 coordsys_src,
                 coordsys_dst,
-                this->m_gain_factor
+                this->m_gain_factor,
+                false,
+                false
             };
 
             SolutionCurveWithConditionCheck<MapT> solution_curve {};
@@ -272,7 +282,9 @@ private:
                 this->m_basic_objects.m_order,
                 coordsys_dst,
                 coordsys_src,
-                this->m_gain_factor
+                this->m_gain_factor,
+                false,
+                false
             };
 
             SolutionCurveWithConditionCheck<MapT> solution_curve {};

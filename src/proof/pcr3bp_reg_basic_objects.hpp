@@ -49,9 +49,9 @@ public:
     {
         const ScalarType b0 { 255.0 / 256 }; // { 1.0 - pow(2.0, -24) };
 
-        const ScalarType a0 { 151.0 / 256 };
+        const ScalarType a0 { 1.0 / 256 };
 
-        const ScalarType L { 0.000106 }; //{ 0.000105902 };
+        const ScalarType L { 0.0039 }; //{ 0.000105902 };
 
     } m_parallelogram_coverings_parameters;
 };

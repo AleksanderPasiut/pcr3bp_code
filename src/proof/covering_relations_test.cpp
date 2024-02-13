@@ -44,7 +44,7 @@ TEST(Pcr3bp_proof, periodic_coverings)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Part of interval arithmetic validation of the proof of Theorem 8, where we assert the existence of covering
-//!        relation N_3 <= N_4
+//!        relation N_3 => N_4
 //!
 //!        In this computation we also perform a part of interval arithmetic validation of the proof of Lemma 8, where we
 //!        assert that the trajectories shadowing the covering relation described above, do not intersect with the collision
