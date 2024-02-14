@@ -18,7 +18,7 @@ In the source files we use the term "periodic" to refer to the "ejection/collisi
 
 ## Building and launching
 ### Prerequisites
-In order to build and launch the program it is necessary to clone this repository into the PC with Linux OS (other operating systems are not supported). It is necessary to have autotools, cmake, git, and c++ compiler that supports C++17 standard installed.
+In order to build and launch the program it is necessary to clone this repository into the PC with Linux OS (other operating systems are not supported). It is necessary to have cmake, git, and c++ compiler that supports C++17 standard installed.
 
 ### Launching the program
 
@@ -27,10 +27,6 @@ In order to build and launch the program the following commands have to be execu
     git clone https://github.com/AleksanderPasiut/pcr3bp_code
     cd pcr3bp_code
     git submodule update --init --recursive
-    mkdir build
+    bash bootstrap.sh
     cd build
-    cmake .. -DCAPD_ENABLE_MULTIPRECISION=OFF
-    make
     ./pcr3bp_code
-
-Another approach is to download the .zip file with the code from this github repository. In such case the first two commands from the list above can be skipped.

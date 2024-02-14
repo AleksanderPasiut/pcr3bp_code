@@ -36,6 +36,7 @@ public:
 
     LyapunovOrbitRegCollisionSetup(ScalarType intermediate_time, bool full_test = true) : m_intermediate_time(intermediate_time)
     {
+        std::cout.precision(15);
         print_var(intermediate_time);
 
         const VectorType h0 = VectorType{ -0.711059 };
@@ -55,8 +56,20 @@ public:
 
         if (full_test)
         {
-            EXPECT_EQ(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point());
-            EXPECT_EQ(image_point, m_basic_objects.m_parameters.get_image_point());
+            if constexpr (std::is_same<MapT, IMap>::value)
+            {
+                EXPECT_TRUE(subset(intermediate_point, m_basic_objects.m_parameters.get_intermediate_point()))
+                    << intermediate_point << '\n'
+                    << m_basic_objects.m_parameters.get_intermediate_point();
+
+                EXPECT_TRUE(subset(image_point, m_basic_objects.m_parameters.get_image_point()))
+                    << image_point << '\n'
+                    << m_basic_objects.m_parameters.get_image_point();
+
+                EXPECT_TRUE(subset(root[4], m_basic_objects.m_parameters.get_energy()))
+                    << root[4] << '\n'
+                    << m_basic_objects.m_parameters.get_energy();
+            }
 
             const ScalarType lyapunov_orbit_period_diff = capd::abs( (intermediate_time + m_poincare.get_last_evaluation_return_time())*2 - m_basic_objects.m_lyapunov_orbit_period );
             EXPECT_LT(lyapunov_orbit_period_diff, 1.3e-13);

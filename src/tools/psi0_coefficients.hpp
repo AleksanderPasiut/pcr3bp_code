@@ -11,6 +11,7 @@
 #include "psi0_specialized.hpp"
 
 #include <proof/pcr3bp_reg_basic_objects.hpp>
+#include <proof/periodic_orbit_coordsys_generator.hpp>
 
 namespace Pcr3bpProof
 {
