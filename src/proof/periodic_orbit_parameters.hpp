@@ -97,10 +97,10 @@ template<>
 inline IVector RegLyapunovCollisionOrbitParameters<IMap>::get_image_point() const
 {
     return VectorType{
-        CapdUtils::ReadableInterval<ScalarType>("3fefeb9cf0cc3a73", "3fefeb9cf0cc4859"),
+        CapdUtils::ReadableInterval<ScalarType>("3fefeb9cf0cc3943", "3fefeb9cf0cc4988"),
         CapdUtils::ReadableInterval<ScalarType>("0000000000000000", "0000000000000000"),
         CapdUtils::ReadableInterval<ScalarType>("0000000000000000", "0000000000000000"),
-        CapdUtils::ReadableInterval<ScalarType>("c008cd84a5f13f99", "c008cd84a5dd1386")
+        CapdUtils::ReadableInterval<ScalarType>("c008cd84a5ed1c56", "c008cd84a5e13763")
     };
 }
 
