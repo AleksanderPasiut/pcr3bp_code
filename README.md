@@ -1,11 +1,24 @@
 # Oscillatory collision approach in the Earth-Moon restricted three body problem
 
 ## Overview
-This repository contains the source code for the computer assisted proofs.
+This repository contains the source code for the interval arithmetic validation used in the paper "Oscillatory collision approach in the Earth-Moon restricted three body problem" by M. J. Capiński and A. Pasiut. 
+
+The following source files contain the proofs for the respective theorems and lemmas:
+
+* periodic_orbit_parameters_test.cpp
+  * Theorem 7
+* covering_relations_test.cpp
+  * Theorem 8
+  * Lemma 8
+  * Lemma 11
+* covering_relations_test.parallelogram_covering_derivative_check.cpp
+  * Lemma 10
+
+In the source files we use the term "periodic" to refer to the "ejection/collision" orbit. Also, we use the term "homoclinic" to refer to the "outer" orbit.
 
 ## Building and launching
 ### Prerequisites
-In order to build and launch the program it is necessary to clone this repository into the PC with Linux OS (other operating systems are not supported). It is necessary to have autotools, cmake, and c++ compiler that supports C++17 standard installed.
+In order to build and launch the program it is necessary to clone this repository into the PC with Linux OS (other operating systems are not supported). It is necessary to have autotools, cmake, git, and c++ compiler that supports C++17 standard installed.
 
 ### Launching the program
 
@@ -13,6 +26,11 @@ In order to build and launch the program the following commands have to be execu
 
     git clone https://github.com/AleksanderPasiut/pcr3bp_code
     cd pcr3bp_code
+    git submodule update --init --recursive
+    mkdir build
+    cd build
     cmake .. -DCAPD_ENABLE_MULTIPRECISION=OFF
     make
-    ./pcr3bp_code --gtest_filter=Pcr3bp_proof.*
+    ./pcr3bp_code
+
+Another approach is to download the .zip file with the code from this github repository. In such case the first two commands from the list above can be skipped.

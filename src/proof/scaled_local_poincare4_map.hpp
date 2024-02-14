@@ -11,31 +11,33 @@ namespace Pcr3bpProof
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Implementation of the `g` map
+//! @brief Implementation of the local poincare map with scaling factor included
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename MapT>
-class G_Map : public CapdUtils::MapBase<MapT>
+class ScaledLocalPoincare4_Map : public CapdUtils::MapBase<MapT>
 {
 public:
     using ScalarType = typename MapT::ScalarType;
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    G_Map(
+    ScaledLocalPoincare4_Map(
         MapT& vector_field,
         MapT& constraint,
         unsigned order,
         const CapdUtils::LocalCoordinateSystem<MapT>& src_coordsys,
         const CapdUtils::LocalCoordinateSystem<MapT>& dst_coordsys,
         ScalarType input_gain,
-        bool specialized = false)
+        bool src_specialized,
+        bool dst_specialized)
             : m_local_poincare4(
                 vector_field,
                 constraint,
                 order,
                 src_coordsys,
                 dst_coordsys,
-                specialized)
+                src_specialized,
+                dst_specialized)
             , m_input_gain(input_gain, m_local_poincare4.dimension())
             , m_output_gain(ScalarType(1.0) / input_gain, m_local_poincare4.imageDimension())
     {}

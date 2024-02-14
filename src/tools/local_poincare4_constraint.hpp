@@ -10,6 +10,7 @@
 #include <capd_utils/local_poincare_wrapper.hpp>
 
 #include "local_poincare4_constraint_base.hpp"
+
 #include "id_with_constraint.hpp"
 
 namespace Pcr3bpProof

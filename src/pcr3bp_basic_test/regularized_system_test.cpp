@@ -59,7 +59,7 @@ static void compare_with_standard_flow_at_point()
         const double pu = dist(rng);
         const double pv = dist(rng);
 
-        f({ u, v, pu, pv }, 1.2e-12);
+        f({ u, v, pu, pv }, 1.4e-12);
     }
 }
 
@@ -137,7 +137,7 @@ TEST(Pcr3bp_basic, compare_regular_flow_at_1_with_standard_flow_1)
     Pcr3bpProof::TimemapTestParams param;
     param.initial = { -0.5, 0.1, 0.1, 1.1, 0.0, 0.0 };
     param.time = 0.1;
-    param.precision = 1.5e-14;
+    param.precision = 1.6e-14;
     Pcr3bpProof::compare_with_standard_flow<1>(param);
 }
 

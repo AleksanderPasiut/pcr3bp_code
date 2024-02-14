@@ -27,7 +27,7 @@ public:
         const ScalarType alpha = 5.09;
         const ScalarType beta = 0.195;
         const ScalarType rho = 0.197;
-        const ScalarType c = 0.0011;
+        const ScalarType c = 0.021;
 
         EXPECT_TRUE( 0 < beta );
         EXPECT_TRUE( beta < rho );
