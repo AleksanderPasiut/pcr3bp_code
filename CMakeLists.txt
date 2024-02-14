@@ -31,7 +31,6 @@ endif()
 # primary component build
 ################################################################################
 set(SOURCES_LIST
-    src/tools/variable_printer.cpp
     src/tools/print_bootstrap.cpp
     src/main.cpp)
 

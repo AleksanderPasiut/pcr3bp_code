@@ -4,7 +4,6 @@
 
 #include "tools/test_tools.hpp"
 #include "tools/print_bootstrap.hpp"
-#include "tools/variable_printer.hpp"
 #include "homoclinic_orbit_origins_initial_generator.hpp"
 #include "homoclinic_orbit_origins_initial.hpp"
 
@@ -21,7 +20,7 @@ TEST(Pcr3bp_intermediate, homoclinic_orbit_origins_initial_test)
     
     HomoclinicOrbitOriginsInitialGenerator<MapT> homoclinic_orbit_origins_initial_generator { setup.get_coordsys_container() };
 
-    #if 1
+    #if 0
 
     std::ofstream ostr("homoclinic_orbit_parameters.cpp.generated");
 
