@@ -26,7 +26,4 @@ In order to build and launch the program the following commands have to be execu
 
     git clone https://github.com/AleksanderPasiut/pcr3bp_code
     cd pcr3bp_code
-    git submodule update --init --recursive
-    bash bootstrap.sh
-    cd build
-    ./pcr3bp_code
+    bash build_and_run.sh
