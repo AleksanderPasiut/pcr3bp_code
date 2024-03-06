@@ -40,17 +40,11 @@ public:
         , m_param(param)
         , m_ruler( Leo::Ruler<ScalarType>(0.0, param.t, param.point_count, 1) )
         , m_renderable(
+            core_ref.get_objects(),
             Leo::RulerSet<1>({ m_ruler }),
             param.rotation)
     {
         refresh();
-
-        m_core_ref.register_manifold(&m_renderable);
-    }
-
-    virtual ~RegEvolution4() noexcept
-    {
-        m_core_ref.unregister_manifold(&m_renderable);
     }
 
     void refresh()

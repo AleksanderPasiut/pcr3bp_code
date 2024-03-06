@@ -7,11 +7,9 @@
 
 #include <tools/types.hpp>
 
-#if 0
+#include <proof/pcr3bp_reg_basic_objects.hpp>
 
 #include <capd_utils/concat.hpp>
-
-#endif
 
 #include "plot_common/window_properties.hpp"
 
@@ -41,12 +39,14 @@ private:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-#if 0
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
     std::unique_ptr<RegEvolution4> m_reg_evolution {};
     std::unique_ptr<RegEvolution4> m_reg_evolution_2 {};
+
+#if 0
+
     std::array<std::unique_ptr<HL_Map>, 4> m_ptdbg {};
 
     CoveringRelationsSetup m_covering_relations_setup {};
@@ -62,8 +62,6 @@ private:
 public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
     {}
-
-#if 0
 
     void reload_reg_evolution(RVector ret, double time, size_t point_count, float thickness)
     {
@@ -95,13 +93,10 @@ public:
         m_reg_evolution_2 = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
     }
 
-#endif
-
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase::set_param(packet_vector);
 
-#if 0
         int idx = 0;
         const size_t reg_evo_select = this->get_param(idx++);
         const size_t reg_evo_point_count = this->get_param(idx++);
@@ -129,6 +124,7 @@ public:
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
+
         if (reg_evo_select == -1)
         {
             m_reg_evolution.reset();
@@ -155,7 +151,7 @@ public:
         if (reg_evo_select == 1)
         {
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
-            const RVector image_point = m_basic_objects.m_parameters.get_image_point_approx();
+            const RVector image_point = m_basic_objects.m_parameters.get_image_point();
 
             reload_reg_evolution(
                 initial_point,
@@ -169,6 +165,8 @@ public:
                 reg_evo_point_count,
                 reg_evo_thickness);
         }
+
+#if 0
 
         reload_pos_manifold(h, show_ghv, thickness);
         reload_mid_manifold(h, show_ghv, thickness);
@@ -263,7 +261,6 @@ public:
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
 
-#if 0
 
         if (m_reg_evolution)
         {
@@ -274,6 +271,8 @@ public:
         {
             m_reg_evolution_2->refresh();
         }
+
+#if 0
 
         for (auto& ptdbg : m_ptdbg)
         {
