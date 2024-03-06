@@ -8,6 +8,7 @@
 #include <tools/types.hpp>
 
 #include <proof/pcr3bp_reg_basic_objects.hpp>
+#include <proof/covering_relations_setup.hpp>
 
 #include <capd_utils/concat.hpp>
 
@@ -24,7 +25,6 @@
 #include "plot_2/objects/section_plot4_ce.hpp"
 
 #include <beta/periodic_orbit_parameters.hpp>
-#include <beta/covering_relations_setup.hpp>
 
 #endif
 
@@ -47,10 +47,12 @@ private:
 
     std::array<std::unique_ptr<HL_Map>, 4> m_ptdbg {};
 
-#if 0
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
+    std::list<HL_Map> m_origins {};
+
+#if 0
     std::unique_ptr<SectionPlot4> m_short_path_section {};
     std::unique_ptr<SectionPlot4> m_long_path_section {};
 
@@ -176,13 +178,38 @@ public:
         reload_mid_manifold(h, show_ghv, thickness);
         reload_neg_manifold(h, show_ghv, thickness);
 
-#endif
 
         m_ptdbg[0] = std::make_unique<HL_Map>(
             std::ref(get_core_ref()), m_basic_objects.m_parameters.get_initial_point(), std::cref(this->get_transformation()));
 
         m_ptdbg[1] = std::make_unique<HL_Map>(
             std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point(), std::cref(this->get_transformation()));
+
+#endif
+        
+        m_origins.clear();
+
+        using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
+        for (Coordsys const& coordsys : m_covering_relations_setup.get_periodic_orbit_coordsys())
+        {
+            m_origins.emplace_back(
+                std::ref(get_core_ref()),
+                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                std::cref( this->get_transformation() ),
+                reg_evo_thickness * 5
+            );
+        }
+
+        for (Coordsys const& coordsys : m_covering_relations_setup.get_homoclinic_orbit_coordsys())
+        {
+            m_origins.emplace_back(
+                std::ref(get_core_ref()),
+                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                std::cref( this->get_transformation() ),
+                reg_evo_thickness * 5
+            );
+        }
+
 
 #if 0
         if (select_short_path_section >= 0)
@@ -285,6 +312,11 @@ public:
             {
                 ptdbg->refresh();
             }
+        }
+
+        for (auto& ptdbg : m_origins)
+        {
+            ptdbg.refresh();
         }
 
 #if 0
