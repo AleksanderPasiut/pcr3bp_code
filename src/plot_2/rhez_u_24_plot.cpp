@@ -137,6 +137,11 @@ public:
         const size_t highlight_periodic_orbit_point = this->get_param(idx++);
         const size_t highlight_homoclinic_orbit_point = this->get_param(idx++);
 
+        const bool show_arg_h_sets = this->get_param(idx++);
+        const bool show_img_h_sets = this->get_param(idx++);
+        const bool show_limg_h_sets = this->get_param(idx++);
+        const bool show_rimg_h_sets = this->get_param(idx++);
+
         const size_t centerpoint_index = this->get_param(idx++);
 
         this->set_scale(pow(10.0, scale));
