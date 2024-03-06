@@ -20,7 +20,7 @@
 
 #include "gen2dplot_plot.scale.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 // template<template<typename> typename Func>

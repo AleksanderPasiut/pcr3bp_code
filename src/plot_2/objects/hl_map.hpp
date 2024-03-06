@@ -8,7 +8,7 @@
 #include "capd_renderable.hpp"
 #include "tools/test_tools.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class HL_Map

@@ -9,9 +9,13 @@
 
 #include "capd_renderable.hpp"
 
+#if 0
+
 #include "plot_1/objects/rhez_u_alpha_object_24.hpp"
 
-namespace Ursa
+#endif
+
+namespace Pcr3bpProof
 {
 
 class CoreInteriorBaseRhez_u_24 : protected CoreInteriorBase4d
@@ -19,15 +23,19 @@ class CoreInteriorBaseRhez_u_24 : protected CoreInteriorBase4d
 private:
     Lyra::Core3d& m_core_ref;
 
+#if 0
     std::unique_ptr<RenderableUAlpha24> m_manifold_mid;
     std::unique_ptr<RenderableUAlpha24> m_manifold_pos;
     std::unique_ptr<RenderableUAlpha24> m_manifold_neg;
+#endif
 
 protected:
     CoreInteriorBaseRhez_u_24(Lyra::Core3d& core_ref)
         : CoreInteriorBase4d()
         , m_core_ref(core_ref)
     {}
+
+#if 0
 
     void reload_pos_manifold(double h, bool show, float thickness)
     {
@@ -89,6 +97,8 @@ protected:
         }
     }
 
+#endif
+
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase4d::set_param(packet_vector);
@@ -97,6 +107,8 @@ protected:
     void set_rotation_4d(Leo::Matrix4f const & matrix)
     {
         CoreInteriorBase4d::set_rotation(matrix);
+    
+#if 0
 
         if (m_manifold_mid)
         {
@@ -112,6 +124,8 @@ protected:
         {
             m_manifold_neg->refresh();
         }
+
+#endif
     }
 
     Lyra::Core3d& get_core_ref()

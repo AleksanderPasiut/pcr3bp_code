@@ -10,7 +10,7 @@
 
 #include <complex>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class X

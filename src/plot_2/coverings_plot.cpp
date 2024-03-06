@@ -20,7 +20,7 @@
 
 #include "capd_renderable.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class Env
@@ -294,9 +294,9 @@ public:
 
 int main(int argc, char* argv[])
 {
-    using Core = Taurus::DefaultCore2d<Ursa::CoreInterior>;
+    using Core = Taurus::DefaultCore2d<Pcr3bpProof::CoreInterior>;
     Serpent::SglHostWindow<Core> window(
-        Ursa::create_window_properties("plot_coverings"),
+        Pcr3bpProof::create_window_properties("plot_coverings"),
         argc,
         argv,
         Leo::Color(1.0, 1.0, 1.0),

@@ -12,7 +12,7 @@
 #include <carina/affine_map.hpp>
 #include <carina/enp_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class SectionPlot4

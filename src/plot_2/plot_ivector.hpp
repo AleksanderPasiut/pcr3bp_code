@@ -8,7 +8,7 @@
 #include <lyra/manifold/manifold_interface.hpp>
 #include "tools/test_tools.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class PlotIVector

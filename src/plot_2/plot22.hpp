@@ -9,7 +9,7 @@
 #include "capd_renderable.hpp"
 #include "tools/test_tools.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
     template<typename MapT>
     class Plot22 final

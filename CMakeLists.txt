@@ -25,6 +25,9 @@ plot_component( plot_reg_evolution_raw
 plot_component( plot_reg_evolution_lyapunov_multi
     src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
 
+plot_component( plot_rhez_u_24
+    src/plot_2/rhez_u_24_plot.cpp)
+
 endif()
 
 ################################################################################

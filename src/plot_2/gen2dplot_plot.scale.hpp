@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>

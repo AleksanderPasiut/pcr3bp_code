@@ -5,11 +5,20 @@
 #include <serpent/sgl_host_window.hpp>
 #include <taurus/default_core_4d.hpp>
 
+#include <tools/types.hpp>
+
+#if 0
+
 #include <carina/concat.hpp>
+
+#endif
 
 #include "plot_common/window_properties.hpp"
 
 #include "rhez_u_24_core_interior_base.hpp"
+
+#if 0
+
 #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/section_plot4.hpp"
@@ -18,7 +27,9 @@
 #include <beta/periodic_orbit_parameters.hpp>
 #include <beta/covering_relations_setup.hpp>
 
-namespace Ursa
+#endif
+
+namespace Pcr3bpProof
 {
 
 class CoreInterior : CoreInteriorBaseRhez_u_24
@@ -28,6 +39,8 @@ private:
     using ScalarType = typename MapT::ScalarType;
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
+
+#if 0
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
@@ -43,9 +56,13 @@ private:
     std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
     std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
 
+#endif
+
 public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
     {}
+
+#if 0
 
     void reload_reg_evolution(RVector ret, double time, size_t point_count, float thickness)
     {
@@ -77,10 +94,13 @@ public:
         m_reg_evolution_2 = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
     }
 
+#endif
+
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase::set_param(packet_vector);
 
+#if 0
         int idx = 0;
         const size_t reg_evo_select = this->get_param(idx++);
         const size_t reg_evo_point_count = this->get_param(idx++);
@@ -234,11 +254,15 @@ public:
         {
             m_long_path_section_CE.reset();
         }
+
+#endif
     }
 
     void set_rotation_4d(Leo::Matrix4f const & matrix)
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
+
+#if 0
 
         if (m_reg_evolution)
         {
@@ -277,6 +301,8 @@ public:
         {
             m_long_path_section_CE->refresh();
         }
+
+#endif
     }
 };
 
@@ -284,9 +310,9 @@ public:
 
 int main(int argc, char* argv[])
 {
-    using Core = Taurus::DefaultCore4d<Ursa::CoreInterior>;
+    using Core = Taurus::DefaultCore4d<Pcr3bpProof::CoreInterior>;
     Serpent::SglHostWindow<Core> window(
-        Ursa::create_window_properties("RHEZ U 24"), argc, argv);
+        Pcr3bpProof::create_window_properties("RHEZ U 24"), argc, argv);
 
     window.show();
     window.run();

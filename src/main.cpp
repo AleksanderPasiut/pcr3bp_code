@@ -4,3 +4,5 @@
 
 #include "plot_1/reg_evolution_raw_master.hpp"
 #include "plot_1/reg_evolution_lyapunov_master.multi.hpp"
+
+#include "plot_2/rhez_u_24_master.hpp"

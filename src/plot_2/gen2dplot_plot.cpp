@@ -13,7 +13,7 @@
 // #include "gen2dplot_plot_x0.hpp"
 #include "gen2dplot_plot_x1.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class CoreInteriorGen2dPlot : CoreInteriorBase
@@ -47,9 +47,9 @@ public:
 
 int main(int argc, char* argv[])
 {
-    using Core = Taurus::DefaultCore2d<Ursa::CoreInteriorGen2dPlot>;
+    using Core = Taurus::DefaultCore2d<Pcr3bpProof::CoreInteriorGen2dPlot>;
     Serpent::SglHostWindow<Core> window(
-        Ursa::create_window_properties("gen2dplot"), argc, argv);
+        Pcr3bpProof::create_window_properties("gen2dplot"), argc, argv);
 
     window.show();
     window.run();

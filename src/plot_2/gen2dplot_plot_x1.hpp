@@ -11,7 +11,7 @@
 
 #include <aries/hrclock.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class X

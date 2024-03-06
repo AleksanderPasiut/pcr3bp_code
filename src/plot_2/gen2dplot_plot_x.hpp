@@ -17,7 +17,7 @@
 
 #include <carina/local_map.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class PlotID

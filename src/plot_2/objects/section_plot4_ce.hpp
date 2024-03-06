@@ -15,7 +15,7 @@
 #include <alpha/tools/local_poincare4_constraint.hpp>
 #include <beta/pcr3bp_reg_basic_objects.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class SectionPlot4_CE
