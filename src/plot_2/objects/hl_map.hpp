@@ -23,16 +23,16 @@ private:
 public:
     HL_Map(Lyra::Core3d& core_ref, RVector U, const Leo::Matrix4f & matrix)
         : m_core_ref(core_ref)
-        , m_vector(RVector{ U[2], U[3], U[0], U[1] }, std::cref(matrix))
+        , m_vector(core_ref.get_objects(), RVector{ U[2], U[3], U[0], U[1] }, std::cref(matrix))
     {
         refresh();
 
-        m_core_ref.register_manifold(&m_vector);
+        // m_core_ref.register_manifold(&m_vector);
     }
 
     virtual ~HL_Map() noexcept
     {
-        m_core_ref.unregister_manifold(&m_vector);
+        // m_core_ref.unregister_manifold(&m_vector);
     }
 
     void refresh()

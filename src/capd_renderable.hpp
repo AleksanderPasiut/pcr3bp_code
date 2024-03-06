@@ -317,8 +317,6 @@ private:
     const VectorType m_vector;
 };
 
-#if 0
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render single vector as point (4. dim)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -326,8 +324,8 @@ template<typename VectorType>
 class CapdVectorRenderable4 : public Lyra::Manifold4<0>
 {
 public:
-    CapdVectorRenderable4(VectorType vector, Leo::Matrix4f const& rotation)
-        : Lyra::Manifold4<0>(Leo::RulerSet<0>( 1 ), rotation)
+    CapdVectorRenderable4(Lyra::Core3dObjects& objects, VectorType vector, Leo::Matrix4f const& rotation)
+        : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ), rotation)
         , m_vector(vector)
     {}
 
@@ -349,8 +347,6 @@ public:
 private:
     const VectorType m_vector;
 };
-
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render single interval vector with map (in 2. or 3. dim)

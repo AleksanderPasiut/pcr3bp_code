@@ -16,10 +16,10 @@
 #include "rhez_u_24_core_interior_base.hpp"
 
 #include "plot_1/objects/reg_evolution4.hpp"
+#include "plot_2/objects/hl_map.hpp"
 
 #if 0
 
-#include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/section_plot4.hpp"
 #include "plot_2/objects/section_plot4_ce.hpp"
 
@@ -45,9 +45,9 @@ private:
     std::unique_ptr<RegEvolution4> m_reg_evolution {};
     std::unique_ptr<RegEvolution4> m_reg_evolution_2 {};
 
-#if 0
-
     std::array<std::unique_ptr<HL_Map>, 4> m_ptdbg {};
+
+#if 0
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
@@ -172,12 +172,15 @@ public:
         reload_mid_manifold(h, show_ghv, thickness);
         reload_neg_manifold(h, show_ghv, thickness);
 
+#endif
+
         m_ptdbg[0] = std::make_unique<HL_Map>(
             std::ref(get_core_ref()), m_basic_objects.m_parameters.get_initial_point(), std::cref(this->get_rotation()));
 
         m_ptdbg[1] = std::make_unique<HL_Map>(
-            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point_approx(), std::cref(this->get_rotation()));
+            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point(), std::cref(this->get_rotation()));
 
+#if 0
         if (select_short_path_section >= 0)
         {
             const SectionPlot4::Param param
@@ -272,8 +275,6 @@ public:
             m_reg_evolution_2->refresh();
         }
 
-#if 0
-
         for (auto& ptdbg : m_ptdbg)
         {
             if (ptdbg)
@@ -281,6 +282,8 @@ public:
                 ptdbg->refresh();
             }
         }
+
+#if 0
 
         if (m_short_path_section)
         {
