@@ -39,14 +39,10 @@ private:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
     std::unique_ptr<RegEvolution4> m_reg_evolution {};
     std::unique_ptr<RegEvolution4> m_reg_evolution_2 {};
-
-    std::array<std::unique_ptr<HL_Map>, 4> m_ptdbg {};
-
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
@@ -178,13 +174,6 @@ public:
         reload_mid_manifold(h, show_ghv, thickness);
         reload_neg_manifold(h, show_ghv, thickness);
 
-
-        m_ptdbg[0] = std::make_unique<HL_Map>(
-            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_initial_point(), std::cref(this->get_transformation()));
-
-        m_ptdbg[1] = std::make_unique<HL_Map>(
-            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point(), std::cref(this->get_transformation()));
-
 #endif
         
         m_origins.clear();
@@ -304,14 +293,6 @@ public:
         if (m_reg_evolution_2)
         {
             m_reg_evolution_2->refresh();
-        }
-
-        for (auto& ptdbg : m_ptdbg)
-        {
-            if (ptdbg)
-            {
-                ptdbg->refresh();
-            }
         }
 
         for (auto& ptdbg : m_origins)
