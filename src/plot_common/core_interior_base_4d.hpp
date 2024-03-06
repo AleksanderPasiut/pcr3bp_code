@@ -20,9 +20,11 @@ public:
     {
         m_rotation.set_identity();
 
-        m_transformation = [this](Lyra::Point4d const & arg) -> Lyra::Point4d
+        m_transformation = [this](Lyra::Point4d arg) -> Lyra::Point4d
         {
-            Leo::ArrayAccessStdRead<4, float> in(arg);
+            Leo::ArrayAccessStd<4, float> in(arg);
+
+            Leo::ArrayScalarOp::mul(in, m_scale);
 
             Lyra::Point4d ret {};
             Leo::ArrayAccessStd out(ret);

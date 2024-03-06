@@ -124,6 +124,8 @@ public:
 
         const double scale = this->get_param(idx++);
 
+        this->set_scale(scale);
+
         const double h = m_basic_objects.m_parameters.get_energy();
 
 
