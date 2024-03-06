@@ -5,10 +5,10 @@
 #pragma once
 
 #include "tools/test_tools.hpp"
-#include <carina/capd/solution_curve.hpp>
+#include <capd_utils/capd/solution_curve.hpp>
 #include <leo/interpolation/interpolation.hpp>
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 template<typename MapT>

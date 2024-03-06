@@ -15,8 +15,8 @@
 #include "pcr3bp_basic/pcr3bp_reg_poincare2_negative_u_xieta.hpp"
 #include "pcr3bp_basic/pcr3bp_reg_poincare2_positive_u_xieta.hpp"
 
-#include <carina/identity_map.hpp>
-#include <carina/local_map.hpp>
+#include <capd_utils/identity_map.hpp>
+#include <capd_utils/local_map.hpp>
 
 #include "gen2dplot_plot.scale.hpp"
 

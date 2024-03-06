@@ -8,9 +8,9 @@
 #include "capd_renderable.hpp"
 #include "tools/test_tools.hpp"
 
-#include <carina/local_coordinate_system.hpp>
-#include <carina/affine_map.hpp>
-#include <carina/enp_map.hpp>
+#include <capd_utils/local_coordinate_system.hpp>
+#include <capd_utils/affine_map.hpp>
+#include <capd_utils/enp_map.hpp>
 
 namespace Pcr3bpProof
 {
