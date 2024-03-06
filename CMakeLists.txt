@@ -8,9 +8,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1")
 ################################################################################
 # plot components build
 ################################################################################
-function(plot_component SLAVE_NAME SOURCE_FILE)
+function(plot_component SLAVE_NAME)
 
-    add_executable(${SLAVE_NAME} ${SOURCE_FILE})
+    add_executable(${SLAVE_NAME} ${ARGN})
     target_include_directories(${SLAVE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(${SLAVE_NAME} PRIVATE taurus)
     target_link_libraries(${SLAVE_NAME} PRIVATE capd_utils)
@@ -25,8 +25,9 @@ plot_component( plot_reg_evolution_raw
 plot_component( plot_reg_evolution_lyapunov_multi
     src/plot_1/reg_evolution_lyapunov_plot.multi.cpp)
 
-plot_component( plot_rhez_u_24
-    src/plot_2/rhez_u_24_plot.cpp)
+plot_component( plot_rhez_u_24 
+    src/plot_2/rhez_u_24_plot.cpp
+    src/tools/variable_printer.cpp)
 
 endif()
 
