@@ -5,13 +5,13 @@
 #pragma once
 
 #include <lyra/core3d.hpp>
-#include <carina/timemap_wrapper.hpp>
+#include <capd_utils/timemap_wrapper.hpp>
 #include "tools/test_tools.hpp"
 #include "tools/solution_curve_interpolation.hpp"
 #include "pcr3bp_basic/regularized_system.hpp"
 #include "capd_renderable.hpp"
 
-namespace Ursa
+namespace Pcr3bpProof
 {
 
 class RegEvolution4 final
