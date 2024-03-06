@@ -214,7 +214,7 @@ public:
                 std::ref(m_basic_objects),
                 CapdUtils::LocalCoordinateSystem<MapT>::convert_from( periodic_orbit_coordsys_vector.at(select_short_path_section_CE) ),
                 section_span,
-                1.0,
+                11,
                 std::cref(this->get_transformation()),
                 reg_evo_thickness
             };
@@ -234,7 +234,7 @@ public:
                 std::ref(m_basic_objects),
                 CapdUtils::LocalCoordinateSystem<MapT>::convert_from( homoclinic_orbit_coordsys_vector.at(select_long_path_section_CE) ),
                 section_span,
-                1.0,
+                11,
                 std::cref(this->get_transformation()),
                 reg_evo_thickness
             };

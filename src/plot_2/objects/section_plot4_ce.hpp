@@ -31,7 +31,7 @@ public:
         Pcr3bp::RegBasicObjects<MapT>& basic_objects;
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         double span;
-        double scale;
+        size_t divs;
         const Lyra::Manifold4_Transformation & transformation_ref;
         float thickness;
     };
@@ -39,14 +39,14 @@ public:
     SectionPlot4_CE(Lyra::Core3d& core_ref, const Param& param)
         : m_core_ref(core_ref)
         , m_param(param)
-        , m_linear( param.coordsys.get_origin(), param.coordsys.get_directions_matrix() * param.scale )
+        , m_linear( param.coordsys.get_origin(), param.coordsys.get_directions_matrix() )
         , m_constraint( param.basic_objects.m_hamiltonian_reg2, param.coordsys )
         , m_renderable(
             std::ref(core_ref.get_objects()),
             std::ref(m_composite),
             Leo::RulerSet<2>({
-                Leo::Ruler<double>( -param.span, param.span, 21, 1 ),
-                Leo::Ruler<double>( -param.span, param.span, 21, 1 ) }),
+                Leo::Ruler<double>( -param.span, param.span, param.divs, 1 ),
+                Leo::Ruler<double>( -param.span, param.span, param.divs, 1 ) }),
             std::cref(param.transformation_ref) )
     {
         refresh();
