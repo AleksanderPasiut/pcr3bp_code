@@ -72,6 +72,16 @@ public:
         return m_img;
     }
 
+    const VectorType get_img_left() const noexcept
+    {
+        return m_img_left;
+    }
+
+    const VectorType get_img_right() const noexcept
+    {
+        return m_img_right;
+    }
+
 private:
     VectorType m_img { VectorType(2) };
     MatrixType m_der { MatrixType(2,2) };

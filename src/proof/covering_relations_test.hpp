@@ -9,6 +9,8 @@
 #include "tools/solution_curve_with_condition_check.hpp"
 #include "tools/auxiliary_functions.hpp"
 
+#include "tools/logging/h_set_parameters.hpp"
+
 #include "covering_relations_test_base.hpp"
 #include "covering_relation_checker.hpp"
 
@@ -16,6 +18,41 @@
 
 namespace Pcr3bpProof
 {
+
+inline void export_hset_parameters(const std::list<CapdUtils::HsetParameters>& hset_parameters, std::string file_name)
+{
+    std::ofstream ofs(file_name);
+
+    if (ofs)
+    {
+        ofs.precision(15);
+        CapdUtils::serialize_hset_parameters_list(ofs, hset_parameters);
+    }
+}
+
+inline CapdUtils::HsetParameters build_hset_parameters(
+    CapdUtils::HsetType type,
+    const CapdUtils::LocalCoordinateSystem<IMap>& coordsys,
+    IVector coordinates)
+{
+    std::array<double, 4> coordsys_origin {};
+    coordsys_origin.at(0) = CapdUtils::scalar_cast<double>( coordsys.get_origin()[0] );
+    coordsys_origin.at(1) = CapdUtils::scalar_cast<double>( coordsys.get_origin()[1] );
+    coordsys_origin.at(2) = CapdUtils::scalar_cast<double>( coordsys.get_origin()[2] );
+    coordsys_origin.at(3) = CapdUtils::scalar_cast<double>( coordsys.get_origin()[3] );
+
+    std::array<double, 4> coordinates_arr {};
+    coordinates_arr.at(0) = coordinates[0].leftBound();
+    coordinates_arr.at(1) = coordinates[0].rightBound();
+    coordinates_arr.at(2) = coordinates[1].leftBound();
+    coordinates_arr.at(3) = coordinates[1].rightBound();
+
+    return CapdUtils::HsetParameters{
+        .type = type,
+        .coordsys_origin = coordsys_origin,
+        .coordinates = coordinates_arr
+    };
+}
 
 template<typename MapT>
 class CoveringRelationsTest : public CoveringRelationsTestBase<MapT>
@@ -36,6 +73,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_homoclinic_coverings()
     {
+        std::list<CapdUtils::HsetParameters> hset_parameters {};
+
         for (size_t i = 1; i < this->m_homoclinic_orbit_coordsys.size(); ++i)
         {
             const size_t src_idx = i-1;
@@ -45,9 +84,11 @@ public:
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_homoclinic_orbit_coordsys.at(src_idx);
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_homoclinic_orbit_coordsys.at(dst_idx);
 
-            const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
+            const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst, false, false, hset_parameters);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
+
+        export_hset_parameters(hset_parameters, "homoclinic_coverings_hset_parameters.csv");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,12 +96,14 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_periodic_coverings()
     {
+        std::list<CapdUtils::HsetParameters> hset_parameters {};
+
         {
             std::cout << "periodic orbit covering 0 => 1\n";
 
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(0);
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(1);
-            check_covering_relation_forward(coordsys_src, coordsys_dst, true);
+            check_covering_relation_forward(coordsys_src, coordsys_dst, true, false, hset_parameters);
         }
 
         {
@@ -68,9 +111,11 @@ public:
 
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(1);
             const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = this->m_periodic_orbit_coordsys.at(2);
-            const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
+            const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst, false, false, hset_parameters);
             simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
         }
+
+        export_hset_parameters(hset_parameters, "periodic_coverings_hset_parameters.csv");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,12 +123,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void check_jump_coverings()
     {
+        std::list<CapdUtils::HsetParameters> hset_parameters {};
+
         std::cout << "periodic (3) => first homoclinic covering\n";
 
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_src = this->m_periodic_orbit_coordsys.at(3);
         const CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst = *( this->m_homoclinic_orbit_coordsys.begin() );
-        const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst);
+        const ScalarType time_span = check_covering_relation_forward(coordsys_src, coordsys_dst, false, false, hset_parameters);
         simple_collision_avoidance_check(coordsys_src, coordsys_dst, time_span);
+
+        export_hset_parameters(hset_parameters, "jump_coverings_hset_parameters.csv");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,8 +195,9 @@ private:
     ScalarType check_covering_relation_forward(
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_src,
         CapdUtils::LocalCoordinateSystem<MapT> coordsys_dst,
-        bool src_specialized = false,
-        bool dst_specialized = false)
+        bool src_specialized,
+        bool dst_specialized,
+        std::list<CapdUtils::HsetParameters>& hset_parameters)
     {
         ScaledLocalPoincare4_Map<MapT> f
         {
@@ -176,6 +226,11 @@ private:
         };
 
         extension_to_4_dst(cr.get_img() * this->m_gain_factor);
+
+        hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::Argument, coordsys_src, N * this->m_gain_factor));
+        hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::Image, coordsys_dst, cr.get_img() * this->m_gain_factor));
+        hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::LeftImage, coordsys_dst, cr.get_img_left() * this->m_gain_factor));
+        hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::RightImage, coordsys_dst, cr.get_img_right() * this->m_gain_factor));
 
         return time_span;
     }
