@@ -220,8 +220,6 @@ private:
     MapT& m_map;
 };
 
-#if 0
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render N->4 map with wireframe
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,10 +230,11 @@ public:
     static constexpr size_t image_dimension = 4;
     
     CapdMapRenderable(
+        Lyra::Core3dObjects& objects,
         MapT& map,
         const Leo::RulerSet<domain_dimension>& ruler_set,
-        Leo::Matrix4f const& rotation)
-            : Lyra::Manifold4<domain_dimension>( ruler_set, rotation )
+        Lyra::Manifold4_Transformation const& transformation_ref)
+            : Lyra::Manifold4<domain_dimension>( objects, ruler_set, transformation_ref )
             , m_map(map)
     {}
 
@@ -254,8 +253,6 @@ public:
 private:
     MapT& m_map;
 };
-
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief render map with discrete domain as points (in 2. or 3. dim)

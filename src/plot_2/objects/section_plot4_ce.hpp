@@ -12,8 +12,8 @@
 #include <capd_utils/affine_map.hpp>
 #include <capd_utils/enp_map.hpp>
 
-#include <alpha/tools/local_poincare4_constraint.hpp>
-#include <beta/pcr3bp_reg_basic_objects.hpp>
+#include <tools/local_poincare4_constraint.hpp>
+#include <proof/pcr3bp_reg_basic_objects.hpp>
 
 namespace Pcr3bpProof
 {
@@ -32,7 +32,7 @@ public:
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         double span;
         double scale;
-        const Leo::Matrix4f& matrix;
+        const Lyra::Manifold4_Transformation & transformation_ref;
         float thickness;
     };
 
@@ -42,19 +42,14 @@ public:
         , m_linear( param.coordsys.get_origin(), param.coordsys.get_directions_matrix() * param.scale )
         , m_constraint( param.basic_objects.m_hamiltonian_reg2, param.coordsys )
         , m_renderable(
+            std::ref(core_ref.get_objects()),
             std::ref(m_composite),
             Leo::RulerSet<2>({
                 Leo::Ruler<double>( -param.span, param.span, 21, 1 ),
                 Leo::Ruler<double>( -param.span, param.span, 21, 1 ) }),
-            std::cref(param.matrix) )
+            std::cref(param.transformation_ref) )
     {
         refresh();
-        m_core_ref.register_manifold(&m_renderable);
-    }
-
-    ~SectionPlot4_CE() noexcept
-    {
-        m_core_ref.unregister_manifold(&m_renderable);
     }
 
     void refresh()
