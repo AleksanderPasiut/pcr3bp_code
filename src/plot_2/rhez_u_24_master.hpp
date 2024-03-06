@@ -34,6 +34,8 @@ TEST(Plot, Rhez_u_24)
 
         Aquila::ParamConfig("evolution time", 0.0, 10.0, 3.5453, 0.0001, 4),
 
+        Aquila::ParamConfig("scale", 0.0, 10.0, 1.0, 0.0001, 4)
+
     };
 
     Glib::RefPtr<Gtk::Application> app =

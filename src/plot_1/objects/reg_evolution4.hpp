@@ -28,7 +28,7 @@ public:
         VectorType initial_point;
         ScalarType t;
         size_t point_count;
-        const Leo::Matrix4f& rotation;
+        const Lyra::Manifold4_Transformation & transformation_ref;
         float thickness;
         bool positive;
     };
@@ -42,7 +42,7 @@ public:
         , m_renderable(
             core_ref.get_objects(),
             Leo::RulerSet<1>({ m_ruler }),
-            param.rotation)
+            param.transformation_ref)
     {
         refresh();
     }

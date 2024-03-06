@@ -70,7 +70,7 @@ public:
             ret,
             time,
             point_count,
-            this->get_rotation(),
+            this->get_transformation(),
             thickness,
             true
         };
@@ -85,7 +85,7 @@ public:
             ret,
             time,
             point_count,
-            this->get_rotation(),
+            this->get_transformation(),
             thickness,
             false
         };
@@ -121,6 +121,8 @@ public:
         // const double section_scale = this->get_param(idx++);
 
         const double evolution_time = this->get_param(idx++);
+
+        const double scale = this->get_param(idx++);
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
@@ -175,10 +177,10 @@ public:
 #endif
 
         m_ptdbg[0] = std::make_unique<HL_Map>(
-            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_initial_point(), std::cref(this->get_rotation()));
+            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_initial_point(), std::cref(this->get_transformation()));
 
         m_ptdbg[1] = std::make_unique<HL_Map>(
-            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point(), std::cref(this->get_rotation()));
+            std::ref(get_core_ref()), m_basic_objects.m_parameters.get_image_point(), std::cref(this->get_transformation()));
 
 #if 0
         if (select_short_path_section >= 0)

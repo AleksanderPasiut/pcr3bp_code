@@ -14,9 +14,9 @@ namespace Pcr3bpProof
 class HL_Map
 {
 public:
-    HL_Map(Lyra::Core3d& core_ref, RVector U, const Leo::Matrix4f & matrix)
+    HL_Map(Lyra::Core3d& core_ref, RVector U, const Lyra::Manifold4_Transformation & transformation_ref)
         : m_core_ref(core_ref)
-        , m_vector(core_ref.get_objects(), RVector{ U[2], U[3], U[0], U[1] }, std::cref(matrix))
+        , m_vector(core_ref.get_objects(), RVector{ U[2], U[3], U[0], U[1] }, std::cref(transformation_ref))
     {
         refresh();
     }

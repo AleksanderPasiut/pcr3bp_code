@@ -324,9 +324,12 @@ template<typename VectorType>
 class CapdVectorRenderable4 : public Lyra::Manifold4<0>
 {
 public:
-    CapdVectorRenderable4(Lyra::Core3dObjects& objects, VectorType vector, Leo::Matrix4f const& rotation)
-        : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ), rotation)
-        , m_vector(vector)
+    CapdVectorRenderable4(
+        Lyra::Core3dObjects& objects,
+        VectorType vector,
+        Lyra::Manifold4_Transformation const & transformation_ref)
+            : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ), transformation_ref)
+            , m_vector(vector)
     {}
 
     void fill(float thickness)
