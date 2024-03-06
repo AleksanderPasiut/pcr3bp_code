@@ -9,6 +9,7 @@
 #include <lyra/manifold/manifold4.hpp>
 #include "plot_common/core_interior_base.hpp"
 
+#include <iostream>
 
 namespace Pcr3bpProof
 {
@@ -16,7 +17,7 @@ namespace Pcr3bpProof
 class CoreInteriorBase4d : public CoreInteriorBase
 {
 public:
-    CoreInteriorBase4d() : CoreInteriorBase(), m_rotation()
+    CoreInteriorBase4d() : CoreInteriorBase()
     {
         m_rotation.set_identity();
 
@@ -56,9 +57,9 @@ public:
     }
 
 private:
-    Leo::Matrix4f m_rotation;
+    Leo::Matrix4f m_rotation {};
     float m_scale { 1.0f };
-    Lyra::Point4d m_offset;
+    Lyra::Point4d m_offset {};
 
     Lyra::Manifold4_Transformation m_transformation {};
 };
