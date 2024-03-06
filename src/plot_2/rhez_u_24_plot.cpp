@@ -53,7 +53,7 @@ private:
     std::unique_ptr<SectionPlot4> m_long_path_section {};
 
     std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
-    std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
+    std::uniqcue_ptr<SectionPlot4_CE> m_long_path_section_CE {};
 
 #endif
 
@@ -96,6 +96,8 @@ public:
         CoreInteriorBase::set_param(packet_vector);
 
         int idx = 0;
+        const double point_thickness = this->get_param(idx++);
+        
         const size_t reg_evo_select = this->get_param(idx++);
         const size_t reg_evo_point_count = this->get_param(idx++);
         const double reg_evo_thickness = this->get_param(idx++);
@@ -121,6 +123,9 @@ public:
         const double evolution_time = this->get_param(idx++);
 
         const double scale = this->get_param(idx++);
+
+        const bool show_periodic_orbit_origins = this->get_param(idx++);
+        const bool show_homoclinic_orbit_origins = this->get_param(idx++);
 
         this->set_scale(scale);
 
@@ -179,24 +184,30 @@ public:
         m_origins.clear();
 
         using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
-        for (Coordsys const& coordsys : m_covering_relations_setup.get_periodic_orbit_coordsys())
+        if (show_periodic_orbit_origins)
         {
-            m_origins.emplace_back(
-                std::ref(get_core_ref()),
-                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                std::cref( this->get_transformation() ),
-                reg_evo_thickness * 5
-            );
+            for (Coordsys const& coordsys : m_covering_relations_setup.get_periodic_orbit_coordsys())
+            {
+                m_origins.emplace_back(
+                    std::ref(get_core_ref()),
+                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                    std::cref( this->get_transformation() ),
+                    point_thickness
+                );
+            }
         }
 
-        for (Coordsys const& coordsys : m_covering_relations_setup.get_homoclinic_orbit_coordsys())
+        if (show_homoclinic_orbit_origins)
         {
-            m_origins.emplace_back(
-                std::ref(get_core_ref()),
-                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                std::cref( this->get_transformation() ),
-                reg_evo_thickness * 5
-            );
+            for (Coordsys const& coordsys : m_covering_relations_setup.get_homoclinic_orbit_coordsys())
+            {
+                m_origins.emplace_back(
+                    std::ref(get_core_ref()),
+                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                    std::cref( this->get_transformation() ),
+                    point_thickness
+                );
+            }
         }
 
 

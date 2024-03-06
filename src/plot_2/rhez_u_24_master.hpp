@@ -11,9 +11,10 @@ TEST(Plot, Rhez_u_24)
 {
     Aquila::ParamsetConfig<double> paramset_config
     {
+        Aquila::ParamConfig("point thickness", 0.0, 0.1, 0.05, 0.0001, 4),
         Aquila::ParamConfig("reg evolution select", -1.0, 1.0, -1.0, 1.0, 0),
         Aquila::ParamConfig("reg evolution point count", 0.0, 100000.0, 2000.0, 1.0, 0),
-        Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.013, 0.0001, 4),
+        Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.005, 0.0001, 4),
 
         Aquila::ParamConfig("ghv manifold thickness", 0.0, 0.01, 0.002, 0.0001, 4),
         Aquila::ParamConfig("show ghv manifold", 0.0, 1.0, 1.0, 1.0, 0),
@@ -34,7 +35,10 @@ TEST(Plot, Rhez_u_24)
 
         Aquila::ParamConfig("evolution time", 0.0, 10.0, 3.5453, 0.0001, 4),
 
-        Aquila::ParamConfig("scale", 0.0, 10.0, 1.0, 0.0001, 4)
+        Aquila::ParamConfig("scale", 0.0, 10.0, 1.0, 0.0001, 4),
+
+        Aquila::ParamConfig("show periodic orbit origins", 0.0, 1.0, 0.0, 1.0, 0),
+        Aquila::ParamConfig("show homoclinic orbit origins", 0.0, 1.0, 0.0, 1.0, 0)
 
     };
 
