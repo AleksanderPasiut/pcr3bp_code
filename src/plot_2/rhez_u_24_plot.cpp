@@ -6,6 +6,7 @@
 #include <taurus/default_core_4d.hpp>
 
 #include <tools/types.hpp>
+#include <tools/logging/h_set_parameters.hpp>
 
 #include <proof/pcr3bp_reg_basic_objects.hpp>
 #include <proof/covering_relations_setup.hpp>
@@ -48,7 +49,31 @@ private:
 
 public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
-    {}
+    {
+        auto load_hset_parameters_list = [](std::string file_name) -> std::list<CapdUtils::HsetParameters>
+        {
+            std::ifstream ifs(file_name);
+            if (ifs)
+            {
+                return CapdUtils::deserialize_hset_parameters_list(ifs);
+            }
+
+            throw std::logic_error("Failed to find hset parameters file!");
+        };
+        auto homoclinic_hset_parameters_list = load_hset_parameters_list("homoclinic_coverings_hset_parameters.csv");
+        auto periodic_hset_parameters_list = load_hset_parameters_list("periodic_coverings_hset_parameters.csv");
+        auto jump_hset_parameters_list = load_hset_parameters_list("jump_coverings_hset_parameters.csv");
+
+        m_hset_parameters_list = std::list<CapdUtils::HsetParameters>();
+        m_hset_parameters_list.splice(m_hset_parameters_list.end(), homoclinic_hset_parameters_list);
+        m_hset_parameters_list.splice(m_hset_parameters_list.end(), periodic_hset_parameters_list);
+        m_hset_parameters_list.splice(m_hset_parameters_list.end(), jump_hset_parameters_list);
+
+        for (auto& hp : m_hset_parameters_list)
+        {
+            hp.serialize(std::cout);
+        }
+    }
 
     void reload_reg_evolution(
         std::unique_ptr<RegEvolution4>& reg_evolution_pos, 
@@ -287,8 +312,10 @@ public:
         {
             m_long_path_section_CE->refresh();
         }
-
     }
+
+private:
+    std::list<CapdUtils::HsetParameters> m_hset_parameters_list {};
 };
 
 }
