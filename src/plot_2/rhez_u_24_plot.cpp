@@ -121,6 +121,11 @@ public:
         const bool show_periodic_orbit_origins = this->get_param(idx++);
         const bool show_homoclinic_orbit_origins = this->get_param(idx++);
 
+        const size_t highlight_periodic_orbit_point = this->get_param(idx++);
+        const size_t highlight_homoclinic_orbit_point = this->get_param(idx++);
+
+        const size_t centerpoint_index = this->get_param(idx++);
+
         this->set_scale(scale);
 
         const double h = m_basic_objects.m_parameters.get_energy();
@@ -180,27 +185,32 @@ public:
         using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
         if (show_periodic_orbit_origins)
         {
+            size_t idx = 0;
             for (Coordsys const& coordsys : m_covering_relations_setup.get_periodic_orbit_coordsys())
             {
                 m_origins.emplace_back(
                     std::ref(get_core_ref()),
                     CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     std::cref( this->get_transformation() ),
-                    point_thickness
+                    point_thickness * (idx == highlight_periodic_orbit_point ? 2.0 : 1.0)
                 );
+
+                ++idx;
             }
         }
 
         if (show_homoclinic_orbit_origins)
         {
+            size_t idx = 0;
             for (Coordsys const& coordsys : m_covering_relations_setup.get_homoclinic_orbit_coordsys())
             {
                 m_origins.emplace_back(
                     std::ref(get_core_ref()),
                     CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     std::cref( this->get_transformation() ),
-                    point_thickness
+                    point_thickness * (idx == highlight_homoclinic_orbit_point ? 2.0 : 1.0)
                 );
+                ++idx;
             }
         }
 

@@ -33,8 +33,12 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("scale", 0.0, 10.0, 1.0, 0.0001, 4),
 
         Aquila::ParamConfig("show periodic orbit origins", 0.0, 1.0, 0.0, 1.0, 0),
-        Aquila::ParamConfig("show homoclinic orbit origins", 0.0, 1.0, 0.0, 1.0, 0)
+        Aquila::ParamConfig("show homoclinic orbit origins", 0.0, 1.0, 0.0, 1.0, 0),
 
+        Aquila::ParamConfig("highlight periodic orbit point", -1.0, 100.0, -1.0, 1.0, 0),
+        Aquila::ParamConfig("highlight homoclinic orbit point", -1.0, 100.0, -1.0, 1.0, 0),
+
+        Aquila::ParamConfig("centerpoint index", -1.0, 100.0, -1.0, 1.0, 0)
     };
 
     Glib::RefPtr<Gtk::Application> app =
