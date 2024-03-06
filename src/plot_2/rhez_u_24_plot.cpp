@@ -43,6 +43,8 @@ private:
 
     std::unique_ptr<RegEvolution4> m_reg_evolution {};
     std::unique_ptr<RegEvolution4> m_reg_evolution_2 {};
+    std::unique_ptr<RegEvolution4> m_reg_evolution_3 {};
+    std::unique_ptr<RegEvolution4> m_reg_evolution_4 {};
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
@@ -61,34 +63,37 @@ public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
     {}
 
-    void reload_reg_evolution(RVector ret, double time, size_t point_count, float thickness)
+    void reload_reg_evolution(
+        std::unique_ptr<RegEvolution4>& reg_evolution_pos, 
+        std::unique_ptr<RegEvolution4>& reg_evolution_neg, 
+        RVector ret, double time, size_t point_count, float thickness)
     {
-        const RegEvolution4::Param param = {
-            m_basic_objects.m_setup,
-            ret,
-            time,
-            point_count,
-            this->get_transformation(),
-            thickness,
-            true
-        };
+        {
+            const RegEvolution4::Param param = {
+                m_basic_objects.m_setup,
+                ret,
+                time,
+                point_count,
+                this->get_transformation(),
+                thickness,
+                true
+            };
 
-        m_reg_evolution = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
-    }
+            reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
+        }
+        {
+            const RegEvolution4::Param param = {
+                m_basic_objects.m_setup,
+                ret,
+                time,
+                point_count,
+                this->get_transformation(),
+                thickness,
+                false
+            };
 
-    void reload_reg_evolution_2(RVector ret, double time, size_t point_count, float thickness)
-    {
-        const RegEvolution4::Param param = {
-            m_basic_objects.m_setup,
-            ret,
-            time,
-            point_count,
-            this->get_transformation(),
-            thickness,
-            false
-        };
-
-        m_reg_evolution_2 = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
+            reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
+        }
     }
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
@@ -98,7 +103,6 @@ public:
         int idx = 0;
         const double point_thickness = this->get_param(idx++);
 
-        const size_t reg_evo_select = this->get_param(idx++);
         const size_t reg_evo_point_count = this->get_param(idx++);
         const double reg_evo_thickness = this->get_param(idx++);
 
@@ -118,6 +122,9 @@ public:
 
         const double scale = this->get_param(idx++);
 
+        const bool show_periodic_orbit = this->get_param(idx++);
+        const bool show_homoclinic_orbit = this->get_param(idx++);
+
         const bool show_periodic_orbit_origins = this->get_param(idx++);
         const bool show_homoclinic_orbit_origins = this->get_param(idx++);
 
@@ -130,46 +137,40 @@ public:
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
+        if (show_periodic_orbit)
+        {
+            const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
-        if (reg_evo_select == -1)
+            reload_reg_evolution(
+                m_reg_evolution,
+                m_reg_evolution_2,
+                initial_point,
+                0.908943,
+                reg_evo_point_count,
+                reg_evo_thickness);
+        }
+        else
         {
             m_reg_evolution.reset();
             m_reg_evolution_2.reset();
         }
 
-        if (reg_evo_select == 0)
+        if (show_homoclinic_orbit)
         {
-            const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
+            const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
 
             reload_reg_evolution(
+                m_reg_evolution_3,
+                m_reg_evolution_4,
                 initial_point,
-                evolution_time,
-                reg_evo_point_count,
-                reg_evo_thickness);
-
-            reload_reg_evolution_2(
-                initial_point,
-                evolution_time,
+                2.636,
                 reg_evo_point_count,
                 reg_evo_thickness);
         }
-
-        if (reg_evo_select == 1)
+        else
         {
-            const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
-            const RVector image_point = m_basic_objects.m_parameters.get_image_point();
-
-            reload_reg_evolution(
-                initial_point,
-                evolution_time,
-                reg_evo_point_count,
-                reg_evo_thickness);
-
-            reload_reg_evolution_2(
-                initial_point,
-                evolution_time,
-                reg_evo_point_count,
-                reg_evo_thickness);
+            m_reg_evolution_3.reset();
+            m_reg_evolution_4.reset();
         }
 
 #if 0
