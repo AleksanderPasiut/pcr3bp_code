@@ -54,11 +54,10 @@ private:
 #if 0
     std::unique_ptr<SectionPlot4> m_short_path_section {};
     std::unique_ptr<SectionPlot4> m_long_path_section {};
+#endif
 
     std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
-    std::uniqcue_ptr<SectionPlot4_CE> m_long_path_section_CE {};
-
-#endif
+    std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
 
 public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
@@ -105,7 +104,7 @@ public:
         const double point_thickness = this->get_param(idx++);
 
         const size_t reg_evo_point_count = this->get_param(idx++);
-        const double reg_evo_thickness = this->get_param(idx++);
+        const float reg_evo_thickness = this->get_param(idx++);
 
         const int select_short_path_section = this->get_param(idx++);
         const int select_long_path_section = this->get_param(idx++);
@@ -261,17 +260,18 @@ public:
         {
             m_long_path_section.reset();
         }
+#endif
 
         if (select_short_path_section_CE >= 0)
         {
             const SectionPlot4_CE::Param param
             {
                 std::ref(m_basic_objects),
-                m_covering_relations_setup.get_periodic_orbit_coordsys().at(select_short_path_section_CE),
+                CapdUtils::LocalCoordinateSystem<MapT>::convert_from( periodic_orbit_coordsys_vector.at(select_short_path_section_CE) ),
                 section_span,
-                1.0 / section_span,
-                std::cref(this->get_rotation()),
-                thickness
+                1.0,
+                std::cref(this->get_transformation()),
+                reg_evo_thickness
             };
 
             m_short_path_section_CE = std::make_unique<SectionPlot4_CE>(
@@ -287,11 +287,11 @@ public:
             const SectionPlot4_CE::Param param
             {
                 std::ref(m_basic_objects),
-                m_covering_relations_setup.get_homoclinic_orbit_coordsys().at(select_long_path_section_CE),
+                CapdUtils::LocalCoordinateSystem<MapT>::convert_from( homoclinic_orbit_coordsys_vector.at(select_long_path_section_CE) ),
                 section_span,
-                1.0 / section_span,
-                std::cref(this->get_rotation()),
-                thickness
+                1.0,
+                std::cref(this->get_transformation()),
+                reg_evo_thickness
             };
 
             m_long_path_section_CE = std::make_unique<SectionPlot4_CE>(
@@ -301,8 +301,6 @@ public:
         {
             m_long_path_section_CE.reset();
         }
-
-#endif
     }
 
     void set_rotation_4d(Leo::Matrix4f const & matrix)
@@ -346,6 +344,7 @@ public:
         {
             m_long_path_section->refresh();
         }
+#endif
 
         if (m_short_path_section_CE)
         {
@@ -357,7 +356,6 @@ public:
             m_long_path_section_CE->refresh();
         }
 
-#endif
     }
 };
 
