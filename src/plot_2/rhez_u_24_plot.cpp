@@ -172,14 +172,6 @@ public:
             m_reg_evolution_3.reset();
             m_reg_evolution_4.reset();
         }
-
-#if 0
-
-        reload_pos_manifold(h, show_ghv, thickness);
-        reload_mid_manifold(h, show_ghv, thickness);
-        reload_neg_manifold(h, show_ghv, thickness);
-
-#endif
         
         m_origins.clear();
 
