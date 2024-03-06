@@ -59,8 +59,8 @@ private:
     Pcr3bpRegPoincarePositiveU_XiEta_CE<MapT> m_hlp2;
     Pcr3bpRegPoincareNegativeU_XiEta_CE<MapT> m_hln2;
 
-    using LocalMapPT = Carina::LocalMapObsolete<decltype(m_hlp2)>;
-    using LocalMapNT = Carina::LocalMapObsolete<decltype(m_hln2)>;
+    using LocalMapPT = CapdUtils::LocalMapObsolete<decltype(m_hlp2)>;
+    using LocalMapNT = CapdUtils::LocalMapObsolete<decltype(m_hln2)>;
 
     LocalMapPT m_local_map_p1;
     LocalMapPT m_local_map_p2;
@@ -68,7 +68,7 @@ private:
 
     Pcr3bpRegPoincare2PositiveU_XiEta_CE<MapT> m_flp2;
 
-    using LocalMapFPT = Carina::LocalMapObsolete<decltype(m_flp2)>;
+    using LocalMapFPT = CapdUtils::LocalMapObsolete<decltype(m_flp2)>;
 
     LocalMapFPT m_local_map_f_p1;
     LocalMapFPT m_local_map_f_p2;

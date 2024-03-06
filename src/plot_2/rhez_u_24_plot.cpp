@@ -137,7 +137,7 @@ public:
 
         if (reg_evo_select == 0)
         {
-            const RVector initial_point = Carina::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
+            const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
             reload_reg_evolution(
                 initial_point,

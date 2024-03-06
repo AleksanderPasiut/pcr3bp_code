@@ -29,7 +29,7 @@ public:
     struct Param
     {
         Pcr3bp::RegBasicObjects<MapT>& basic_objects;
-        Carina::LocalCoordinateSystem<MapT> coordsys;
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         double span;
         double scale;
         const Leo::Matrix4f& matrix;
@@ -67,13 +67,13 @@ private:
 
     Param m_param;
 
-    Carina::AffineMap<MapT> m_linear;
+    CapdUtils::AffineMap<MapT> m_linear;
 
     LocalPoincare4_Constraint<MapT> m_constraint;
 
-    MapT m_reorder { Carina::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
+    MapT m_reorder { CapdUtils::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
 
-    Carina::CompositeMap<MapT, decltype(m_constraint)&, decltype(m_linear)&, MapT&> m_composite
+    CapdUtils::CompositeMap<MapT, decltype(m_constraint)&, decltype(m_linear)&, MapT&> m_composite
     {
         std::ref(m_constraint),
         std::ref(m_linear),

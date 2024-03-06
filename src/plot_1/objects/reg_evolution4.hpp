@@ -59,7 +59,7 @@ public:
 
         m_timemap.set_time(m_param.t);
 
-        Carina::SolutionCurve<MapT> solution(0.0);
+        CapdUtils::SolutionCurve<MapT> solution(0.0);
 
         m_timemap(U0, solution);
 
@@ -111,7 +111,7 @@ private:
     Lyra::Core3d& m_core_ref;
 
     MapT m_map;
-    Carina::TimemapWrapper<MapT> m_timemap;
+    CapdUtils::TimemapWrapper<MapT> m_timemap;
 
     Param m_param;
 

@@ -19,7 +19,7 @@ namespace Pcr3bpProof
         MapT & m_map;
         Lyra::ManifoldInterface<2,2> m_renderable;
 
-        using Map22v = CapdVectorRenderable<Carina::RVector, 2>;
+        using Map22v = CapdVectorRenderable<CapdUtils::RVector, 2>;
 
         std::list<Map22v> m_map22v;
 

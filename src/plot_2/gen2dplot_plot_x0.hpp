@@ -92,7 +92,7 @@ private:
 
 
     GMapT<MapT>& m_gen_map;
-    Carina::LocalMapObsolete<GMapT<MapT>> m_local;
+    CapdUtils::LocalMapObsolete<GMapT<MapT>> m_local;
 };
 
 template<typename MapT>

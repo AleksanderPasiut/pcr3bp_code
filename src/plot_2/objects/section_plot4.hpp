@@ -25,7 +25,7 @@ public:
 
     struct Param
     {
-        Carina::LocalCoordinateSystem<MapT> coordsys;
+        CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         double span;
         const Leo::Matrix4f& matrix;
         float thickness;
@@ -62,9 +62,9 @@ private:
 
     Param m_param;
 
-    Carina::AffineMap<MapT> m_linear;
+    CapdUtils::AffineMap<MapT> m_linear;
 
-    Carina::ENP<MapT, decltype(m_linear)&> m_linear_P0_3
+    CapdUtils::ENP<MapT, decltype(m_linear)&> m_linear_P0_3
     {
         VectorType(4),
         { 0, 1, -1, 2 },
