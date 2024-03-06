@@ -126,7 +126,7 @@ public:
 
         const size_t centerpoint_index = this->get_param(idx++);
 
-        this->set_scale(scale);
+        this->set_scale(pow(10.0, scale));
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
@@ -183,10 +183,11 @@ public:
         m_origins.clear();
 
         using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
+        auto periodic_orbit_coordsys_vector = m_covering_relations_setup.get_periodic_orbit_coordsys();
         if (show_periodic_orbit_origins)
         {
             size_t idx = 0;
-            for (Coordsys const& coordsys : m_covering_relations_setup.get_periodic_orbit_coordsys())
+            for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
             {
                 m_origins.emplace_back(
                     std::ref(get_core_ref()),
@@ -199,10 +200,11 @@ public:
             }
         }
 
+        auto homoclinic_orbit_coordsys_vector = m_covering_relations_setup.get_homoclinic_orbit_coordsys();
         if (show_homoclinic_orbit_origins)
         {
             size_t idx = 0;
-            for (Coordsys const& coordsys : m_covering_relations_setup.get_homoclinic_orbit_coordsys())
+            for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
             {
                 m_origins.emplace_back(
                     std::ref(get_core_ref()),
@@ -212,6 +214,23 @@ public:
                 );
                 ++idx;
             }
+        }
+
+        if (centerpoint_index != -1)
+        {
+            if (centerpoint_index < periodic_orbit_coordsys_vector.size())
+            {
+                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
+            }
+            else if (centerpoint_index < periodic_orbit_coordsys_vector.size() + homoclinic_orbit_coordsys_vector.size())
+            {
+                size_t const idx = centerpoint_index - periodic_orbit_coordsys_vector.size();
+                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(idx).get_origin() ) );
+            }
+        }
+        else
+        {
+            this->set_offset(Lyra::Point4d());
         }
 
 

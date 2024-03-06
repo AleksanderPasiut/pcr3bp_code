@@ -48,7 +48,7 @@ public:
 
     void set_offset(Lyra::Point4d offset)
     {
-        m_offset = offset;
+        m_offset = { offset[2], offset[3], offset[0], offset[1] };
     }
 
     Lyra::Manifold4_Transformation const & get_transformation() const noexcept
