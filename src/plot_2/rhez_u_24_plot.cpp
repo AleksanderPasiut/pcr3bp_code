@@ -18,16 +18,8 @@
 
 #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_2/objects/hl_map.hpp"
-
 #include "plot_2/objects/section_plot4_ce.hpp"
 
-#if 0
-
-#include "plot_2/objects/section_plot4.hpp"
-
-#include <beta/periodic_orbit_parameters.hpp>
-
-#endif
 
 namespace Pcr3bpProof
 {
@@ -50,11 +42,6 @@ private:
     CoveringRelationsSetup m_covering_relations_setup {};
 
     std::list<HL_Map> m_origins {};
-
-#if 0
-    std::unique_ptr<SectionPlot4> m_short_path_section {};
-    std::unique_ptr<SectionPlot4> m_long_path_section {};
-#endif
 
     std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
     std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
@@ -105,9 +92,6 @@ public:
 
         const size_t reg_evo_point_count = this->get_param(idx++);
         const float reg_evo_thickness = this->get_param(idx++);
-
-        const int select_short_path_section = this->get_param(idx++);
-        const int select_long_path_section = this->get_param(idx++);
 
         const int select_short_path_section_CE = this->get_param(idx++);
         const int select_long_path_section_CE = this->get_param(idx++);
@@ -223,45 +207,6 @@ public:
             this->set_offset(Lyra::Point4d());
         }
 
-
-#if 0
-        if (select_short_path_section >= 0)
-        {
-            const SectionPlot4::Param param
-            {
-                m_covering_relations_setup.get_periodic_orbit_coordsys().at(select_short_path_section),
-                1.0,
-                std::cref(this->get_rotation()),
-                thickness
-            };
-
-            m_short_path_section = std::make_unique<SectionPlot4>(
-                std::ref(get_core_ref()), std::cref(param));
-        }
-        else
-        {
-            m_short_path_section.reset();
-        }
-
-        if (select_long_path_section >= 0)
-        {
-            const SectionPlot4::Param param
-            {
-                m_covering_relations_setup.get_homoclinic_orbit_coordsys().at(select_long_path_section),
-                section_span,
-                std::cref(this->get_rotation()),
-                thickness
-            };
-
-            m_long_path_section = std::make_unique<SectionPlot4>(
-                std::ref(get_core_ref()), std::cref(param));
-        }
-        else
-        {
-            m_long_path_section.reset();
-        }
-#endif
-
         if (select_short_path_section_CE >= 0)
         {
             const SectionPlot4_CE::Param param
@@ -332,19 +277,6 @@ public:
         {
             ptdbg.refresh();
         }
-
-#if 0
-
-        if (m_short_path_section)
-        {
-            m_short_path_section->refresh();
-        }
-
-        if (m_long_path_section)
-        {
-            m_long_path_section->refresh();
-        }
-#endif
 
         if (m_short_path_section_CE)
         {

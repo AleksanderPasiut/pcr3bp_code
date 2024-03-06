@@ -15,10 +15,6 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("reg evolution point count", 0.0, 100000.0, 2000.0, 1.0, 0),
         Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.005, 0.0001, 4),
 
-
-        Aquila::ParamConfig("select short path section", -1.0, 3.0, -1.0, 1.0, 0),
-        Aquila::ParamConfig("select long path section", -1.0, 27.0, -1.0, 1.0, 0),
-
         Aquila::ParamConfig("select short path section CE", -1.0, 3.0, -1.0, 1.0, 0),
         Aquila::ParamConfig("select long path section CE", -1.0, 27.0, -1.0, 1.0, 0),
 
