@@ -20,6 +20,7 @@
 #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/section_plot4_ce.hpp"
+#include "plot_2/objects/hset_renderable.hpp"
 
 
 namespace Pcr3bpProof
@@ -32,6 +33,9 @@ private:
     using ScalarType = typename MapT::ScalarType;
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
+
+    using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
+
 
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
@@ -46,6 +50,8 @@ private:
 
     std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
     std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
+
+    std::list<HsetRenderable> m_h_sets {};
 
 public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
@@ -69,10 +75,10 @@ public:
         m_hset_parameters_list.splice(m_hset_parameters_list.end(), periodic_hset_parameters_list);
         m_hset_parameters_list.splice(m_hset_parameters_list.end(), jump_hset_parameters_list);
 
-        for (auto& hp : m_hset_parameters_list)
-        {
-            hp.serialize(std::cout);
-        }
+        // for (auto& hp : m_hset_parameters_list)
+        // {
+        //     hp.serialize(std::cout);
+        // }
     }
 
     void reload_reg_evolution(
@@ -148,6 +154,25 @@ public:
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
+        
+
+        if (centerpoint_index != -1)
+        {
+            if (centerpoint_index < periodic_orbit_coordsys_vector.size())
+            {
+                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
+            }
+            else if (centerpoint_index < periodic_orbit_coordsys_vector.size() + homoclinic_orbit_coordsys_vector.size())
+            {
+                size_t const idx = centerpoint_index - periodic_orbit_coordsys_vector.size();
+                this->set_offset( convert<4>( homoclinic_orbit_coordsys_vector.at(idx).get_origin() ) );
+            }
+        }
+        else
+        {
+            this->set_offset(Lyra::Point4d());
+        }
+
         if (show_periodic_orbit)
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
@@ -186,8 +211,7 @@ public:
         
         m_origins.clear();
 
-        using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
-        auto periodic_orbit_coordsys_vector = m_covering_relations_setup.get_periodic_orbit_coordsys();
+        
         if (show_periodic_orbit_origins)
         {
             size_t idx = 0;
@@ -204,7 +228,6 @@ public:
             }
         }
 
-        auto homoclinic_orbit_coordsys_vector = m_covering_relations_setup.get_homoclinic_orbit_coordsys();
         if (show_homoclinic_orbit_origins)
         {
             size_t idx = 0;
@@ -218,23 +241,6 @@ public:
                 );
                 ++idx;
             }
-        }
-
-        if (centerpoint_index != -1)
-        {
-            if (centerpoint_index < periodic_orbit_coordsys_vector.size())
-            {
-                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
-            }
-            else if (centerpoint_index < periodic_orbit_coordsys_vector.size() + homoclinic_orbit_coordsys_vector.size())
-            {
-                size_t const idx = centerpoint_index - periodic_orbit_coordsys_vector.size();
-                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(idx).get_origin() ) );
-            }
-        }
-        else
-        {
-            this->set_offset(Lyra::Point4d());
         }
 
         if (select_short_path_section_CE >= 0)
@@ -276,12 +282,81 @@ public:
         {
             m_long_path_section_CE.reset();
         }
+
+        m_h_sets.clear();
+
+        for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
+        {
+            bool is_visible = false;
+            is_visible |= (show_arg_h_sets && hp.type == CapdUtils::HsetType::Argument);
+            is_visible |= (show_img_h_sets && hp.type == CapdUtils::HsetType::Image);
+            is_visible |= (show_limg_h_sets && hp.type == CapdUtils::HsetType::LeftImage);
+            is_visible |= (show_rimg_h_sets && hp.type == CapdUtils::HsetType::RightImage);
+
+            if (is_visible)
+            {
+                auto find_coordsys = [&](std::array<double, 4> coordsys_origin) -> CapdUtils::LocalCoordinateSystem<IMap>*
+                {
+                    CapdUtils::LocalCoordinateSystem<IMap>* ret = nullptr;
+                    double distance = INFINITY;
+
+                    RVector co =  { coordsys_origin[0], coordsys_origin[1], coordsys_origin[2], coordsys_origin[3] };
+
+                    CapdUtils::MaxNorm<RMap> norm {};
+
+                    int j = 0;
+                    for (auto& cs : homoclinic_orbit_coordsys_vector)
+                    {
+                        double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
+                        if (d < distance)
+                        {
+                            ret = &cs;
+                            distance = d;
+                            std::cout << "j " << j << '\n';
+                        }
+                        ++j;
+                    }
+
+                    int k = 0;
+                    for (auto& cs : periodic_orbit_coordsys_vector)
+                    {
+                        double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
+                        if (d < distance)
+                        {
+                            ret = &cs;
+                            distance = d;
+                            std::cout << "k " << k << '\n';
+                        }
+                        ++k;
+                    }
+
+                    std::cout << '\n';
+
+                    return ret;
+                };
+
+                CapdUtils::LocalCoordinateSystem<IMap>* coordsys_ptr = find_coordsys(hp.coordsys_origin);
+
+                const HsetRenderable::Param param
+                {
+                    std::ref(m_basic_objects),
+                    CapdUtils::LocalCoordinateSystem<MapT>::convert_from( *coordsys_ptr ),
+                    hp.coordinates,
+                    3,
+                    std::cref(this->get_transformation()),
+                    reg_evo_thickness
+                };
+
+                m_h_sets.emplace_back(
+                    std::ref(get_core_ref()),
+                    std::cref(param));
+            }
+        }
     }
 
     void set_rotation_4d(Leo::Matrix4f const & matrix)
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
-
 
         if (m_reg_evolution)
         {
@@ -317,10 +392,25 @@ public:
         {
             m_long_path_section_CE->refresh();
         }
+
+        for (auto& hs : m_h_sets)
+        {
+            hs.refresh();
+        }
     }
 
 private:
     std::list<CapdUtils::HsetParameters> m_hset_parameters_list {};
+
+    std::vector<Coordsys> periodic_orbit_coordsys_vector
+    {
+        m_covering_relations_setup.get_periodic_orbit_coordsys()
+    };
+
+    std::vector<Coordsys> homoclinic_orbit_coordsys_vector
+    {
+        m_covering_relations_setup.get_homoclinic_orbit_coordsys()
+    };
 };
 
 }
