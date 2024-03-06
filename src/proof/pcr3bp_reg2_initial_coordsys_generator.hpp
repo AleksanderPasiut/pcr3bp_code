@@ -8,6 +8,7 @@
 #include <capd_utils/local_coordinate_system.hpp>
 
 #include "pcr3bp_reg_basic_objects.hpp"
+#include <tools/test_tools.hpp>
 
 namespace Pcr3bpProof
 {
