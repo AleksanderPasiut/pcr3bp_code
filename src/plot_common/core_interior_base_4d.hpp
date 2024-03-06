@@ -24,11 +24,12 @@ public:
         {
             Leo::ArrayAccessStd<4, float> in(arg);
 
+            Leo::ArrayAccessStdRead offset_access(m_offset);
+            Leo::ArrayElemOp::sub(in, offset_access);
             Leo::ArrayScalarOp::mul(in, m_scale);
 
             Lyra::Point4d ret {};
             Leo::ArrayAccessStd out(ret);
-
             Leo::ArrayTensorOp::mul<1, 0>(out, m_rotation, in);
             return ret;
         };
@@ -44,6 +45,11 @@ public:
         m_scale = scale;
     }
 
+    void set_offset(Lyra::Point4d offset)
+    {
+        m_offset = offset;
+    }
+
     Lyra::Manifold4_Transformation const & get_transformation() const noexcept
     {
         return m_transformation;
@@ -52,6 +58,7 @@ public:
 private:
     Leo::Matrix4f m_rotation;
     float m_scale { 1.0f };
+    Lyra::Point4d m_offset;
 
     Lyra::Manifold4_Transformation m_transformation {};
 };
