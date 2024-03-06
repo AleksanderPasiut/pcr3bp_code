@@ -106,9 +106,6 @@ public:
         const size_t reg_evo_point_count = this->get_param(idx++);
         const double reg_evo_thickness = this->get_param(idx++);
 
-        const double lyapunov_u0_param = this->get_param(idx++);
-        const size_t lyapunov_adj_steps = this->get_param(idx++);
-
         const int select_short_path_section = this->get_param(idx++);
         const int select_long_path_section = this->get_param(idx++);
 
@@ -163,7 +160,7 @@ public:
                 m_reg_evolution_3,
                 m_reg_evolution_4,
                 initial_point,
-                2.636,
+                2.6362,
                 reg_evo_point_count,
                 reg_evo_thickness);
         }
@@ -320,6 +317,16 @@ public:
         if (m_reg_evolution_2)
         {
             m_reg_evolution_2->refresh();
+        }
+
+        if (m_reg_evolution_3)
+        {
+            m_reg_evolution_3->refresh();
+        }
+
+        if (m_reg_evolution_4)
+        {
+            m_reg_evolution_4->refresh();
         }
 
         for (auto& ptdbg : m_origins)
