@@ -97,16 +97,10 @@ public:
 
         int idx = 0;
         const double point_thickness = this->get_param(idx++);
-        
+
         const size_t reg_evo_select = this->get_param(idx++);
         const size_t reg_evo_point_count = this->get_param(idx++);
         const double reg_evo_thickness = this->get_param(idx++);
-
-        const float thickness = this->get_param(idx++);
-
-        const bool show_ghv = this->get_param(idx++) != 0.0;
-        // const bool show_mid = this->get_param(idx++) != 0.0;
-        // const bool show_neg = this->get_param(idx++) != 0.0;
 
         const double lyapunov_u0_param = this->get_param(idx++);
         const size_t lyapunov_adj_steps = this->get_param(idx++);

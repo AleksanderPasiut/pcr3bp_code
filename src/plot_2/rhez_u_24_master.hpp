@@ -16,11 +16,6 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("reg evolution point count", 0.0, 100000.0, 2000.0, 1.0, 0),
         Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.005, 0.0001, 4),
 
-        Aquila::ParamConfig("ghv manifold thickness", 0.0, 0.01, 0.002, 0.0001, 4),
-        Aquila::ParamConfig("show ghv manifold", 0.0, 1.0, 1.0, 1.0, 0),
-        // Aquila::ParamConfig("show ghv manifold (mid)", 0.0, 1.0, 1.0, 1.0, 0),
-        // Aquila::ParamConfig("show ghv manifold (neg)", 0.0, 1.0, 1.0, 1.0, 0),
-
         Aquila::ParamConfig("lyapunov u0 param", -1.0, 1.0, 0.0, 0.001, 4),
         Aquila::ParamConfig("lyapunov adjustment steps", 0.0, 10.0, 2.0, 1.0, 0),
 
