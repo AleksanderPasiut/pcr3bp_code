@@ -39,8 +39,6 @@ public:
     HsetRenderable(Lyra::Core3d& core_ref, const Param& param)
         : m_core_ref(core_ref)
         , m_param(param)
-        , m_linear( param.coordsys.get_origin(), param.coordsys.get_directions_matrix() )
-        , m_constraint( param.basic_objects.m_hamiltonian_reg2, param.coordsys )
         , m_renderable(
             std::ref(core_ref.get_objects()),
             std::ref(m_composite),
@@ -62,9 +60,17 @@ private:
 
     Param m_param;
 
-    CapdUtils::AffineMap<MapT> m_linear;
+    CapdUtils::AffineMap<MapT> m_linear
+    {
+        m_param.coordsys.get_origin(),
+        m_param.coordsys.get_directions_matrix()
+    };
 
-    LocalPoincare4_Constraint<MapT> m_constraint;
+    LocalPoincare4_Constraint<MapT> m_constraint
+    {
+        m_param.basic_objects.m_hamiltonian_reg2,
+        m_param.coordsys
+    };
 
     MapT m_reorder { CapdUtils::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
 
