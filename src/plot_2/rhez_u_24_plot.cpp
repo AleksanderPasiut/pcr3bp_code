@@ -26,6 +26,62 @@
 namespace Pcr3bpProof
 {
 
+struct DualRegEvolution
+{
+    std::unique_ptr<RegEvolution4> m_reg_evolution_pos {};
+    std::unique_ptr<RegEvolution4> m_reg_evolution_neg {};
+
+    DualRegEvolution(
+        Lyra::Core3d& core_ref,
+        Pcr3bp::SetupParameters<RMap> setup,
+        Manifold4_Transformation const & transformation_ref,
+        RVector ret,
+        double time,
+        size_t point_count,
+        float thickness)
+    {
+        {
+            const RegEvolution4::Param param = {
+                setup,
+                ret,
+                time,
+                point_count,
+                transformation_ref,
+                thickness,
+                true
+            };
+
+            m_reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
+        }
+        {
+            const RegEvolution4::Param param = {
+                setup,
+                ret,
+                time,
+                point_count,
+                transformation_ref,
+                thickness,
+                false
+            };
+
+            m_reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
+        }
+    }
+
+    void refresh()
+    {
+        if (m_reg_evolution_pos)
+        {
+            m_reg_evolution_pos->refresh();
+        }
+
+        if (m_reg_evolution_neg)
+        {
+            m_reg_evolution_neg->refresh();
+        }
+    }
+};
+
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 private:
@@ -36,11 +92,10 @@ private:
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
-
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    std::unique_ptr<RegEvolution4> m_reg_evolution {};
-    std::unique_ptr<RegEvolution4> m_reg_evolution_2 {};
+    std::list<DualRegEvolution> m_dual_reg_evolution_list {};
+    
     std::unique_ptr<RegEvolution4> m_reg_evolution_3 {};
     std::unique_ptr<RegEvolution4> m_reg_evolution_4 {};
 
@@ -154,8 +209,6 @@ public:
 
         const double h = m_basic_objects.m_parameters.get_energy();
 
-        
-
         if (centerpoint_index != -1)
         {
             if (centerpoint_index < periodic_orbit_coordsys_vector.size())
@@ -173,40 +226,34 @@ public:
             this->set_offset({});
         }
 
+        m_dual_reg_evolution_list.clear();
+
         if (show_periodic_orbit)
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
-            reload_reg_evolution(
-                m_reg_evolution,
-                m_reg_evolution_2,
+            m_dual_reg_evolution_list.emplace_back(
+                std::ref(get_core_ref()),
+                m_basic_objects.m_setup,
+                std::cref(this->get_transformation()),
                 initial_point,
                 0.908943,
                 reg_evo_point_count,
                 reg_evo_thickness);
-        }
-        else
-        {
-            m_reg_evolution.reset();
-            m_reg_evolution_2.reset();
         }
 
         if (show_homoclinic_orbit)
         {
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
 
-            reload_reg_evolution(
-                m_reg_evolution_3,
-                m_reg_evolution_4,
+            m_dual_reg_evolution_list.emplace_back(
+                std::ref(get_core_ref()),
+                m_basic_objects.m_setup,
+                std::cref(this->get_transformation()),
                 initial_point,
                 2.6362,
                 reg_evo_point_count,
                 reg_evo_thickness);
-        }
-        else
-        {
-            m_reg_evolution_3.reset();
-            m_reg_evolution_4.reset();
         }
         
         m_origins.clear();
@@ -350,24 +397,9 @@ public:
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
 
-        if (m_reg_evolution)
+        for (auto& evo : m_dual_reg_evolution_list)
         {
-            m_reg_evolution->refresh();
-        }
-
-        if (m_reg_evolution_2)
-        {
-            m_reg_evolution_2->refresh();
-        }
-
-        if (m_reg_evolution_3)
-        {
-            m_reg_evolution_3->refresh();
-        }
-
-        if (m_reg_evolution_4)
-        {
-            m_reg_evolution_4->refresh();
+            evo.refresh();
         }
 
         for (auto& ptdbg : m_origins)
