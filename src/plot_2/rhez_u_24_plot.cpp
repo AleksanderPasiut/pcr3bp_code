@@ -136,39 +136,6 @@ public:
         // }
     }
 
-    void reload_reg_evolution(
-        std::unique_ptr<RegEvolution4>& reg_evolution_pos, 
-        std::unique_ptr<RegEvolution4>& reg_evolution_neg, 
-        RVector ret, double time, size_t point_count, float thickness)
-    {
-        {
-            const RegEvolution4::Param param = {
-                m_basic_objects.m_setup,
-                ret,
-                time,
-                point_count,
-                this->get_transformation(),
-                thickness,
-                true
-            };
-
-            reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
-        }
-        {
-            const RegEvolution4::Param param = {
-                m_basic_objects.m_setup,
-                ret,
-                time,
-                point_count,
-                this->get_transformation(),
-                thickness,
-                false
-            };
-
-            reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(get_core_ref()), std::cref(param));
-        }
-    }
-
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
         CoreInteriorBase::set_param(packet_vector);
@@ -191,6 +158,9 @@ public:
 
         const bool show_periodic_orbit = this->get_param(idx++);
         const bool show_homoclinic_orbit = this->get_param(idx++);
+
+        const bool show_periodic_orbit_local = this->get_param(idx++);
+        const bool show_homoclinic_orbit_local = this->get_param(idx++);
 
         const bool show_periodic_orbit_origins = this->get_param(idx++);
         const bool show_homoclinic_orbit_origins = this->get_param(idx++);
@@ -254,6 +224,36 @@ public:
                 2.6362,
                 reg_evo_point_count,
                 reg_evo_thickness);
+        }
+
+        if (show_periodic_orbit_local)
+        {
+            for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
+            {
+                m_dual_reg_evolution_list.emplace_back(
+                    std::ref(get_core_ref()),
+                    m_basic_objects.m_setup,
+                    std::cref(this->get_transformation()),
+                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 
+                    evolution_time,
+                    reg_evo_point_count,
+                    reg_evo_thickness);
+            }
+        }
+
+        if (show_homoclinic_orbit_local)
+        {
+            for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
+            {
+                m_dual_reg_evolution_list.emplace_back(
+                    std::ref(get_core_ref()),
+                    m_basic_objects.m_setup,
+                    std::cref(this->get_transformation()),
+                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 
+                    evolution_time,
+                    reg_evo_point_count,
+                    reg_evo_thickness);
+            }
         }
         
         m_origins.clear();

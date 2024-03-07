@@ -21,12 +21,15 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("section span", 0.0001, 1000.0, 1.0, 0.0001, 4),
         // Aquila::ParamConfig("section scale", 0.0001, 1000.0, 1.0, 0.0001, 4),
 
-        Aquila::ParamConfig("evolution time", 0.0, 10.0, 2.636, 0.0001, 6),
+        Aquila::ParamConfig("evolution time", 0.0, 10.0, 0.5, 0.0001, 6),
 
         Aquila::ParamConfig("scale", -20.0, 20.0, 0.0, 0.01, 2),
 
         Aquila::ParamConfig("show periodic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
         Aquila::ParamConfig("show homoclinic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
+
+        Aquila::ParamConfig("show periodic orbit loc.", 0.0, 1.0, 0.0, 1.0, 0),
+        Aquila::ParamConfig("show homoclinic orbit loc.", 0.0, 1.0, 0.0, 1.0, 0),
 
         Aquila::ParamConfig("show periodic orbit origins", 0.0, 1.0, 0.0, 1.0, 0),
         Aquila::ParamConfig("show homoclinic orbit origins", 0.0, 1.0, 0.0, 1.0, 0),
