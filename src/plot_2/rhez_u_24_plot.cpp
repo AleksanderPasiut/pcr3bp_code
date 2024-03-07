@@ -20,6 +20,7 @@
 #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
+#include "plot_2/objects/collision_manifold.hpp"
 
 
 namespace Pcr3bpProof
@@ -95,8 +96,7 @@ private:
 
     std::list<DualRegEvolution> m_dual_reg_evolution_list {};
     
-    std::unique_ptr<RegEvolution4> m_reg_evolution_3 {};
-    std::unique_ptr<RegEvolution4> m_reg_evolution_4 {};
+    std::unique_ptr<CollisionManifold> m_collision_manifold {};
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
@@ -146,6 +146,8 @@ public:
 
         const double scale = this->get_param(idx++);
 
+        const bool show_collision_manifold = this->get_param(idx++);
+
         const bool show_periodic_orbit = this->get_param(idx++);
         const bool show_homoclinic_orbit = this->get_param(idx++);
 
@@ -184,6 +186,18 @@ public:
         else
         {
             this->set_offset({});
+        }
+
+        if (show_collision_manifold)
+        {
+            m_collision_manifold = std::make_unique<CollisionManifold>(
+                std::ref(get_core_ref()),
+                std::cref(this->get_transformation()),
+                reg_evo_thickness);
+        }
+        else
+        {
+            m_collision_manifold.reset();
         }
 
         m_dual_reg_evolution_list.clear();
@@ -346,6 +360,11 @@ public:
     void set_rotation_4d(Leo::Matrix4f const & matrix)
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
+
+        if (m_collision_manifold)
+        {
+            m_collision_manifold->refresh();
+        }
 
         for (auto& evo : m_dual_reg_evolution_list)
         {

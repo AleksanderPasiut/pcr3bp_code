@@ -97,13 +97,6 @@ private:
         *m_extension_to_4_ptr
     };
 
-
-    // LocalPoincare4_Constraint<MapT> m_constraint
-    // {
-    //     m_param.basic_objects.m_hamiltonian_reg2,
-    //     m_param.coordsys
-    // };
-
     MapT m_reorder { CapdUtils::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
 
     CapdUtils::CompositeMap<MapT, decltype(m_constraint)&, decltype(m_linear)&, MapT&> m_composite
