@@ -95,9 +95,11 @@ private:
 
     const CapdUtils::LocalCoordinateSystem<MapT> m_src_coordsys_4_dim
     {
-        CapdUtils::LocalCoordinateSystem<IMap>(
-            m_parameters.get_initial_point(),
-            CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(0).get_directions_matrix()) )
+        CapdUtils::LocalCoordinateSystem<MapT>::convert_from(
+            CapdUtils::LocalCoordinateSystem<IMap>(
+                m_parameters.get_initial_point(),
+                CapdUtils::matrix_cast<IMatrix>(m_periodic_orbit_coordsys_approx.at(0).get_directions_matrix()) )
+        )
     };
 
     const std::array<ScalarType, 2> m_d

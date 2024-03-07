@@ -13,6 +13,7 @@
 #include <capd_utils/enp_map.hpp>
 
 #include <tools/local_poincare4_constraint.hpp>
+#include <tools/local_poincare4_constraint_spec.hpp>
 #include <proof/pcr3bp_reg_basic_objects.hpp>
 
 namespace Pcr3bpProof
@@ -66,11 +67,42 @@ private:
         m_param.coordsys.get_directions_matrix()
     };
 
-    LocalPoincare4_Constraint<MapT> m_constraint
+    using LocalPoincare4_Constraint_BaseType = LocalPoincare4_Constraint_Base<MapT>;
+    using LocalPoincare4_Constraint_BaseTypePtr = std::unique_ptr<LocalPoincare4_Constraint_BaseType>;
+    using LocalPoincare4_Constraint_Type = LocalPoincare4_Constraint<MapT>;
+    using LocalPoincare4_Constraint_SpecType = LocalPoincare4_Constraint_Spec<MapT>;
+
+    LocalPoincare4_Constraint_BaseTypePtr m_extension_to_4_ptr
     {
-        m_param.basic_objects.m_hamiltonian_reg2,
-        m_param.coordsys
+        [this]() -> LocalPoincare4_Constraint_BaseTypePtr
+        {
+            auto origin = m_param.coordsys.get_origin();
+
+            bool is_origin_zero = origin[0] == 0.0 && origin[1] == 0.0;
+
+            return is_origin_zero ?
+                LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_SpecType>(
+                    std::ref(m_param.basic_objects.m_hamiltonian_reg2),
+                    std::ref(m_param.coordsys)
+                )) :
+                LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_Type>(
+                    std::ref(m_param.basic_objects.m_hamiltonian_reg2),
+                    std::ref(m_param.coordsys)
+                ));
+        }()
     };
+
+    LocalPoincare4_Constraint_BaseType& m_constraint
+    {
+        *m_extension_to_4_ptr
+    };
+
+
+    // LocalPoincare4_Constraint<MapT> m_constraint
+    // {
+    //     m_param.basic_objects.m_hamiltonian_reg2,
+    //     m_param.coordsys
+    // };
 
     MapT m_reorder { CapdUtils::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
 
