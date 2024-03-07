@@ -160,17 +160,17 @@ public:
         {
             if (centerpoint_index < periodic_orbit_coordsys_vector.size())
             {
-                this->set_offset( convert<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
+                this->set_offset( convert_double<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
             }
             else if (centerpoint_index < periodic_orbit_coordsys_vector.size() + homoclinic_orbit_coordsys_vector.size())
             {
                 size_t const idx = centerpoint_index - periodic_orbit_coordsys_vector.size();
-                this->set_offset( convert<4>( homoclinic_orbit_coordsys_vector.at(idx).get_origin() ) );
+                this->set_offset( convert_double<4>( homoclinic_orbit_coordsys_vector.at(idx).get_origin() ) );
             }
         }
         else
         {
-            this->set_offset(Lyra::Point4d());
+            this->set_offset({});
         }
 
         if (show_periodic_orbit)
@@ -304,7 +304,6 @@ public:
 
                     CapdUtils::MaxNorm<RMap> norm {};
 
-                    int j = 0;
                     for (auto& cs : homoclinic_orbit_coordsys_vector)
                     {
                         double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
@@ -312,12 +311,9 @@ public:
                         {
                             ret = &cs;
                             distance = d;
-                            std::cout << "j " << j << '\n';
                         }
-                        ++j;
                     }
 
-                    int k = 0;
                     for (auto& cs : periodic_orbit_coordsys_vector)
                     {
                         double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
@@ -325,12 +321,8 @@ public:
                         {
                             ret = &cs;
                             distance = d;
-                            std::cout << "k " << k << '\n';
                         }
-                        ++k;
                     }
-
-                    std::cout << '\n';
 
                     return ret;
                 };

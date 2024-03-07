@@ -13,6 +13,8 @@
 namespace Pcr3bpProof
 {
 
+using Manifold4_Transformation = std::function<Lyra::Point4d(std::array<double, 4>)>;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief convert array<float> to VectorT
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,6 +56,35 @@ std::array<float, dimension> convert(const CapdUtils::IVector& vector)
     }
     return ret;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief convert RVector to array<double>
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template<size_t dimension>
+std::array<double, dimension> convert_double(const CapdUtils::RVector& vector)
+{
+    std::array<double, dimension> ret;
+    for (size_t i = 0; i < dimension; ++i)
+    {
+        ret[i] = vector[i];
+    }
+    return ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief convert IVector to array<double>
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template<size_t dimension>
+std::array<double, dimension> convert_double(const CapdUtils::IVector& vector)
+{
+    std::array<double, dimension> ret;
+    for (size_t i = 0; i < dimension; ++i)
+    {
+        ret[i] = vector[i].mid().leftBound();
+    }
+    return ret;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief convert IVector to RulerSet
@@ -233,9 +264,10 @@ public:
         Lyra::Core3dObjects& objects,
         MapT& map,
         const Leo::RulerSet<domain_dimension>& ruler_set,
-        Lyra::Manifold4_Transformation const& transformation_ref)
-            : Lyra::Manifold4<domain_dimension>( objects, ruler_set, transformation_ref )
+        Manifold4_Transformation const& transformation_ref)
+            : Lyra::Manifold4<domain_dimension>( objects, ruler_set )
             , m_map(map)
+            , m_transformation_ref(transformation_ref)
     {}
 
     void fill(float thickness)
@@ -244,7 +276,9 @@ public:
         {
             using VectorType = typename MapT::VectorType;
             const VectorType vector = convert<VectorType, domain_dimension>(in);
-            return convert<image_dimension>( m_map( vector ) );
+            const VectorType image = m_map( vector );
+            std::array<double, 4> tmp = convert_double<4>(image);
+            return m_transformation_ref(tmp);
         };
 
         Lyra::Manifold4<domain_dimension>::fill(func, thickness);
@@ -252,6 +286,8 @@ public:
 
 private:
     MapT& m_map;
+
+    const Manifold4_Transformation & m_transformation_ref;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,16 +360,18 @@ public:
     CapdVectorRenderable4(
         Lyra::Core3dObjects& objects,
         VectorType vector,
-        Lyra::Manifold4_Transformation const & transformation_ref)
-            : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ), transformation_ref)
+        Manifold4_Transformation const & transformation_ref)
+            : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ))
             , m_vector(vector)
+            , m_transformation_ref(transformation_ref)
     {}
 
     void fill(float thickness)
     {
         auto func = [this](const size_t& in) -> std::array<float, 4>
         {
-            return convert<4>( m_vector );
+            std::array<double, 4> tmp = convert_double<4>(m_vector);
+            return m_transformation_ref(tmp);
         };
 
         Lyra::Manifold4<0>::fill(func, thickness);
@@ -346,6 +384,8 @@ public:
 
 private:
     const VectorType m_vector;
+
+    const Manifold4_Transformation & m_transformation_ref;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -32,7 +32,7 @@ public:
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         std::array<double, 4> coordinates;
         size_t divs;
-        const Lyra::Manifold4_Transformation & transformation_ref;
+        const Manifold4_Transformation & transformation_ref;
         float thickness;
     };
 

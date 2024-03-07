@@ -9,6 +9,8 @@
 #include <lyra/manifold/manifold4.hpp>
 #include "plot_common/core_interior_base.hpp"
 
+#include "capd_renderable.hpp"
+
 #include <iostream>
 
 namespace Pcr3bpProof
@@ -21,9 +23,9 @@ public:
     {
         m_rotation.set_identity();
 
-        m_transformation = [this](Lyra::Point4d arg) -> Lyra::Point4d
+        m_transformation = [this](std::array<double, 4> arg) -> Lyra::Point4d
         {
-            Leo::ArrayAccessStd<4, float> in(arg);
+            Leo::ArrayAccessStd<4, double> in(arg);
 
             Leo::ArrayAccessStdRead offset_access(m_offset);
             Leo::ArrayElemOp::sub(in, offset_access);
@@ -41,27 +43,27 @@ public:
         m_rotation = matrix;
     }
 
-    void set_scale(float scale) noexcept
+    void set_scale(double scale) noexcept
     {
         m_scale = scale;
     }
 
-    void set_offset(Lyra::Point4d offset)
+    void set_offset(std::array<double, 4> offset)
     {
         m_offset = { offset[2], offset[3], offset[0], offset[1] };
     }
 
-    Lyra::Manifold4_Transformation const & get_transformation() const noexcept
+    Manifold4_Transformation const & get_transformation() const noexcept
     {
         return m_transformation;
     }
 
 private:
     Leo::Matrix4f m_rotation {};
-    float m_scale { 1.0f };
-    Lyra::Point4d m_offset {};
+    double m_scale { 1.0f };
+    std::array<double, 4> m_offset {};
 
-    Lyra::Manifold4_Transformation m_transformation {};
+    Manifold4_Transformation m_transformation {};
 };
 
 }

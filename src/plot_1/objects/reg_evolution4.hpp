@@ -28,7 +28,7 @@ public:
         VectorType initial_point;
         ScalarType t;
         size_t point_count;
-        const Lyra::Manifold4_Transformation & transformation_ref;
+        const Manifold4_Transformation & transformation_ref;
         float thickness;
         bool positive;
     };
@@ -41,8 +41,7 @@ public:
         , m_ruler( Leo::Ruler<ScalarType>(0.0, param.t, param.point_count, 1) )
         , m_renderable(
             core_ref.get_objects(),
-            Leo::RulerSet<1>({ m_ruler }),
-            param.transformation_ref)
+            Leo::RulerSet<1>({ m_ruler }))
     {
         refresh();
     }
@@ -83,12 +82,9 @@ public:
 
             const VectorType U = solution(t);
 
-            const float u = U[0];
-            const float v = U[1];
-            const float pu = U[2];
-            const float pv = U[3];
-
-            return { pu, pv, u, v };
+            std::array<double, 4> tmp = { U[2], U[3], U[0], U[1] };
+            Lyra::Point4d out = m_param.transformation_ref(tmp);
+            return out;
         };
 
         m_renderable.fill( func, m_param.thickness );
