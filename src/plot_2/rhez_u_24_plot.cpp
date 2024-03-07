@@ -19,7 +19,6 @@
 
 #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_2/objects/hl_map.hpp"
-#include "plot_2/objects/section_plot4_ce.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
 
 
@@ -103,9 +102,6 @@ private:
 
     std::list<HL_Map> m_origins {};
 
-    std::unique_ptr<SectionPlot4_CE> m_short_path_section_CE {};
-    std::unique_ptr<SectionPlot4_CE> m_long_path_section_CE {};
-
     std::list<HsetRenderable> m_h_sets {};
 
 public:
@@ -145,12 +141,6 @@ public:
 
         const size_t reg_evo_point_count = this->get_param(idx++);
         const float reg_evo_thickness = this->get_param(idx++);
-
-        const int select_short_path_section_CE = this->get_param(idx++);
-        const int select_long_path_section_CE = this->get_param(idx++);
-
-        const double section_span = this->get_param(idx++);
-        // const double section_scale = this->get_param(idx++);
 
         const double evolution_time = this->get_param(idx++);
 
@@ -290,46 +280,6 @@ public:
             }
         }
 
-        if (select_short_path_section_CE >= 0)
-        {
-            const SectionPlot4_CE::Param param
-            {
-                std::ref(m_basic_objects),
-                CapdUtils::LocalCoordinateSystem<MapT>::convert_from( periodic_orbit_coordsys_vector.at(select_short_path_section_CE) ),
-                section_span,
-                11,
-                std::cref(this->get_transformation()),
-                reg_evo_thickness
-            };
-
-            m_short_path_section_CE = std::make_unique<SectionPlot4_CE>(
-                std::ref(get_core_ref()), std::cref(param));
-        }
-        else
-        {
-            m_short_path_section_CE.reset();
-        }
-
-        if (select_long_path_section_CE >= 0)
-        {
-            const SectionPlot4_CE::Param param
-            {
-                std::ref(m_basic_objects),
-                CapdUtils::LocalCoordinateSystem<MapT>::convert_from( homoclinic_orbit_coordsys_vector.at(select_long_path_section_CE) ),
-                section_span,
-                11,
-                std::cref(this->get_transformation()),
-                reg_evo_thickness
-            };
-
-            m_long_path_section_CE = std::make_unique<SectionPlot4_CE>(
-                std::ref(get_core_ref()), std::cref(param));
-        }
-        else
-        {
-            m_long_path_section_CE.reset();
-        }
-
         m_h_sets.clear();
 
         for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
@@ -405,16 +355,6 @@ public:
         for (auto& ptdbg : m_origins)
         {
             ptdbg.refresh();
-        }
-
-        if (m_short_path_section_CE)
-        {
-            m_short_path_section_CE->refresh();
-        }
-
-        if (m_long_path_section_CE)
-        {
-            m_long_path_section_CE->refresh();
         }
 
         for (auto& hs : m_h_sets)

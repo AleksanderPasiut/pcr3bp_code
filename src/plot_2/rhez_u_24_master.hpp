@@ -15,15 +15,9 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("reg evolution point count", 0.0, 100000.0, 2000.0, 1.0, 0),
         Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.005, 0.0001, 4),
 
-        Aquila::ParamConfig("select short path section CE", -1.0, 3.0, -1.0, 1.0, 0),
-        Aquila::ParamConfig("select long path section CE", -1.0, 27.0, -1.0, 1.0, 0),
-
-        Aquila::ParamConfig("section span", 0.0001, 1000.0, 1.0, 0.0001, 4),
-        // Aquila::ParamConfig("section scale", 0.0001, 1000.0, 1.0, 0.0001, 4),
-
         Aquila::ParamConfig("evolution time", 0.0, 10.0, 0.05, 0.0001, 6),
 
-        Aquila::ParamConfig("scale", -20.0, 20.0, 0.0, 0.01, 2),
+        Aquila::ParamConfig("scale", -20.0, 20.0, 0.0, 0.1, 1),
 
         Aquila::ParamConfig("show periodic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
         Aquila::ParamConfig("show homoclinic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
