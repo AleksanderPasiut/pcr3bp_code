@@ -21,7 +21,7 @@ TEST(Plot, Rhez_u_24)
         Aquila::ParamConfig("section span", 0.0001, 1000.0, 1.0, 0.0001, 4),
         // Aquila::ParamConfig("section scale", 0.0001, 1000.0, 1.0, 0.0001, 4),
 
-        Aquila::ParamConfig("evolution time", 0.0, 10.0, 0.5, 0.0001, 6),
+        Aquila::ParamConfig("evolution time", 0.0, 10.0, 0.05, 0.0001, 6),
 
         Aquila::ParamConfig("scale", -20.0, 20.0, 0.0, 0.01, 2),
 
