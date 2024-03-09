@@ -29,6 +29,34 @@
 namespace Pcr3bpProof
 {
 
+std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
+{
+    auto load_hset_parameters_list_file = [](std::string file_name) -> std::list<CapdUtils::HsetParameters>
+    {
+        std::ifstream ifs(file_name);
+        if (ifs)
+        {
+            return CapdUtils::deserialize_hset_parameters_list(ifs);
+        }
+
+        throw std::logic_error("Failed to find hset parameters file!");
+    };
+    auto homoclinic_hset_parameters_list = load_hset_parameters_list_file("homoclinic_coverings_hset_parameters.csv");
+    auto periodic_hset_parameters_list = load_hset_parameters_list_file("periodic_coverings_hset_parameters.csv");
+    auto jump_hset_parameters_list = load_hset_parameters_list_file("jump_coverings_hset_parameters.csv");
+
+    std::list<CapdUtils::HsetParameters> hset_parameters_list {};
+    hset_parameters_list.splice(hset_parameters_list.end(), homoclinic_hset_parameters_list);
+    hset_parameters_list.splice(hset_parameters_list.end(), periodic_hset_parameters_list);
+    hset_parameters_list.splice(hset_parameters_list.end(), jump_hset_parameters_list);
+
+    // for (auto& hp : hset_parameters_list)
+    // {
+    //     hp.serialize(std::cout);
+    // }
+    return hset_parameters_list;
+}
+
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 public:
@@ -40,31 +68,7 @@ public:
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
-    {
-        auto load_hset_parameters_list = [](std::string file_name) -> std::list<CapdUtils::HsetParameters>
-        {
-            std::ifstream ifs(file_name);
-            if (ifs)
-            {
-                return CapdUtils::deserialize_hset_parameters_list(ifs);
-            }
-
-            throw std::logic_error("Failed to find hset parameters file!");
-        };
-        auto homoclinic_hset_parameters_list = load_hset_parameters_list("homoclinic_coverings_hset_parameters.csv");
-        auto periodic_hset_parameters_list = load_hset_parameters_list("periodic_coverings_hset_parameters.csv");
-        auto jump_hset_parameters_list = load_hset_parameters_list("jump_coverings_hset_parameters.csv");
-
-        m_hset_parameters_list = std::list<CapdUtils::HsetParameters>();
-        m_hset_parameters_list.splice(m_hset_parameters_list.end(), homoclinic_hset_parameters_list);
-        m_hset_parameters_list.splice(m_hset_parameters_list.end(), periodic_hset_parameters_list);
-        m_hset_parameters_list.splice(m_hset_parameters_list.end(), jump_hset_parameters_list);
-
-        // for (auto& hp : m_hset_parameters_list)
-        // {
-        //     hp.serialize(std::cout);
-        // }
-    }
+    {}
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
@@ -309,6 +313,7 @@ public:
                     CapdUtils::LocalCoordinateSystem<MapT>::convert_from( *coordsys_ptr ),
                     hp.coordinates,
                     3,
+                    5,
                     std::cref(this->get_transformation()),
                     reg_evo_thickness
                 };
@@ -374,7 +379,10 @@ private:
 
     std::list<HsetRenderable> m_h_sets {};
 
-    std::list<CapdUtils::HsetParameters> m_hset_parameters_list {};
+    std::list<CapdUtils::HsetParameters> m_hset_parameters_list
+    {
+        load_hset_parameters_list()
+    };
 
     std::vector<Coordsys> periodic_orbit_coordsys_vector
     {

@@ -33,6 +33,7 @@ public:
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         std::array<double, 4> coordinates;
         size_t divs;
+        size_t subdivs;
         const Manifold4_Transformation & transformation_ref;
         float thickness;
     };
@@ -44,8 +45,8 @@ public:
             std::ref(core_ref.get_objects()),
             std::ref(m_composite),
             Leo::RulerSet<2>({
-                Leo::Ruler<double>( param.coordinates.at(0), param.coordinates.at(1), param.divs, 1 ),
-                Leo::Ruler<double>( param.coordinates.at(2), param.coordinates.at(3), param.divs, 1 ) }),
+                Leo::Ruler<double>( param.coordinates.at(0), param.coordinates.at(1), param.divs, param.subdivs ),
+                Leo::Ruler<double>( param.coordinates.at(2), param.coordinates.at(3), param.divs, param.subdivs ) }),
             std::cref(param.transformation_ref) )
     {
         refresh();
