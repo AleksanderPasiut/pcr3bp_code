@@ -123,10 +123,15 @@ public:
 
         if (show_collision_manifold)
         {
+            CollisionManifold::Param const param
+            {
+                .thickness = reg_evo_thickness
+            };
+
             m_collision_manifold = std::make_unique<CollisionManifold>(
-                std::ref(get_core_ref()),
+                std::ref(get_core_ref().get_objects()),
                 std::cref(this->get_transformation()),
-                reg_evo_thickness);
+                std::cref(param));
         }
         else
         {

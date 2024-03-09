@@ -14,24 +14,28 @@ namespace Pcr3bpProof
 class CollisionManifold
 {
 public:
+    struct Param
+    {
+        float thickness;
+    };
+
     CollisionManifold(
-        Lyra::Core3d& core_ref,
+        Lyra::Core3dObjects& core_objects_ref,
         const Manifold4_Transformation & transformation_ref,
-        float thickness)
-            : m_core_ref(core_ref)
-            , m_renderable(
-                core_ref.get_objects(),
+        const Param& param)
+            : m_renderable(
+                core_objects_ref,
                 m_map,
                 Leo::RulerSet<1>{ Leo::Ruler( 0.0, 2 * M_PI, 10000, 1 ) },
                 std::cref(transformation_ref))
-            , m_thickness(thickness)
+            , m_param(param)
     {
         refresh();
     }
 
     void refresh()
     {
-        m_renderable.fill(m_thickness);
+        m_renderable.fill(m_param.thickness);
     }
 
 private:
@@ -54,8 +58,6 @@ private:
         return map;
     }
 
-    Lyra::Core3d& m_core_ref;
-
     RMap m_map
     {
         create_collision_manifold_map()
@@ -63,7 +65,7 @@ private:
 
     CapdMapRenderable<decltype(m_map), 1, 4> m_renderable;
 
-    float m_thickness;
+    Param m_param;
 };
 
 }
