@@ -22,35 +22,24 @@ public:
     CoreInteriorBase4d() : CoreInteriorBase()
     {
         m_rotation.set_identity();
-
-        m_transformation = [this](std::array<double, 4> arg) -> Lyra::Point4d
-        {
-            Leo::ArrayAccessStd<4, double> in(arg);
-
-            Leo::ArrayAccessStdRead offset_access(m_offset);
-            Leo::ArrayElemOp::sub(in, offset_access);
-            Leo::ArrayScalarOp::mul(in, m_scale);
-
-            Lyra::Point4d ret {};
-            Leo::ArrayAccessStd out(ret);
-            Leo::ArrayTensorOp::mul<1, 0>(out, m_rotation, in);
-            return ret;
-        };
     }
 
     void set_rotation(Leo::Matrix4f const & matrix) noexcept
     {
         m_rotation = matrix;
+        m_transformation.inc_params_counter();
     }
 
     void set_scale(double scale) noexcept
     {
         m_scale = scale;
+        m_transformation.inc_params_counter();
     }
 
     void set_offset(std::array<double, 4> offset)
     {
         m_offset = { offset[2], offset[3], offset[0], offset[1] };
+        m_transformation.inc_params_counter();
     }
 
     Manifold4_Transformation const & get_transformation() const noexcept
@@ -63,7 +52,22 @@ private:
     double m_scale { 1.0f };
     std::array<double, 4> m_offset {};
 
-    Manifold4_Transformation m_transformation {};
+    Manifold4_Transformation m_transformation
+    {
+        [this](std::array<double, 4> arg) -> Lyra::Point4d
+        {
+            Leo::ArrayAccessStd<4, double> in(arg);
+
+            Leo::ArrayAccessStdRead offset_access(m_offset);
+            Leo::ArrayElemOp::sub(in, offset_access);
+            Leo::ArrayScalarOp::mul(in, m_scale);
+
+            Lyra::Point4d ret {};
+            Leo::ArrayAccessStd out(ret);
+            Leo::ArrayTensorOp::mul<1, 0>(out, m_rotation, in);
+            return ret;
+        }
+    };
 };
 
 }

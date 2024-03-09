@@ -13,7 +13,33 @@
 namespace Pcr3bpProof
 {
 
-using Manifold4_Transformation = std::function<Lyra::Point4d(std::array<double, 4>)>;
+class Manifold4_Transformation
+{
+public:
+    using Func = std::function<Lyra::Point4d(std::array<double, 4>)>;
+
+    Manifold4_Transformation(Func func) : m_func(func), m_params_counter()
+    {}
+
+    const Func& func() const noexcept
+    {
+        return m_func;
+    }
+
+    void inc_params_counter() noexcept
+    {
+        ++m_params_counter;
+    }
+
+    bool operator!= (const Manifold4_Transformation& arg) const noexcept
+    {
+        return this->m_params_counter != arg.m_params_counter;
+    }
+
+private:
+    Func m_func;
+    size_t m_params_counter;
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief convert array<float> to VectorT
@@ -278,7 +304,7 @@ public:
             const VectorType vector = convert<VectorType, domain_dimension>(in);
             const VectorType image = m_map( vector );
             std::array<double, 4> tmp = convert_double<4>(image);
-            return m_transformation_ref(tmp);
+            return m_transformation_ref.func()(tmp);
         };
 
         Lyra::Manifold4<domain_dimension>::fill(func, thickness);
@@ -371,7 +397,7 @@ public:
         auto func = [this](const size_t& in) -> std::array<float, 4>
         {
             std::array<double, 4> tmp = convert_double<4>(m_vector);
-            return m_transformation_ref(tmp);
+            return m_transformation_ref.func()(tmp);
         };
 
         Lyra::Manifold4<0>::fill(func, thickness);

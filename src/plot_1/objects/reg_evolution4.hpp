@@ -83,7 +83,7 @@ public:
             const VectorType U = solution(t);
 
             std::array<double, 4> tmp = { U[2], U[3], U[0], U[1] };
-            Lyra::Point4d out = m_param.transformation_ref(tmp);
+            Lyra::Point4d out = m_param.transformation_ref.func()(tmp);
             return out;
         };
 
