@@ -22,34 +22,46 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    struct Param
+    struct Params
     {
         Pcr3bp::SetupParameters<MapT> const & setup;
         VectorType initial_point;
         ScalarType t;
         size_t point_count;
-        const Manifold4_Transformation & transformation_ref;
         float thickness;
         bool positive;
+
+        bool operator!= (const Params& arg) const noexcept
+        {
+            return
+                this->initial_point != arg.initial_point ||
+                this->t != arg.t ||
+                this->point_count != arg.point_count ||
+                this->thickness != arg.thickness;
+        }
     };
 
-    RegEvolution4(Lyra::Core3dObjects& core_objects_ref, const Param& param)
-        : m_map(create_map(param.setup, param.positive))
-        , m_timemap(m_map, 0.0, 20)
-        , m_param(param)
-        , m_ruler( Leo::Ruler<ScalarType>(0.0, param.t, param.point_count, 1) )
-        , m_renderable(
-            core_objects_ref,
-            Leo::RulerSet<1>({ m_ruler }))
+    RegEvolution4(
+        Lyra::Core3dObjects& core_objects_ref,
+        const Manifold4_Transformation & transformation_ref,
+        const Params& params)
+            : m_transformation_ref(transformation_ref)
+            , m_map(create_map(params.setup, params.positive))
+            , m_timemap(m_map, 0.0, 20)
+            , m_params(params)
+            , m_ruler( Leo::Ruler<ScalarType>(0.0, params.t, params.point_count, 1) )
+            , m_renderable(
+                core_objects_ref,
+                Leo::RulerSet<1>({ m_ruler }))
     {
         refresh();
     }
 
     void refresh()
     {
-        const VectorType U0 = m_param.initial_point;
+        const VectorType U0 = m_params.initial_point;
 
-        m_timemap.set_time(m_param.t);
+        m_timemap.set_time(m_params.t);
 
         CapdUtils::SolutionCurve<MapT> solution(0.0);
 
@@ -58,7 +70,7 @@ public:
         Leo::LinearInterpolationNodesList<ScalarType, ScalarType> length_time_nodes;
 
         ScalarType length = 0;
-        for (size_t n = 0; n < m_param.point_count; ++n)
+        for (size_t n = 0; n < m_params.point_count; ++n)
         {
             const ScalarType time = m_ruler.minimum() + n * m_ruler.step();
 
@@ -82,11 +94,16 @@ public:
             const VectorType U = solution(t);
 
             std::array<double, 4> tmp = { U[2], U[3], U[0], U[1] };
-            Lyra::Point4d out = m_param.transformation_ref.func()(tmp);
+            Lyra::Point4d out = m_transformation_ref.func()(tmp);
             return out;
         };
 
-        m_renderable.fill( func, m_param.thickness );
+        m_renderable.fill( func, m_params.thickness );
+    }
+
+    const Params& get_params() const noexcept
+    {
+        return m_params;
     }
 
 private:
@@ -97,10 +114,12 @@ private:
             Pcr3bp::RegularizedSystem<MapT>::createNegativeVectorField(2, setup, false);
     }
 
+    const Manifold4_Transformation & m_transformation_ref;
+
     MapT m_map;
     CapdUtils::TimemapWrapper<MapT> m_timemap;
 
-    Param m_param;
+    Params m_params;
 
     Leo::Ruler<ScalarType> m_ruler;
 

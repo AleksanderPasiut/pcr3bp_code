@@ -65,7 +65,7 @@ public:
 
 private:
     Manifold4_Transformation const & m_ref;
-    size_t m_params_counter;
+    size_t m_params_counter {};
 };
 
 }

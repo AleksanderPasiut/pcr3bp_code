@@ -12,7 +12,7 @@ TEST(Plot, Rhez_u_24)
     Aquila::ParamsetConfig<double> paramset_config
     {
         Aquila::ParamConfig("point thickness", 0.0, 0.1, 0.05, 0.0001, 4),
-        Aquila::ParamConfig("reg evolution point count", 0.0, 100000.0, 2000.0, 1.0, 0),
+        Aquila::ParamConfig("reg evolution point count", 0.0, 1000000.0, 2000.0, 1.0, 0),
         Aquila::ParamConfig("reg evolution thickness", 0.0, 0.05, 0.005, 0.0001, 4),
 
         Aquila::ParamConfig("evolution time", 0.0, 10.0, 0.05, 0.0001, 6),
