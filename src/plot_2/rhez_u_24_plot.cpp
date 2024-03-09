@@ -331,7 +331,7 @@ private:
     
     Renderable4d_WithParams<CollisionManifold> m_collision_manifold
     {
-        get_core_ref().get_objects(),
+        get_core_ref(),
         this->get_transformation()
     };
 

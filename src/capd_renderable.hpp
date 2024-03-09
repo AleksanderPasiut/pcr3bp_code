@@ -10,36 +10,10 @@
 #include <capd_utils/capd/basic_types.hpp>
 #include <capd_utils/capd/solution_curve.hpp>
 
+#include "manifold4_transformation.hpp"
+
 namespace Pcr3bpProof
 {
-
-class Manifold4_Transformation
-{
-public:
-    using Func = std::function<Lyra::Point4d(std::array<double, 4>)>;
-
-    Manifold4_Transformation(Func func) : m_func(func), m_params_counter()
-    {}
-
-    const Func& func() const noexcept
-    {
-        return m_func;
-    }
-
-    void inc_params_counter() noexcept
-    {
-        ++m_params_counter;
-    }
-
-    bool operator!= (const Manifold4_Transformation& arg) const noexcept
-    {
-        return this->m_params_counter != arg.m_params_counter;
-    }
-
-private:
-    Func m_func;
-    size_t m_params_counter;
-};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief convert array<float> to VectorT
