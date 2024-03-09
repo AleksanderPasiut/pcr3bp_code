@@ -22,7 +22,7 @@ public:
             , m_renderable(
                 core_ref.get_objects(),
                 m_map,
-                Leo::RulerSet<1>{ Leo::Ruler( 0.0, 2 * M_PI, 300, 1 ) },
+                Leo::RulerSet<1>{ Leo::Ruler( 0.0, 2 * M_PI, 10000, 1 ) },
                 std::cref(transformation_ref))
             , m_thickness(thickness)
     {
@@ -45,8 +45,8 @@ private:
 
             out[2] = Node(0.0);
             out[3] = Node(0.0);
-            out[0] = r * cos(phi);
-            out[1] = r * sin(phi);
+            out[0] = r * sin(phi);
+            out[1] = r * cos(phi);
         };
 
         RMap map(func, 1, 4, 1);
