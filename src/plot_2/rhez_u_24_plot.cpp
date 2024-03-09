@@ -17,7 +17,9 @@
 
 #include "rhez_u_24_core_interior_base.hpp"
 
-#include "plot_1/objects/reg_evolution4.hpp"
+// #include "plot_1/objects/reg_evolution4.hpp"
+#include "plot_1/objects/dual_reg_evolution4.hpp"
+
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
@@ -26,65 +28,9 @@
 namespace Pcr3bpProof
 {
 
-struct DualRegEvolution
-{
-    std::unique_ptr<RegEvolution4> m_reg_evolution_pos {};
-    std::unique_ptr<RegEvolution4> m_reg_evolution_neg {};
-
-    DualRegEvolution(
-        Lyra::Core3d& core_ref,
-        Pcr3bp::SetupParameters<RMap> setup,
-        Manifold4_Transformation const & transformation_ref,
-        RVector ret,
-        double time,
-        size_t point_count,
-        float thickness)
-    {
-        {
-            const RegEvolution4::Param param = {
-                setup,
-                ret,
-                time,
-                point_count,
-                transformation_ref,
-                thickness,
-                true
-            };
-
-            m_reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
-        }
-        {
-            const RegEvolution4::Param param = {
-                setup,
-                ret,
-                time,
-                point_count,
-                transformation_ref,
-                thickness,
-                false
-            };
-
-            m_reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
-        }
-    }
-
-    void refresh()
-    {
-        if (m_reg_evolution_pos)
-        {
-            m_reg_evolution_pos->refresh();
-        }
-
-        if (m_reg_evolution_neg)
-        {
-            m_reg_evolution_neg->refresh();
-        }
-    }
-};
-
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
-private:
+public:
     using MapT = RMap;
     using ScalarType = typename MapT::ScalarType;
     using VectorType = typename MapT::VectorType;
@@ -92,19 +38,6 @@ private:
 
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
-    Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
-
-    std::list<DualRegEvolution> m_dual_reg_evolution_list {};
-    
-    std::unique_ptr<CollisionManifold> m_collision_manifold {};
-
-    CoveringRelationsSetup m_covering_relations_setup {};
-
-    std::list<HL_Map> m_origins {};
-
-    std::list<HsetRenderable> m_h_sets {};
-
-public:
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
     {
         auto load_hset_parameters_list = [](std::string file_name) -> std::list<CapdUtils::HsetParameters>
@@ -383,6 +316,18 @@ public:
     }
 
 private:
+    Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
+
+    std::list<DualRegEvolution> m_dual_reg_evolution_list {};
+    
+    std::unique_ptr<CollisionManifold> m_collision_manifold {};
+
+    CoveringRelationsSetup m_covering_relations_setup {};
+
+    std::list<HL_Map> m_origins {};
+
+    std::list<HsetRenderable> m_h_sets {};
+
     std::list<CapdUtils::HsetParameters> m_hset_parameters_list {};
 
     std::vector<Coordsys> periodic_orbit_coordsys_vector
