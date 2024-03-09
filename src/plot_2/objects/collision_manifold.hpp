@@ -14,28 +14,38 @@ namespace Pcr3bpProof
 class CollisionManifold
 {
 public:
-    struct Param
+    struct Params
     {
         float thickness;
+
+        bool operator!= (const Params& params) const noexcept
+        {
+            return params.thickness != thickness;
+        }
     };
 
     CollisionManifold(
         Lyra::Core3dObjects& core_objects_ref,
         const Manifold4_Transformation & transformation_ref,
-        const Param& param)
+        const Params& params)
             : m_renderable(
                 core_objects_ref,
                 m_map,
                 Leo::RulerSet<1>{ Leo::Ruler( 0.0, 2 * M_PI, 10000, 1 ) },
                 std::cref(transformation_ref))
-            , m_param(param)
+            , m_params(params)
     {
         refresh();
     }
 
     void refresh()
     {
-        m_renderable.fill(m_param.thickness);
+        m_renderable.fill(m_params.thickness);
+    }
+
+    Params& get_params()
+    {
+        return m_params;
     }
 
 private:
@@ -65,7 +75,7 @@ private:
 
     CapdMapRenderable<decltype(m_map), 1, 4> m_renderable;
 
-    Param m_param;
+    Params m_params;
 };
 
 }

@@ -24,6 +24,7 @@
 #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
 
+#include "plot_2/objects/object_with_params.hpp"
 
 namespace Pcr3bpProof
 {
@@ -123,19 +124,16 @@ public:
 
         if (show_collision_manifold)
         {
-            CollisionManifold::Param const param
+            CollisionManifold::Params const params
             {
                 .thickness = reg_evo_thickness
             };
 
-            m_collision_manifold = std::make_unique<CollisionManifold>(
-                std::ref(get_core_ref().get_objects()),
-                std::cref(this->get_transformation()),
-                std::cref(param));
+            m_collision_manifold.show(params);
         }
         else
         {
-            m_collision_manifold.reset();
+            m_collision_manifold.hide();
         }
 
         m_dual_reg_evolution_list.clear();
@@ -308,10 +306,7 @@ public:
     {
         CoreInteriorBaseRhez_u_24::set_rotation_4d(matrix);
 
-        if (m_collision_manifold)
-        {
-            m_collision_manifold->refresh();
-        }
+        m_collision_manifold.refresh();
 
         for (auto& evo : m_dual_reg_evolution_list)
         {
@@ -334,7 +329,11 @@ private:
 
     std::list<DualRegEvolution> m_dual_reg_evolution_list {};
     
-    std::unique_ptr<CollisionManifold> m_collision_manifold {};
+    Renderable4d_WithParams<CollisionManifold> m_collision_manifold
+    {
+        get_core_ref().get_objects(),
+        this->get_transformation()
+    };
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
