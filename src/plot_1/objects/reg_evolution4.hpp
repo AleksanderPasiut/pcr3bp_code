@@ -24,7 +24,7 @@ public:
 
     struct Param
     {
-        Pcr3bp::SetupParameters<MapT> setup;
+        Pcr3bp::SetupParameters<MapT> const & setup;
         VectorType initial_point;
         ScalarType t;
         size_t point_count;
@@ -33,14 +33,13 @@ public:
         bool positive;
     };
 
-    RegEvolution4(Lyra::Core3d& core_ref, const Param& param)
-        : m_core_ref(core_ref)
-        , m_map(create_map(param.setup, param.positive))
+    RegEvolution4(Lyra::Core3dObjects& core_objects_ref, const Param& param)
+        : m_map(create_map(param.setup, param.positive))
         , m_timemap(m_map, 0.0, 20)
         , m_param(param)
         , m_ruler( Leo::Ruler<ScalarType>(0.0, param.t, param.point_count, 1) )
         , m_renderable(
-            core_ref.get_objects(),
+            core_objects_ref,
             Leo::RulerSet<1>({ m_ruler }))
     {
         refresh();
@@ -97,8 +96,6 @@ private:
             Pcr3bp::RegularizedSystem<MapT>::createPositiveVectorField(2, setup, false) :
             Pcr3bp::RegularizedSystem<MapT>::createNegativeVectorField(2, setup, false);
     }
-
-    Lyra::Core3d& m_core_ref;
 
     MapT m_map;
     CapdUtils::TimemapWrapper<MapT> m_timemap;

@@ -143,8 +143,8 @@ public:
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
             m_dual_reg_evolution_list.emplace_back(
-                std::ref(get_core_ref()),
-                m_basic_objects.m_setup,
+                std::ref(get_core_ref().get_objects()),
+                std::cref(m_basic_objects.m_setup),
                 std::cref(this->get_transformation()),
                 initial_point,
                 0.908943,
@@ -157,8 +157,8 @@ public:
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
 
             m_dual_reg_evolution_list.emplace_back(
-                std::ref(get_core_ref()),
-                m_basic_objects.m_setup,
+                std::ref(get_core_ref().get_objects()),
+                std::cref(m_basic_objects.m_setup),
                 std::cref(this->get_transformation()),
                 initial_point,
                 2.6362,
@@ -171,7 +171,7 @@ public:
             for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
             {
                 m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref()),
+                    std::ref(get_core_ref().get_objects()),
                     m_basic_objects.m_setup,
                     std::cref(this->get_transformation()),
                     CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 
@@ -186,7 +186,7 @@ public:
             for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
             {
                 m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref()),
+                    std::ref(get_core_ref().get_objects()),
                     m_basic_objects.m_setup,
                     std::cref(this->get_transformation()),
                     CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 

@@ -12,11 +12,13 @@ namespace Pcr3bpProof
 class DualRegEvolution
 {
 public:
+    struct Params {};
+
     DualRegEvolution(
-        Lyra::Core3d& core_ref,
-        Pcr3bp::SetupParameters<RMap> setup,
+        Lyra::Core3dObjects& core_objects_ref,
+        Pcr3bp::SetupParameters<RMap> const & setup,
         Manifold4_Transformation const & transformation_ref,
-        RVector ret,
+        RVector initial_point,
         double time,
         size_t point_count,
         float thickness)
@@ -24,7 +26,7 @@ public:
         {
             const RegEvolution4::Param param = {
                 setup,
-                ret,
+                initial_point,
                 time,
                 point_count,
                 transformation_ref,
@@ -32,12 +34,12 @@ public:
                 true
             };
 
-            m_reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
+            m_reg_evolution_pos = std::make_unique<RegEvolution4>(std::ref(core_objects_ref), std::cref(param));
         }
         {
             const RegEvolution4::Param param = {
                 setup,
-                ret,
+                initial_point,
                 time,
                 point_count,
                 transformation_ref,
@@ -45,7 +47,7 @@ public:
                 false
             };
 
-            m_reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(core_ref), std::cref(param));
+            m_reg_evolution_neg = std::make_unique<RegEvolution4>(std::ref(core_objects_ref), std::cref(param));
         }
     }
 
