@@ -16,8 +16,6 @@ class HL_Map
 public:
     struct Param
     {
-        Lyra::Core3d& core_ref;
-        const Manifold4_Transformation & transformation_ref;
         RVector U;
         float thickness;
 
@@ -29,12 +27,15 @@ public:
         }
     };
 
-    HL_Map(const Param& param)
-        : m_param(param)
-        , m_vector(
-            m_param.core_ref.get_objects(),
-            RVector{ m_param.U[2], m_param.U[3], m_param.U[0], m_param.U[1] },
-            std::cref(m_param.transformation_ref))
+    HL_Map(
+        Lyra::Core3dObjects& core_objects_ref,
+        const Manifold4_Transformation & transformation_ref,
+        const Param& param)
+            : m_param(param)
+            , m_vector(
+                core_objects_ref,
+                RVector{ m_param.U[2], m_param.U[3], m_param.U[0], m_param.U[1] },
+                std::cref(transformation_ref))
     {
         refresh();
     }

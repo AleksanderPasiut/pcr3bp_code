@@ -203,13 +203,15 @@ public:
             {
                 HL_Map::Param const param = 
                 {
-                    .core_ref = get_core_ref(),
-                    .transformation_ref = this->get_transformation(),
                     .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
                 };
 
-                m_origins.emplace_back( std::cref(param) );
+                m_origins.emplace_back(
+                    std::ref(get_core_ref().get_objects()),
+                    std::cref(this->get_transformation()),
+                    std::cref(param) );
+
                 ++idx;
             }
         }
@@ -221,13 +223,15 @@ public:
             {
                 HL_Map::Param const param = 
                 {
-                    .core_ref = get_core_ref(),
-                    .transformation_ref = this->get_transformation(),
                     .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
                 };
 
-                m_origins.emplace_back( std::cref(param) );
+                m_origins.emplace_back(
+                    std::ref(get_core_ref().get_objects()),
+                    std::cref(this->get_transformation()),
+                    std::cref(param) );
+
                 ++idx;
             }
         }
