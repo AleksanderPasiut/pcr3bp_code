@@ -70,7 +70,7 @@ public:
         CoreInteriorBase::set_param(packet_vector);
 
         int idx = 0;
-        const double point_thickness = this->get_param(idx++);
+        const float point_thickness = this->get_param(idx++);
 
         const size_t reg_evo_point_count = this->get_param(idx++);
         const float reg_evo_thickness = this->get_param(idx++);
@@ -201,13 +201,15 @@ public:
             size_t idx = 0;
             for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
             {
-                m_origins.emplace_back(
-                    std::ref(get_core_ref()),
-                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                    std::cref( this->get_transformation() ),
-                    point_thickness * (idx == highlight_periodic_orbit_point ? 2.0 : 1.0)
-                );
+                HL_Map::Param const param = 
+                {
+                    .core_ref = get_core_ref(),
+                    .transformation_ref = this->get_transformation(),
+                    .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                    .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
+                };
 
+                m_origins.emplace_back( std::cref(param) );
                 ++idx;
             }
         }
@@ -217,12 +219,15 @@ public:
             size_t idx = 0;
             for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
             {
-                m_origins.emplace_back(
-                    std::ref(get_core_ref()),
-                    CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                    std::cref( this->get_transformation() ),
-                    point_thickness * (idx == highlight_homoclinic_orbit_point ? 2.0 : 1.0)
-                );
+                HL_Map::Param const param = 
+                {
+                    .core_ref = get_core_ref(),
+                    .transformation_ref = this->get_transformation(),
+                    .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                    .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
+                };
+
+                m_origins.emplace_back( std::cref(param) );
                 ++idx;
             }
         }
