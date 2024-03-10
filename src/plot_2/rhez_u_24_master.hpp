@@ -19,10 +19,10 @@ TEST(Plot, Rhez_u_24)
 
         Aquila::ParamConfig("scale", -20.0, 20.0, 0.0, 0.1, 1),
 
-        Aquila::ParamConfig("show collision manifold", 0.0, 1.0, 0.0, 1.0, 0),
+        Aquila::ParamConfig("show collision manifold", 0.0, 2.0, 0.0, 1.0, 0),
         
-        Aquila::ParamConfig("show periodic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
-        Aquila::ParamConfig("show homoclinic orbit evo.", 0.0, 1.0, 0.0, 1.0, 0),
+        Aquila::ParamConfig("show periodic orbit evo.", 0.0, 2.0, 0.0, 1.0, 0),
+        Aquila::ParamConfig("show homoclinic orbit evo.", 0.0, 2.0, 0.0, 1.0, 0),
 
         Aquila::ParamConfig("show periodic orbit loc.", 0.0, 1.0, 0.0, 1.0, 0),
         Aquila::ParamConfig("show homoclinic orbit loc.", 0.0, 1.0, 0.0, 1.0, 0),

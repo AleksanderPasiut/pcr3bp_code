@@ -8,6 +8,9 @@
 #include "manifold4_transformation.hpp"
 #include <memory>
 
+#include "plot_common/timelevel_divisor.hpp"
+#include "plot_common/edge_detector.hpp"
+
 namespace Pcr3bpProof
 {
 
@@ -24,13 +27,16 @@ public:
             , m_transformation_ref(transformation_ref)
     {}
 
-    void show(const ParamsT& params)
+    void rebuild(const ParamsT& params)
     {
         if (m_object_ptr)
         {
             if (m_object_ptr->get_params() != params)
             {
                 rebuild_object(params);
+                m_divisor.reset();
+                m_visible = true;
+                m_edge_detector.reset(true);
             }
             else if (m_transformation_ref.update())
             {
@@ -40,12 +46,23 @@ public:
         else
         {
             rebuild_object(params);
+            m_divisor.reset();
+            m_visible = true;
+            m_edge_detector.reset(true);
         }
     }
 
     void hide()
     {
         m_object_ptr.reset();
+        m_divisor.reset();
+        m_visible = false;
+        m_edge_detector.reset(false);
+    }
+
+    void highlight(bool arg)
+    {
+        m_highlighted = arg;
     }
 
     void refresh()
@@ -61,14 +78,26 @@ public:
 
     void heartbeat()
     {
-        if (m_object_ptr)
+        if (m_highlighted)
         {
-            m_object_ptr->show(m_hidden);
-            m_hidden = !m_hidden;
+            bool const div_output = m_divisor.update();
+
+            if (div_output)
+            {
+                m_visible = !m_visible;
+            }
         }
         else
         {
-            m_hidden = false;
+            m_visible = true;
+        }
+
+        if (m_edge_detector.update(m_visible))
+        {
+            if (m_object_ptr)
+            {
+                m_object_ptr->show(m_visible);
+            }
         }
     }
 
@@ -86,7 +115,12 @@ private:
 
     std::unique_ptr<ObjectT> m_object_ptr {};
 
-    bool m_hidden {};
+    TimelevelDivisor m_divisor {};
+
+    bool m_visible {};
+    bool m_highlighted {};
+
+    EdgeDetector m_edge_detector {};
 };
 
 }

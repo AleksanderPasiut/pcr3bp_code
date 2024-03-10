@@ -96,7 +96,7 @@ public:
             , m_reg_evolution_neg(core_ref, transformation_ref)
     {}
 
-    void show(Params const & params)
+    void rebuild(Params const & params)
     {
         {
             const RegEvolution4::Params params_internal = {
@@ -108,7 +108,7 @@ public:
                 true
             };
 
-            m_reg_evolution_pos.show(params_internal);
+            m_reg_evolution_pos.rebuild(params_internal);
         }
         {
             const RegEvolution4::Params params_internal = {
@@ -120,9 +120,15 @@ public:
                 false
             };
 
-            m_reg_evolution_neg.show(params_internal);
+            m_reg_evolution_neg.rebuild(params_internal);
         }
     }
+
+    void highlight(bool arg)
+    {
+        m_reg_evolution_pos.highlight(arg);
+        m_reg_evolution_neg.highlight(arg);
+    }        
 
     void hide()
     {
@@ -134,6 +140,12 @@ public:
     {
         m_reg_evolution_pos.refresh();
         m_reg_evolution_neg.refresh();
+    }
+
+    void heartbeat()
+    {
+        m_reg_evolution_pos.heartbeat();
+        m_reg_evolution_neg.heartbeat();
     }
     
 private:

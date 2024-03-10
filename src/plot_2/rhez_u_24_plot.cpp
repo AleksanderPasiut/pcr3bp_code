@@ -14,6 +14,7 @@
 #include <capd_utils/concat.hpp>
 
 #include "plot_common/window_properties.hpp"
+#include "plot_common/timelevel_divisor.hpp"
 
 #include "rhez_u_24_core_interior_base.hpp"
 
@@ -67,29 +68,6 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     return hset_parameters_list;
 }
 
-class TimelevelDivisor
-{
-public:
-    using Timepoint = std::chrono::time_point<std::chrono::system_clock>;
-
-    bool update()
-    {
-        const Timepoint t = std::chrono::system_clock().now();
-
-        if (t - m_timepoint > std::chrono::milliseconds(500))
-        {
-            m_timepoint = t;
-            return true;
-        }
-
-        return false;
-    }
-
-private:
-    Timepoint m_timepoint {};
-};
-
-
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 public:
@@ -117,10 +95,10 @@ public:
 
         const double scale = this->get_param(idx++);
 
-        const bool show_collision_manifold = this->get_param(idx++);
+        const unsigned show_collision_manifold = this->get_param(idx++);
 
-        const bool show_periodic_orbit = this->get_param(idx++);
-        const bool show_homoclinic_orbit = this->get_param(idx++);
+        const unsigned show_periodic_orbit = this->get_param(idx++);
+        const unsigned show_homoclinic_orbit = this->get_param(idx++);
 
         const bool show_periodic_orbit_local = this->get_param(idx++);
         const bool show_homoclinic_orbit_local = this->get_param(idx++);
@@ -159,14 +137,15 @@ public:
             this->set_offset({});
         }
 
-        if (show_collision_manifold)
+        if (show_collision_manifold > 0)
         {
             CollisionManifold::Params const params
             {
                 .thickness = reg_evo_thickness
             };
 
-            m_collision_manifold.show(params);
+            m_collision_manifold.rebuild(params);
+            m_collision_manifold.highlight(show_collision_manifold > 1);
         }
         else
         {
@@ -175,7 +154,7 @@ public:
 
         m_dual_reg_evolution_list.clear();
 
-        if (show_periodic_orbit)
+        if (show_periodic_orbit > 0)
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
@@ -187,14 +166,15 @@ public:
                 .thickness = reg_evo_thickness
             };
 
-            m_periodic_orbit.show(params);
+            m_periodic_orbit.rebuild(params);
+            m_periodic_orbit.highlight(show_periodic_orbit > 1);
         }
         else
         {
             m_periodic_orbit.hide();
         }
 
-        if (show_homoclinic_orbit)
+        if (show_homoclinic_orbit > 0)
         {
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, h };
 
@@ -206,7 +186,8 @@ public:
                 .thickness = reg_evo_thickness
             };
 
-            m_homoclinic_orbit.show(params);
+            m_homoclinic_orbit.rebuild(params);
+            m_homoclinic_orbit.highlight(show_homoclinic_orbit > 1);
         }
         else
         {
@@ -395,10 +376,9 @@ public:
 
     void heartbeat()
     {
-        if (m_timelevel_divisor.update())
-        {
-            m_collision_manifold.heartbeat();
-        }
+        m_collision_manifold.heartbeat();
+        m_periodic_orbit.heartbeat();
+        m_homoclinic_orbit.heartbeat();
     }
 
 private:
