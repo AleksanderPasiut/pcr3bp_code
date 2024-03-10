@@ -64,9 +64,6 @@ private:
 
     Lyra::Manifold4<1> m_renderable;
 
-    MapT m_map;
-    CapdUtils::TimemapWrapper<MapT> m_timemap;
-
     CapdUtils::SolutionCurve<MapT> m_solution { 0.0 };
 
     std::unique_ptr<SolutionInterpolation> m_length_time_interpolation {};

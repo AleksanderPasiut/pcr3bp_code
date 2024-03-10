@@ -50,16 +50,17 @@ RegEvolution4::RegEvolution4(
     const Manifold4_Transformation & transformation_ref,
     const Params& params)
         : m_transformation_ref(transformation_ref)
-        , m_map(create_map(params.setup, params.positive))
-        , m_timemap(m_map, 0.0, 20)
         , m_params(params)
         , m_ruler( Leo::Ruler<ScalarType>(0.0, params.t, params.point_count, 1) )
         , m_renderable(
             core_objects_ref,
             Leo::RulerSet<1>({ m_ruler }))
 {
-    m_timemap.set_time(m_params.t);
-    m_timemap(m_params.initial_point, m_solution);
+    MapT map = create_map(params.setup, params.positive);
+    CapdUtils::TimemapWrapper<MapT> timemap( map, 0.0, 20 );
+
+    timemap.set_time(m_params.t);
+    timemap(m_params.initial_point, m_solution);
 
     SolutionInterpolationNodes length_time_nodes = compute_solution_interpolation_nodes(m_solution, m_ruler);
 
