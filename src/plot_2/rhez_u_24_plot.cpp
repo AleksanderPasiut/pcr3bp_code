@@ -67,6 +67,27 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     return hset_parameters_list;
 }
 
+class TimelevelDivisor
+{
+public:
+    using Timepoint = std::chrono::time_point<std::chrono::system_clock>;
+
+    bool update()
+    {
+        const Timepoint t = std::chrono::system_clock().now();
+
+        if (t - m_timepoint > std::chrono::milliseconds(500))
+        {
+            m_timepoint = t;
+            return true;
+        }
+
+        return false;
+    }
+
+private:
+    Timepoint m_timepoint {};
+};
 
 
 class CoreInterior : CoreInteriorBaseRhez_u_24
@@ -372,6 +393,14 @@ public:
         }
     }
 
+    void heartbeat()
+    {
+        if (m_timelevel_divisor.update())
+        {
+            m_collision_manifold.heartbeat();
+        }
+    }
+
 private:
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
@@ -415,6 +444,8 @@ private:
     {
         m_covering_relations_setup.get_homoclinic_orbit_coordsys()
     };
+
+    TimelevelDivisor m_timelevel_divisor {};
 };
 
 }

@@ -52,6 +52,11 @@ public:
         return m_params;
     }
 
+    void show(bool arg)
+    {
+        m_renderable.show(arg);
+    }
+
 private:
     using SolutionInterpolationNodes = Leo::LinearInterpolationNodesList<ScalarType, ScalarType>;
     using SolutionInterpolation = Leo::LinearInterpolationStandard<ScalarType, ScalarType>;

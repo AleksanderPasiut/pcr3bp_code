@@ -43,9 +43,14 @@ public:
         m_renderable.fill(m_params.thickness);
     }
 
-    Params& get_params()
+    const Params& get_params()
     {
         return m_params;
+    }
+
+    void show(bool arg)
+    {
+        m_renderable.show(arg);
     }
 
 private:

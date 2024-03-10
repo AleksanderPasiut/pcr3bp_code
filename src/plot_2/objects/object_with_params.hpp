@@ -59,6 +59,19 @@ public:
         }
     }
 
+    void heartbeat()
+    {
+        if (m_object_ptr)
+        {
+            m_object_ptr->show(m_hidden);
+            m_hidden = !m_hidden;
+        }
+        else
+        {
+            m_hidden = false;
+        }
+    }
+
 private:
     void rebuild_object(const ParamsT& params)
     {
@@ -72,6 +85,8 @@ private:
     Manifold4_Transformation_Ref m_transformation_ref;
 
     std::unique_ptr<ObjectT> m_object_ptr {};
+
+    bool m_hidden {};
 };
 
 }
