@@ -175,7 +175,7 @@ public:
 
         if (show_homoclinic_orbit)
         {
-            const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, -0.711058691 };
+            const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, h };
 
             DualRegEvolutionNew::Params const params = {
                 .setup = m_basic_objects.m_setup,
@@ -192,13 +192,21 @@ public:
             m_homoclinic_orbit.hide();
         }
 
+        auto get_initial_point_from_coordsys = [h](const Coordsys& coordsys) -> RVector
+        {
+            return CapdUtils::Concat<MapT>::concat_vectors({
+                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                RVector{ h }
+            });
+        };
+
         if (show_periodic_orbit_local)
         {
             for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
             {
                 DualRegEvolution::Params const params = {
                     .setup = m_basic_objects.m_setup,
-                    .initial_point = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 
+                    .initial_point = get_initial_point_from_coordsys(coordsys),
                     .time = evolution_time,
                     .point_count = reg_evo_point_count,
                     .thickness = reg_evo_thickness
@@ -217,7 +225,7 @@ public:
             {
                 DualRegEvolution::Params const params = {
                     .setup = m_basic_objects.m_setup,
-                    .initial_point = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ), 
+                    .initial_point = get_initial_point_from_coordsys(coordsys),
                     .time = evolution_time,
                     .point_count = reg_evo_point_count,
                     .thickness = reg_evo_thickness
