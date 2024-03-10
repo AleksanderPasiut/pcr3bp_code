@@ -45,10 +45,20 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     auto periodic_hset_parameters_list = load_hset_parameters_list_file("periodic_coverings_hset_parameters.csv");
     auto jump_hset_parameters_list = load_hset_parameters_list_file("jump_coverings_hset_parameters.csv");
 
+    CapdUtils::HsetParameters periodic_orbit_2_arg_hset
+    {
+        .type = CapdUtils::HsetType::Argument,
+        .coordsys_origin = periodic_hset_parameters_list.rbegin()->coordsys_origin,
+        .coordinates = periodic_hset_parameters_list.begin()->coordinates
+    };
+
     std::list<CapdUtils::HsetParameters> hset_parameters_list {};
     hset_parameters_list.splice(hset_parameters_list.end(), homoclinic_hset_parameters_list);
     hset_parameters_list.splice(hset_parameters_list.end(), periodic_hset_parameters_list);
     hset_parameters_list.splice(hset_parameters_list.end(), jump_hset_parameters_list);
+
+    hset_parameters_list.emplace_back(periodic_orbit_2_arg_hset);
+
 
     // for (auto& hp : hset_parameters_list)
     // {
@@ -56,6 +66,8 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     // }
     return hset_parameters_list;
 }
+
+
 
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
@@ -219,6 +231,8 @@ public:
         }
         
         m_origins.clear();
+
+
 
         
         if (show_periodic_orbit_origins)
