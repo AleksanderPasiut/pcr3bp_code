@@ -265,7 +265,7 @@ public:
         MapT& map,
         const Leo::RulerSet<domain_dimension>& ruler_set,
         Manifold4_Transformation const& transformation_ref)
-            : Lyra::Manifold4<domain_dimension>( objects, ruler_set )
+            : Lyra::Manifold4<domain_dimension>( objects, ruler_set, Leo::Color::Profile::RedPurpleBlue11 )
             , m_map(map)
             , m_transformation_ref(transformation_ref)
     {}
@@ -361,7 +361,7 @@ public:
         Lyra::Core3dObjects& objects,
         VectorType vector,
         Manifold4_Transformation const & transformation_ref)
-            : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ))
+            : Lyra::Manifold4<0>(objects, Leo::RulerSet<0>( 1 ), Leo::Color::Profile::RedPurpleBlue11)
             , m_vector(vector)
             , m_transformation_ref(transformation_ref)
     {}

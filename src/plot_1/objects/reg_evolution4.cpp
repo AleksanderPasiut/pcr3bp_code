@@ -54,7 +54,8 @@ RegEvolution4::RegEvolution4(
         , m_ruler( Leo::Ruler<ScalarType>(0.0, params.t, params.point_count, 1) )
         , m_renderable(
             core_objects_ref,
-            Leo::RulerSet<1>({ m_ruler }))
+            Leo::RulerSet<1>({ m_ruler }),
+            Leo::Color::Profile::RedPurpleBlue11)
 {
     MapT map = create_map(params.setup, params.positive);
     CapdUtils::TimemapWrapper<MapT> timemap( map, 0.0, 20 );

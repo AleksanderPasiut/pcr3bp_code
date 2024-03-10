@@ -426,49 +426,29 @@ int main(int argc, char* argv[])
         Pcr3bpProof::create_window_properties("RHEZ U 24"),
         argc,
         argv,
-        Leo::Color(0.0, 0.0, 0.0),
+        Leo::Color::White(),
         Serpent::Grid3d::Properties{
             .ruler_x = Leo::Ruler<>(-2, 2, 9, 1),
             .ruler_y = Leo::Ruler<>(-2, 2, 9, 1),
             .ruler_z = Leo::Ruler<>(-2, 2, 9, 1),
-            .grid_color = Leo::Color( 0.5, 0.5, 0.5 ),
+            .grid_color = Leo::Color::DarkGray(),
             .grid_width = 0.005f,
             .label_x = L".",
             .label_y = L".",
             .label_z = L".",
             .label_properties{
-                .back_color = Leo::Color(0.0, 0.0, 0.0),
-                .fore_color = Leo::Color(1.0, 1.0, 1.0),
+                .back_color = Leo::Color::White(),
+                .fore_color = Leo::Color::DarkGray(),
                 .halfheight = 0.05f
             }
         },
         Serpent::Colortray::get_properties_1d(
-            Leo::Color::Profile::RedGreenBlue11,
-            Leo::Color(0.0, 0.0, 0.0),
-            Leo::Color(1.0, 1.0, 1.0),
+            Leo::Color::Profile::RedPurpleBlue11,
+            Leo::Color::White(),
+            Leo::Color::DarkGray(),
             Lyra::Colortray::get_default_placement_1d(),
             Leo::Ruler<double>(-1.0, +1.0, 3, 1))
     );
-
-    // Serpent::SglHostWindow<Core> window(
-    //     Pcr3bpProof::create_window_properties("reg lyapunov orbit multi"),
-    //     argc,
-    //     argv,
-    //     Leo::Color(1.0, 1.0, 1.0),
-    //     Serpent::Grid2d::Properties{
-    //         .ruler_x = Leo::Ruler<>(-1.5, 1.5, 7, 1),
-    //         .ruler_y = Leo::Ruler<>(-1.5, 1.5, 7, 1),
-    //         .grid_color = Leo::Color(0.1, 0.1, 0.1),
-    //         .grid_width = 0.0025f,
-    //         .label_x = L".",
-    //         .label_y = L".",
-    //         .label_properties{
-    //             .back_color = Leo::Color(1.0, 1.0, 1.0),
-    //             .fore_color = Leo::Color(0.1, 0.1, 0.1),
-    //             .halfheight = 0.03f,
-    //             .align = Serpent::Align::Center
-    //         }
-    //     });
 
     window.show();
     window.run();
