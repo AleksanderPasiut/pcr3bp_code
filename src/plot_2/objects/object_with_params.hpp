@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <lyra/core3d.hpp>
+#include "manifold4_transformation.hpp"
 #include <memory>
 
 namespace Pcr3bpProof
