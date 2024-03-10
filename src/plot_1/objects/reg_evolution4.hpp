@@ -8,6 +8,7 @@
 #include <pcr3bp_basic/setup_parameters.hpp>
 #include <lyra/core3d.hpp>
 #include <capd_utils/timemap_wrapper.hpp>
+#include <tools/solution_curve_interpolation.hpp>
 
 namespace Pcr3bpProof
 {
@@ -52,16 +53,23 @@ public:
     }
 
 private:
-    const Manifold4_Transformation & m_transformation_ref;
+    using SolutionInterpolationNodes = Leo::LinearInterpolationNodesList<ScalarType, ScalarType>;
+    using SolutionInterpolation = Leo::LinearInterpolationStandard<ScalarType, ScalarType>;
 
-    MapT m_map;
-    CapdUtils::TimemapWrapper<MapT> m_timemap;
+    const Manifold4_Transformation & m_transformation_ref;
 
     Params m_params;
 
     Leo::Ruler<ScalarType> m_ruler;
 
     Lyra::Manifold4<1> m_renderable;
+
+    MapT m_map;
+    CapdUtils::TimemapWrapper<MapT> m_timemap;
+
+    CapdUtils::SolutionCurve<MapT> m_solution { 0.0 };
+
+    std::unique_ptr<SolutionInterpolation> m_length_time_interpolation {};
 };
 
 }
