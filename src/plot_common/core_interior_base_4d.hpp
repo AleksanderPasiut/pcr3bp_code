@@ -21,12 +21,20 @@ class CoreInteriorBase4d : public CoreInteriorBase
 public:
     CoreInteriorBase4d() : CoreInteriorBase()
     {
-        m_rotation.set_identity();
+        Leo::ArrayFill::mov(m_reorder, 
+        {
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0,
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0
+        });
+
+        Leo::ArrayFill::mov(m_rotation, m_reorder);
     }
 
     void set_rotation(Leo::Matrix4f const & matrix) noexcept
     {
-        m_rotation = matrix;
+        Leo::ArrayTensorOp::mul<1, 0>(m_rotation, matrix, m_reorder);
         m_transformation.inc_params_counter();
     }
 
@@ -48,6 +56,8 @@ public:
     }
 
 private:
+    Leo::Matrix4f m_reorder {};
+
     Leo::Matrix4f m_rotation {};
     double m_scale { 1.0f };
     std::array<double, 4> m_offset {};
