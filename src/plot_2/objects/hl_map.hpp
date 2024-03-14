@@ -32,10 +32,7 @@ public:
         const Manifold4_Transformation & transformation_ref,
         const Param& param)
             : m_param(param)
-            , m_vector(
-                core_objects_ref,
-                RVector{ m_param.U[2], m_param.U[3], m_param.U[0], m_param.U[1] },
-                std::cref(transformation_ref))
+            , m_vector(core_objects_ref, m_param.U, std::cref(transformation_ref))
     {
         refresh();
     }

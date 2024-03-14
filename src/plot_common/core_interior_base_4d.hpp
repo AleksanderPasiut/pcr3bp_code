@@ -38,7 +38,7 @@ public:
 
     void set_offset(std::array<double, 4> offset)
     {
-        m_offset = { offset[2], offset[3], offset[0], offset[1] };
+        m_offset = offset;
         m_transformation.inc_params_counter();
     }
 
