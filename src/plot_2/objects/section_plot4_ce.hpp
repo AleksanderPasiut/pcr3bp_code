@@ -66,13 +66,10 @@ private:
 
     LocalPoincare4_Constraint<MapT> m_constraint;
 
-    MapT m_reorder { CapdUtils::ProjectionMap<MapT>::create(4, { 2, 3, 0, 1 }) };
-
-    CapdUtils::CompositeMap<MapT, decltype(m_constraint)&, decltype(m_linear)&, MapT&> m_composite
+    CapdUtils::CompositeMap<MapT, decltype(m_constraint)&, decltype(m_linear)&> m_composite
     {
         std::ref(m_constraint),
-        std::ref(m_linear),
-        std::ref(m_reorder),
+        std::ref(m_linear)
     };
 
     CapdMapRenderable<decltype(m_composite), 2, 4> m_renderable;

@@ -62,10 +62,10 @@ private:
             Node& phi = in[0];
             Node& r = param[0];
 
-            out[2] = Node(0.0);
-            out[3] = Node(0.0);
-            out[0] = r * sin(phi);
-            out[1] = r * cos(phi);
+            out[0] = Node(0.0);
+            out[1] = Node(0.0);
+            out[2] = r * sin(phi);
+            out[3] = r * cos(phi);
         };
 
         RMap map(func, 1, 4, 1);

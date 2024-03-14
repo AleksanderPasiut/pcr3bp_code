@@ -79,7 +79,7 @@ void RegEvolution4::refresh()
 
         const VectorType U = m_solution(t);
 
-        std::array<double, 4> tmp = { U[2], U[3], U[0], U[1] };
+        std::array<double, 4> tmp = { U[0], U[1], U[2], U[3] };
         Lyra::Point4d out = m_transformation_ref.func()(tmp);
         return out;
     };
