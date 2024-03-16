@@ -5,7 +5,7 @@
 #pragma once
 
 #include "plot_1/objects/reg_evolution4.hpp"
-#include "plot_2/objects/object_with_params.hpp"
+#include "plot_2/objects/renderable4d_with_params.hpp"
 
 namespace Pcr3bpProof
 {

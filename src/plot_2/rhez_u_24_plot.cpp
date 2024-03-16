@@ -21,7 +21,7 @@
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
-#include "plot_2/objects/object_with_params.hpp"
+#include "plot_2/objects/renderable4d_with_params.hpp"
 
 #include "load_hset_parameters_list.hpp"
 #include "orbit_from_coordsys_container.hpp"
