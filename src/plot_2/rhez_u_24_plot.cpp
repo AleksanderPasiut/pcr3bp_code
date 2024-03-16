@@ -119,7 +119,7 @@ public:
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
-            DualRegEvolutionNew::Params const params = {
+            DualRegEvolution::Params const params = {
                 .setup = m_basic_objects.m_setup,
                 .initial_point = initial_point, 
                 .time = 0.908943,
@@ -139,7 +139,7 @@ public:
         {
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, h };
 
-            DualRegEvolutionNew::Params const params = {
+            DualRegEvolution::Params const params = {
                 .setup = m_basic_objects.m_setup,
                 .initial_point = initial_point, 
                 .time = 2.6362,
@@ -341,13 +341,13 @@ public:
 private:
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    DualRegEvolutionNew m_periodic_orbit
+    DualRegEvolution m_periodic_orbit
     {
         get_core_ref(),
         this->get_transformation()
     };
 
-    DualRegEvolutionNew m_homoclinic_orbit
+    DualRegEvolution m_homoclinic_orbit
     {
         get_core_ref(),
         this->get_transformation()

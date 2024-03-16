@@ -37,7 +37,7 @@ public:
 
 private:
     std::vector<Coordsys> const & m_coordsys_vector;
-    std::vector<DualRegEvolutionNew> m_container {};
+    std::vector<DualRegEvolution> m_container {};
 };
 
 }

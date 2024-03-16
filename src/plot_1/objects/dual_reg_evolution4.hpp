@@ -10,7 +10,7 @@
 namespace Pcr3bpProof
 {
 
-class DualRegEvolutionNew
+class DualRegEvolution
 {
 public:
     struct Params
@@ -22,7 +22,7 @@ public:
         float thickness;
     };
 
-    DualRegEvolutionNew(
+    DualRegEvolution(
         Lyra::Core3d& core_ref,
         Manifold4_Transformation const & transformation_ref)
             : m_reg_evolution_pos(core_ref, transformation_ref)

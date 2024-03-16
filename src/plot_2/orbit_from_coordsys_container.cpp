@@ -48,10 +48,10 @@ void OrbitFromCoordsysContainer::rebuild(Params const & params)
     auto jt = m_coordsys_vector.begin();
     for (auto it = m_container.begin(); it != m_container.end(); ++it, ++jt)
     {
-        DualRegEvolutionNew & evolution = *it;
+        DualRegEvolution & evolution = *it;
         Coordsys const & coordsys = *jt;
 
-        DualRegEvolutionNew::Params const evolution_params = {
+        DualRegEvolution::Params const evolution_params = {
             .setup = params.setup,
             .initial_point = get_initial_point_from_coordsys(coordsys),
             .time = params.time,
@@ -65,7 +65,7 @@ void OrbitFromCoordsysContainer::rebuild(Params const & params)
 
 void OrbitFromCoordsysContainer::refresh()
 {
-    for (DualRegEvolutionNew& evolution : m_container)
+    for (DualRegEvolution& evolution : m_container)
     {
         evolution.refresh();
     }
@@ -73,7 +73,7 @@ void OrbitFromCoordsysContainer::refresh()
 
 void OrbitFromCoordsysContainer::hide()
 {
-    for (DualRegEvolutionNew& evolution : m_container)
+    for (DualRegEvolution& evolution : m_container)
     {
         evolution.hide();
     }
