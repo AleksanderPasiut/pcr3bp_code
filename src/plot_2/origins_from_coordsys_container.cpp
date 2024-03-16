@@ -39,8 +39,15 @@ void OriginsFromCoordsysContainer::rebuild(Params const & params)
 
     if (params.highlight_idx != m_params.highlight_idx)
     {
-        m_container[m_params.highlight_idx].highlight(false);
-        m_container[params.highlight_idx].highlight(true);
+        if (m_params.highlight_idx < m_container.size())
+        {
+            m_container[m_params.highlight_idx].highlight(false);
+        }
+        
+        if (params.highlight_idx < m_container.size())
+        {
+            m_container[params.highlight_idx].highlight(true);
+        }
     }
 
     m_params = params;
