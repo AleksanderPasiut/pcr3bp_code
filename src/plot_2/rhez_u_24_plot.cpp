@@ -31,6 +31,82 @@
 namespace Pcr3bpProof
 {
 
+class OrbitFromCoordsysContainer
+{
+public:
+    struct Params
+    {
+        Pcr3bp::SetupParameters<RMap> const & setup;
+        double time;
+        size_t point_count;
+        float thickness;
+        double h;
+    };
+
+    using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
+
+    OrbitFromCoordsysContainer(std::vector<Coordsys> const & coordsys_vector, Lyra::Core3d& core_ref, Manifold4_Transformation const & transformation_ref)
+        : m_coordsys_vector(coordsys_vector)
+    {
+        m_container.reserve( coordsys_vector.size() );
+
+        for (Coordsys const & coordsys : coordsys_vector)
+        {
+            m_container.emplace_back(std::ref(core_ref), std::cref(transformation_ref));
+        }
+    }
+
+    void rebuild(Params const & params)
+    {
+        auto h = params.h;
+
+        auto get_initial_point_from_coordsys = [h](const Coordsys& coordsys) -> RVector
+        {
+            return CapdUtils::Concat<RMap>::concat_vectors({
+                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                RVector{ h }
+            });
+        };
+
+        auto jt = m_coordsys_vector.begin();
+        for (auto it = m_container.begin(); it != m_container.end(); ++it, ++jt)
+        {
+            DualRegEvolutionNew & evolution = *it;
+            Coordsys const & coordsys = *jt;
+
+            DualRegEvolutionNew::Params const evolution_params = {
+                .setup = params.setup,
+                .initial_point = get_initial_point_from_coordsys(coordsys),
+                .time = params.time,
+                .point_count = params.point_count,
+                .thickness = params.thickness
+            };
+
+            evolution.rebuild(evolution_params);
+        }
+    }
+
+    void refresh()
+    {
+        for (DualRegEvolutionNew& evolution : m_container)
+        {
+            evolution.refresh();
+        }
+    }
+
+    void hide()
+    {
+        for (DualRegEvolutionNew& evolution : m_container)
+        {
+            evolution.hide();
+        }
+    }
+
+private:
+    std::vector<Coordsys> const & m_coordsys_vector;
+    std::vector<DualRegEvolutionNew> m_container {};
+};
+
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 public:
@@ -167,40 +243,38 @@ public:
 
         if (show_periodic_orbit_local)
         {
-            for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
+            OrbitFromCoordsysContainer::Params params
             {
-                DualRegEvolution::Params const params = {
-                    .setup = m_basic_objects.m_setup,
-                    .initial_point = get_initial_point_from_coordsys(coordsys),
-                    .time = evolution_time,
-                    .point_count = reg_evo_point_count,
-                    .thickness = reg_evo_thickness
-                };
+                .setup = m_basic_objects.m_setup,
+                .time = evolution_time,
+                .point_count = reg_evo_point_count,
+                .thickness = reg_evo_thickness,
+                .h = h
+            };
 
-                m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params));
-            }
+            m_periodic_orbit_local.rebuild(params);
+        }
+        else
+        {
+            m_periodic_orbit_local.hide();
         }
 
         if (show_homoclinic_orbit_local)
         {
-            for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
+            OrbitFromCoordsysContainer::Params params
             {
-                DualRegEvolution::Params const params = {
-                    .setup = m_basic_objects.m_setup,
-                    .initial_point = get_initial_point_from_coordsys(coordsys),
-                    .time = evolution_time,
-                    .point_count = reg_evo_point_count,
-                    .thickness = reg_evo_thickness
-                };
+                .setup = m_basic_objects.m_setup,
+                .time = evolution_time,
+                .point_count = reg_evo_point_count,
+                .thickness = reg_evo_thickness,
+                .h = h
+            };
 
-                m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params));
-            }
+            m_homoclinic_orbit_local.rebuild(params);
+        }
+        else
+        {
+            m_homoclinic_orbit_local.hide();
         }
         
         m_origins.clear();
@@ -321,6 +395,9 @@ public:
         m_periodic_orbit.refresh();
         m_homoclinic_orbit.refresh();
 
+        m_periodic_orbit_local.refresh();
+        m_homoclinic_orbit_local.refresh();
+
         for (auto& evo : m_dual_reg_evolution_list)
         {
             evo.refresh();
@@ -386,6 +463,20 @@ private:
     std::vector<Coordsys> homoclinic_orbit_coordsys_vector
     {
         m_covering_relations_setup.get_homoclinic_orbit_coordsys()
+    };
+
+    OrbitFromCoordsysContainer m_periodic_orbit_local
+    {
+        periodic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
+    };
+
+    OrbitFromCoordsysContainer m_homoclinic_orbit_local
+    {
+        homoclinic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
     };
 
     TimelevelDivisor m_timelevel_divisor {};
