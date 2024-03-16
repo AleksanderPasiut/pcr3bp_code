@@ -191,8 +191,6 @@ public:
             m_collision_manifold.hide();
         }
 
-        m_dual_reg_evolution_list.clear();
-
         if (show_periodic_orbit > 0)
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
@@ -398,11 +396,6 @@ public:
         m_periodic_orbit_local.refresh();
         m_homoclinic_orbit_local.refresh();
 
-        for (auto& evo : m_dual_reg_evolution_list)
-        {
-            evo.refresh();
-        }
-
         for (auto& ptdbg : m_origins)
         {
             ptdbg.refresh();
@@ -436,8 +429,6 @@ private:
         this->get_transformation()
     };
 
-    std::list<DualRegEvolution> m_dual_reg_evolution_list {};
-    
     Renderable4d_WithParams<CollisionManifold> m_collision_manifold
     {
         get_core_ref(),
