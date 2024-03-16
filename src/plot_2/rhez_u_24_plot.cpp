@@ -359,8 +359,6 @@ private:
         get_core_ref(),
         this->get_transformation()
     };
-
-    TimelevelDivisor m_timelevel_divisor {};
 };
 
 }
