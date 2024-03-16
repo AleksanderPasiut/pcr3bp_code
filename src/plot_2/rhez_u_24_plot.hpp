@@ -60,7 +60,7 @@ private:
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
-    std::list<HsetRenderable> m_h_sets {};
+    std::list<Renderable4d_WithParams<HsetRenderable>> m_h_sets {};
 
     std::list<CapdUtils::HsetParameters> m_hset_parameters_list
     {

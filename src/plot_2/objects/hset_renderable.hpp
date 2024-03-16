@@ -33,7 +33,6 @@ public:
         std::array<double, 4> coordinates;
         size_t divs;
         size_t subdivs;
-        const Manifold4_Transformation & transformation_ref;
         float thickness;
 
         bool operator!= (const Params& params) const noexcept
@@ -42,16 +41,15 @@ public:
         }
     };
 
-    HsetRenderable(Lyra::Core3d& core_ref, const Params& params)
-        : m_core_ref(core_ref)
-        , m_params(params)
+    HsetRenderable(Lyra::Core3dObjects& core_objects_ref, const Manifold4_Transformation & transformation_ref, const Params& params)
+        : m_params(params)
         , m_renderable(
-            std::ref(core_ref.get_objects()),
+            std::ref(core_objects_ref),
             std::ref(m_composite),
             Leo::RulerSet<2>({
                 Leo::Ruler<double>( params.coordinates.at(0), params.coordinates.at(1), params.divs, params.subdivs ),
                 Leo::Ruler<double>( params.coordinates.at(2), params.coordinates.at(3), params.divs, params.subdivs ) }),
-            std::cref(params.transformation_ref) )
+            std::cref(transformation_ref) )
     {
         refresh();
     }
@@ -72,8 +70,6 @@ public:
     }
 
 private:
-    Lyra::Core3d& m_core_ref;
-
     Params m_params;
 
     CapdUtils::AffineMap<MapT> m_linear

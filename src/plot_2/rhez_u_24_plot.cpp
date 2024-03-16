@@ -8,7 +8,14 @@ namespace Pcr3bpProof
 {
 
 CoreInterior::CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
-{}
+{
+    for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
+    {
+        m_h_sets.emplace_back(
+            std::ref(get_core_ref()),
+            std::cref(this->get_transformation()));
+    }
+}
 
 void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
 {
@@ -187,6 +194,7 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
         m_homoclinic_orbit_origins.hide();
     }
 
+    auto it = m_h_sets.begin();
     for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
     {
         bool is_visible = false;
@@ -195,6 +203,7 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
         is_visible |= (show_limg_h_sets && hp.type == CapdUtils::HsetType::LeftImage);
         is_visible |= (show_rimg_h_sets && hp.type == CapdUtils::HsetType::RightImage);
 
+        auto & h_set = *(it++);
         if (is_visible)
         {
             const Coordsys& coordsys_ref = hset_parameter_to_coordsys_converter.get_coordsys(hp);
@@ -206,13 +215,16 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
                 hp.coordinates,
                 3,
                 5,
-                std::cref(this->get_transformation()),
+                // std::cref(this->get_transformation()),
                 reg_evo_thickness
             };
 
-            m_h_sets.emplace_back(
-                std::ref(get_core_ref()),
-                std::cref(params));
+
+            h_set.rebuild(std::cref(params));
+        }
+        else
+        {
+            h_set.hide();
         }
     }
 }
