@@ -17,9 +17,10 @@ HsetRenderablesContainer::HsetRenderablesContainer(
             periodic_orbit_coordsys_vector,
             homoclinic_orbit_coordsys_vector)
 {
+    m_container.reserve(m_hset_parameters_list.size());
     for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
     {
-        m_h_sets.emplace_back(
+        m_container.emplace_back(
             std::ref(core_ref),
             std::cref(transformation_ref));
     }
@@ -27,7 +28,7 @@ HsetRenderablesContainer::HsetRenderablesContainer(
 
 void HsetRenderablesContainer::update(Params const & params)
 {
-    auto it = m_h_sets.begin();
+    auto it = m_container.begin();
     for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
     {
         bool is_visible = false;
@@ -62,7 +63,7 @@ void HsetRenderablesContainer::update(Params const & params)
 
 void HsetRenderablesContainer::refresh()
 {
-    for (auto& hs : m_h_sets)
+    for (auto& hs : m_container)
     {
         hs.refresh();
     }

@@ -40,8 +40,7 @@ public:
     void refresh();
 
 private:
-
-    std::list<Renderable4d_WithParams<HsetRenderable>> m_h_sets {};
+    std::vector<Renderable4d_WithParams<HsetRenderable>> m_container {};
 
     std::list<CapdUtils::HsetParameters> m_hset_parameters_list
     {
