@@ -237,8 +237,12 @@ void CoreInterior::set_rotation_4d(Leo::Matrix4f const & matrix)
 void CoreInterior::heartbeat()
 {
     m_collision_manifold.heartbeat();
+
     m_periodic_orbit.heartbeat();
     m_homoclinic_orbit.heartbeat();
+
+    m_periodic_orbit_origins.heartbeat();
+    m_homoclinic_orbit_origins.heartbeat();
 }
 
 }

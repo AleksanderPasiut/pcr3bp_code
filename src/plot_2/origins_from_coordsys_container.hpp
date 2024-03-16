@@ -33,9 +33,13 @@ public:
 
     void hide();
 
+    void heartbeat();
+
 private:
     std::vector<Coordsys> const & m_coordsys_vector;
     std::vector<Renderable4d_WithParams<HL_Map>> m_container {};
+
+    Params m_params {};
 };
 
 }

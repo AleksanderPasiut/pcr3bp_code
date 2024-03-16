@@ -20,19 +20,30 @@ OriginsFromCoordsysContainer::OriginsFromCoordsysContainer(std::vector<Coordsys>
 
 void OriginsFromCoordsysContainer::rebuild(Params const & params)
 {
-    auto jt = m_coordsys_vector.begin();
-    for (auto it = m_container.begin(); it != m_container.end(); ++it, ++jt)
+    if (params.thickness != m_params.thickness)
     {
-        auto & point_renderable = *it;
-        Coordsys const & coordsys = *jt;
+        auto jt = m_coordsys_vector.begin();
+        for (auto it = m_container.begin(); it != m_container.end(); ++it, ++jt)
+        {
+            auto & point_renderable = *it;
+            Coordsys const & coordsys = *jt;
 
-        HL_Map::Params const point_params = {
-            .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-            .thickness = params.thickness
-        };
+            HL_Map::Params const point_params = {
+                .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+                .thickness = params.thickness
+            };
 
-        point_renderable.rebuild(point_params);
+            point_renderable.rebuild(point_params);
+        }
     }
+
+    if (params.highlight_idx != m_params.highlight_idx)
+    {
+        m_container[m_params.highlight_idx].highlight(false);
+        m_container[params.highlight_idx].highlight(true);
+    }
+
+    m_params = params;
 }
 
 void OriginsFromCoordsysContainer::refresh()
@@ -48,6 +59,14 @@ void OriginsFromCoordsysContainer::hide()
     for (auto& point : m_container)
     {
         point.hide();
+    }
+}
+
+void OriginsFromCoordsysContainer::heartbeat()
+{
+    for (auto& point : m_container)
+    {
+        point.heartbeat();
     }
 }
 

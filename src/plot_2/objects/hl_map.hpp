@@ -47,6 +47,11 @@ public:
         return m_params;
     }
 
+    void show(bool arg)
+    {
+        m_vector.show(arg);
+    }
+
 private:
     using Vector4 = CapdVectorRenderable4<RVector>;
 
