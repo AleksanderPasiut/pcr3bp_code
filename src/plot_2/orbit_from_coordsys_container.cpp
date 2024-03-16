@@ -2,21 +2,6 @@
 // Author: Aleksander M. Pasiut
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// #include <taurus/default_core_4d.hpp>
-
-// #include <tools/types.hpp>
-// #include <tools/logging/h_set_parameters.hpp>
-
-// #include <proof/pcr3bp_reg_basic_objects.hpp>
-// #include <proof/covering_relations_setup.hpp>
-
-// #include <capd_utils/concat.hpp>
-
-// #include "plot_common/window_properties.hpp"
-
-// #include "plot_1/objects/dual_reg_evolution4.hpp"
-
-
 #include "orbit_from_coordsys_container.hpp"
 
 namespace Pcr3bpProof

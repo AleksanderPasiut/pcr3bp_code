@@ -26,7 +26,7 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    struct Param
+    struct Params
     {
         Pcr3bp::RegBasicObjects<MapT>& basic_objects;
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
@@ -36,31 +36,31 @@ public:
         float thickness;
     };
 
-    SectionPlot4_CE(Lyra::Core3d& core_ref, const Param& param)
+    SectionPlot4_CE(Lyra::Core3d& core_ref, const Params& params)
         : m_core_ref(core_ref)
-        , m_param(param)
-        , m_linear( param.coordsys.get_origin(), param.coordsys.get_directions_matrix() )
-        , m_constraint( param.basic_objects.m_hamiltonian_reg2, param.coordsys )
+        , m_params(params)
+        , m_linear( params.coordsys.get_origin(), params.coordsys.get_directions_matrix() )
+        , m_constraint( params.basic_objects.m_hamiltonian_reg2, params.coordsys )
         , m_renderable(
             std::ref(core_ref.get_objects()),
             std::ref(m_composite),
             Leo::RulerSet<2>({
-                Leo::Ruler<double>( -param.span, param.span, param.divs, 1 ),
-                Leo::Ruler<double>( -param.span, param.span, param.divs, 1 ) }),
-            std::cref(param.transformation_ref) )
+                Leo::Ruler<double>( -params.span, params.span, params.divs, 1 ),
+                Leo::Ruler<double>( -params.span, params.span, params.divs, 1 ) }),
+            std::cref(params.transformation_ref) )
     {
         refresh();
     }
 
     void refresh()
     {
-        m_renderable.fill(m_param.thickness);
+        m_renderable.fill(m_params.thickness);
     }
 
 private:
     Lyra::Core3d& m_core_ref;
 
-    Param m_param;
+    Params m_params;
 
     CapdUtils::AffineMap<MapT> m_linear;
 

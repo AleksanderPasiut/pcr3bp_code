@@ -6,7 +6,6 @@
 
 #include <lyra/core3d.hpp>
 #include "capd_renderable.hpp"
-#include "tools/test_tools.hpp"
 
 #include <capd_utils/local_coordinate_system.hpp>
 #include <capd_utils/affine_map.hpp>
@@ -27,45 +26,60 @@ public:
     using VectorType = typename MapT::VectorType;
     using MatrixType = typename MapT::MatrixType;
 
-    struct Param
+    struct Params
     {
         Pcr3bp::RegBasicObjects<MapT>& basic_objects;
         CapdUtils::LocalCoordinateSystem<MapT> coordsys;
         std::array<double, 4> coordinates;
         size_t divs;
         size_t subdivs;
-        const Manifold4_Transformation & transformation_ref;
         float thickness;
+
+        bool operator!= (const Params& params) const noexcept
+        {
+            return params.thickness != thickness;
+        }
     };
 
-    HsetRenderable(Lyra::Core3d& core_ref, const Param& param)
-        : m_core_ref(core_ref)
-        , m_param(param)
-        , m_renderable(
-            std::ref(core_ref.get_objects()),
-            std::ref(m_composite),
-            Leo::RulerSet<2>({
-                Leo::Ruler<double>( param.coordinates.at(0), param.coordinates.at(1), param.divs, param.subdivs ),
-                Leo::Ruler<double>( param.coordinates.at(2), param.coordinates.at(3), param.divs, param.subdivs ) }),
-            std::cref(param.transformation_ref) )
+    HsetRenderable(
+        Lyra::Core3dObjects& core_objects_ref,
+        const Manifold4_Transformation & transformation_ref,
+        const Params& params)
+            : m_params(params)
+            , m_renderable(
+                core_objects_ref,
+                m_composite,
+                Leo::RulerSet<2>({
+                    Leo::Ruler<double>( params.coordinates.at(0), params.coordinates.at(1), params.divs, params.subdivs ),
+                    Leo::Ruler<double>( params.coordinates.at(2), params.coordinates.at(3), params.divs, params.subdivs )
+                })
+            , transformation_ref )
     {
         refresh();
     }
 
     void refresh()
     {
-        m_renderable.fill(m_param.thickness);
+        m_renderable.fill(m_params.thickness);
+    }
+
+    const Params& get_params()
+    {
+        return m_params;
+    }
+
+    void show(bool arg)
+    {
+        m_renderable.show(arg);
     }
 
 private:
-    Lyra::Core3d& m_core_ref;
-
-    Param m_param;
+    Params m_params;
 
     CapdUtils::AffineMap<MapT> m_linear
     {
-        m_param.coordsys.get_origin(),
-        m_param.coordsys.get_directions_matrix()
+        m_params.coordsys.get_origin(),
+        m_params.coordsys.get_directions_matrix()
     };
 
     using LocalPoincare4_Constraint_BaseType = LocalPoincare4_Constraint_Base<MapT>;
@@ -77,18 +91,18 @@ private:
     {
         [this]() -> LocalPoincare4_Constraint_BaseTypePtr
         {
-            auto origin = m_param.coordsys.get_origin();
+            auto origin = m_params.coordsys.get_origin();
 
             bool is_origin_zero = origin[0] == 0.0 && origin[1] == 0.0;
 
             return is_origin_zero ?
                 LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_SpecType>(
-                    std::ref(m_param.basic_objects.m_hamiltonian_reg2),
-                    std::ref(m_param.coordsys)
+                    std::ref(m_params.basic_objects.m_hamiltonian_reg2),
+                    std::ref(m_params.coordsys)
                 )) :
                 LocalPoincare4_Constraint_BaseTypePtr(std::make_unique<LocalPoincare4_Constraint_Type>(
-                    std::ref(m_param.basic_objects.m_hamiltonian_reg2),
-                    std::ref(m_param.coordsys)
+                    std::ref(m_params.basic_objects.m_hamiltonian_reg2),
+                    std::ref(m_params.coordsys)
                 ));
         }()
     };
