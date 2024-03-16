@@ -58,14 +58,14 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
 
     if (centerpoint_index != -1)
     {
-        if (centerpoint_index < periodic_orbit_coordsys_vector.size())
+        if (centerpoint_index < m_periodic_orbit_coordsys_vector.size())
         {
-            this->set_offset( convert_double<4>( periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
+            this->set_offset( convert_double<4>( m_periodic_orbit_coordsys_vector.at(centerpoint_index).get_origin() ) );
         }
-        else if (centerpoint_index < periodic_orbit_coordsys_vector.size() + homoclinic_orbit_coordsys_vector.size())
+        else if (centerpoint_index < m_periodic_orbit_coordsys_vector.size() + m_homoclinic_orbit_coordsys_vector.size())
         {
-            size_t const idx = centerpoint_index - periodic_orbit_coordsys_vector.size();
-            this->set_offset( convert_double<4>( homoclinic_orbit_coordsys_vector.at(idx).get_origin() ) );
+            size_t const idx = centerpoint_index - m_periodic_orbit_coordsys_vector.size();
+            this->set_offset( convert_double<4>( m_homoclinic_orbit_coordsys_vector.at(idx).get_origin() ) );
         }
     }
     else
@@ -206,7 +206,7 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
         auto & h_set = *(it++);
         if (is_visible)
         {
-            const Coordsys& coordsys_ref = hset_parameter_to_coordsys_converter.get_coordsys(hp);
+            const Coordsys& coordsys_ref = m_hset_parameter_to_coordsys_converter.get_coordsys(hp);
 
             const HsetRenderable::Params params
             {

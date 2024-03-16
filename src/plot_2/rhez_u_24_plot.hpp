@@ -67,47 +67,47 @@ private:
         load_hset_parameters_list()
     };
 
-    std::vector<Coordsys> periodic_orbit_coordsys_vector
+    std::vector<Coordsys> m_periodic_orbit_coordsys_vector
     {
         m_covering_relations_setup.get_periodic_orbit_coordsys()
     };
 
-    std::vector<Coordsys> homoclinic_orbit_coordsys_vector
+    std::vector<Coordsys> m_homoclinic_orbit_coordsys_vector
     {
         m_covering_relations_setup.get_homoclinic_orbit_coordsys()
     };
 
-    HsetParametersToCoordsysConverter hset_parameter_to_coordsys_converter
+    HsetParametersToCoordsysConverter m_hset_parameter_to_coordsys_converter
     {
         m_hset_parameters_list,
-        periodic_orbit_coordsys_vector,
-        homoclinic_orbit_coordsys_vector
+        m_periodic_orbit_coordsys_vector,
+        m_homoclinic_orbit_coordsys_vector
     };
 
     OriginsFromCoordsysContainer m_periodic_orbit_origins
     {
-        periodic_orbit_coordsys_vector,
+        m_periodic_orbit_coordsys_vector,
         get_core_ref(),
         this->get_transformation()
     };
 
     OriginsFromCoordsysContainer m_homoclinic_orbit_origins
     {
-        homoclinic_orbit_coordsys_vector,
+        m_homoclinic_orbit_coordsys_vector,
         get_core_ref(),
         this->get_transformation()
     };
 
     OrbitFromCoordsysContainer m_periodic_orbit_local
     {
-        periodic_orbit_coordsys_vector,
+        m_periodic_orbit_coordsys_vector,
         get_core_ref(),
         this->get_transformation()
     };
 
     OrbitFromCoordsysContainer m_homoclinic_orbit_local
     {
-        homoclinic_orbit_coordsys_vector,
+        m_homoclinic_orbit_coordsys_vector,
         get_core_ref(),
         this->get_transformation()
     };
