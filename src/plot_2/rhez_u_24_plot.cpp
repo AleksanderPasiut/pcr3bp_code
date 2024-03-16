@@ -14,24 +14,23 @@
 #include <capd_utils/concat.hpp>
 
 #include "plot_common/window_properties.hpp"
-#include "plot_common/timelevel_divisor.hpp"
 
 #include "rhez_u_24_core_interior_base.hpp"
 
-// #include "plot_1/objects/reg_evolution4.hpp"
 #include "plot_1/objects/dual_reg_evolution4.hpp"
-
 #include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
-
 #include "plot_2/objects/object_with_params.hpp"
+
 #include "load_hset_parameters_list.hpp"
 #include "orbit_from_coordsys_container.hpp"
 #include "hset_parameters_to_coordsys_converter.hpp"
 
 namespace Pcr3bpProof
 {
+
+
 
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {

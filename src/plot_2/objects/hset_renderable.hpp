@@ -6,7 +6,6 @@
 
 #include <lyra/core3d.hpp>
 #include "capd_renderable.hpp"
-#include "tools/test_tools.hpp"
 
 #include <capd_utils/local_coordinate_system.hpp>
 #include <capd_utils/affine_map.hpp>
