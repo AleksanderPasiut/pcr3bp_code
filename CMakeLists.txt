@@ -29,6 +29,7 @@ plot_component( plot_rhez_u_24
     src/plot_common/timelevel_divisor.cpp
     src/plot_1/objects/reg_evolution4.cpp
     src/plot_2/rhez_u_24_plot.cpp
+    src/plot_2/rhez_u_24_plot.main.cpp
     src/plot_2/load_hset_parameters_list.cpp
     src/plot_2/orbit_from_coordsys_container.cpp
     src/plot_2/origins_from_coordsys_container.cpp
