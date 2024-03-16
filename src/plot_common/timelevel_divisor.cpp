@@ -19,7 +19,7 @@ bool TimelevelDivisor::update()
 {
     const Timepoint t = std::chrono::system_clock().now();
 
-    if (t - m_timepoint > std::chrono::milliseconds(500))
+    if (t - m_timepoint > std::chrono::milliseconds(300))
     {
         m_timepoint = t;
         return true;
