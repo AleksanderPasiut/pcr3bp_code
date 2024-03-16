@@ -7,14 +7,15 @@
 #include "rhez_u_24_core_interior_base.hpp"
 
 #include "plot_1/objects/dual_reg_evolution4.hpp"
-#include "plot_2/objects/hset_renderable.hpp"
+// #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
 #include "plot_2/objects/renderable4d_with_params.hpp"
 
-#include "load_hset_parameters_list.hpp"
+// #include "load_hset_parameters_list.hpp"
 #include "orbit_from_coordsys_container.hpp"
 #include "origins_from_coordsys_container.hpp"
-#include "hset_parameters_to_coordsys_converter.hpp"
+// #include "hset_parameters_to_coordsys_converter.hpp"
+#include "hset_renderables_container.hpp"
 
 namespace Pcr3bpProof
 {
@@ -60,12 +61,12 @@ private:
 
     CoveringRelationsSetup m_covering_relations_setup {};
 
-    std::list<Renderable4d_WithParams<HsetRenderable>> m_h_sets {};
+    // std::list<Renderable4d_WithParams<HsetRenderable>> m_h_sets {};
 
-    std::list<CapdUtils::HsetParameters> m_hset_parameters_list
-    {
-        load_hset_parameters_list()
-    };
+    // std::list<CapdUtils::HsetParameters> m_hset_parameters_list
+    // {
+    //     load_hset_parameters_list()
+    // };
 
     std::vector<Coordsys> m_periodic_orbit_coordsys_vector
     {
@@ -77,9 +78,17 @@ private:
         m_covering_relations_setup.get_homoclinic_orbit_coordsys()
     };
 
-    HsetParametersToCoordsysConverter m_hset_parameter_to_coordsys_converter
+    // HsetParametersToCoordsysConverter m_hset_parameter_to_coordsys_converter
+    // {
+    //     m_hset_parameters_list,
+    //     m_periodic_orbit_coordsys_vector,
+    //     m_homoclinic_orbit_coordsys_vector
+    // };
+
+    HsetRenderablesContainer m_hset_renderables_container
     {
-        m_hset_parameters_list,
+        get_core_ref(),
+        this->get_transformation(),
         m_periodic_orbit_coordsys_vector,
         m_homoclinic_orbit_coordsys_vector
     };
