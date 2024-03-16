@@ -41,15 +41,19 @@ public:
         }
     };
 
-    HsetRenderable(Lyra::Core3dObjects& core_objects_ref, const Manifold4_Transformation & transformation_ref, const Params& params)
-        : m_params(params)
-        , m_renderable(
-            std::ref(core_objects_ref),
-            std::ref(m_composite),
-            Leo::RulerSet<2>({
-                Leo::Ruler<double>( params.coordinates.at(0), params.coordinates.at(1), params.divs, params.subdivs ),
-                Leo::Ruler<double>( params.coordinates.at(2), params.coordinates.at(3), params.divs, params.subdivs ) }),
-            std::cref(transformation_ref) )
+    HsetRenderable(
+        Lyra::Core3dObjects& core_objects_ref,
+        const Manifold4_Transformation & transformation_ref,
+        const Params& params)
+            : m_params(params)
+            , m_renderable(
+                core_objects_ref,
+                m_composite,
+                Leo::RulerSet<2>({
+                    Leo::Ruler<double>( params.coordinates.at(0), params.coordinates.at(1), params.divs, params.subdivs ),
+                    Leo::Ruler<double>( params.coordinates.at(2), params.coordinates.at(3), params.divs, params.subdivs )
+                })
+            , transformation_ref )
     {
         refresh();
     }

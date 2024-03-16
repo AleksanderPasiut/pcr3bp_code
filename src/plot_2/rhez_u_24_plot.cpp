@@ -215,10 +215,8 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
                 hp.coordinates,
                 3,
                 5,
-                // std::cref(this->get_transformation()),
                 reg_evo_thickness
             };
-
 
             h_set.rebuild(std::cref(params));
         }
