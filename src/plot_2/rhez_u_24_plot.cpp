@@ -27,10 +27,10 @@
 
 #include "plot_2/objects/object_with_params.hpp"
 #include "load_hset_parameters_list.hpp"
+#include "orbit_from_coordsys_container.hpp"
 
 namespace Pcr3bpProof
 {
-
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 public:
@@ -115,13 +115,11 @@ public:
             m_collision_manifold.hide();
         }
 
-        m_dual_reg_evolution_list.clear();
-
         if (show_periodic_orbit > 0)
         {
             const RVector initial_point = CapdUtils::Concat<MapT>::concat_vectors({ m_basic_objects.m_parameters.get_initial_point(), RVector{ h } });
 
-            DualRegEvolutionNew::Params const params = {
+            DualRegEvolution::Params const params = {
                 .setup = m_basic_objects.m_setup,
                 .initial_point = initial_point, 
                 .time = 0.908943,
@@ -141,7 +139,7 @@ public:
         {
             const RVector initial_point = { 1.265830729, 0.0, 0.0, 0.1201350685, h };
 
-            DualRegEvolutionNew::Params const params = {
+            DualRegEvolution::Params const params = {
                 .setup = m_basic_objects.m_setup,
                 .initial_point = initial_point, 
                 .time = 2.6362,
@@ -167,40 +165,38 @@ public:
 
         if (show_periodic_orbit_local)
         {
-            for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
+            OrbitFromCoordsysContainer::Params params
             {
-                DualRegEvolution::Params const params = {
-                    .setup = m_basic_objects.m_setup,
-                    .initial_point = get_initial_point_from_coordsys(coordsys),
-                    .time = evolution_time,
-                    .point_count = reg_evo_point_count,
-                    .thickness = reg_evo_thickness
-                };
+                .setup = m_basic_objects.m_setup,
+                .time = evolution_time,
+                .point_count = reg_evo_point_count,
+                .thickness = reg_evo_thickness,
+                .h = h
+            };
 
-                m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params));
-            }
+            m_periodic_orbit_local.rebuild(params);
+        }
+        else
+        {
+            m_periodic_orbit_local.hide();
         }
 
         if (show_homoclinic_orbit_local)
         {
-            for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
+            OrbitFromCoordsysContainer::Params params
             {
-                DualRegEvolution::Params const params = {
-                    .setup = m_basic_objects.m_setup,
-                    .initial_point = get_initial_point_from_coordsys(coordsys),
-                    .time = evolution_time,
-                    .point_count = reg_evo_point_count,
-                    .thickness = reg_evo_thickness
-                };
+                .setup = m_basic_objects.m_setup,
+                .time = evolution_time,
+                .point_count = reg_evo_point_count,
+                .thickness = reg_evo_thickness,
+                .h = h
+            };
 
-                m_dual_reg_evolution_list.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params));
-            }
+            m_homoclinic_orbit_local.rebuild(params);
+        }
+        else
+        {
+            m_homoclinic_orbit_local.hide();
         }
         
         m_origins.clear();
@@ -321,10 +317,8 @@ public:
         m_periodic_orbit.refresh();
         m_homoclinic_orbit.refresh();
 
-        for (auto& evo : m_dual_reg_evolution_list)
-        {
-            evo.refresh();
-        }
+        m_periodic_orbit_local.refresh();
+        m_homoclinic_orbit_local.refresh();
 
         for (auto& ptdbg : m_origins)
         {
@@ -347,20 +341,18 @@ public:
 private:
     Pcr3bp::RegBasicObjects<MapT> m_basic_objects {};
 
-    DualRegEvolutionNew m_periodic_orbit
+    DualRegEvolution m_periodic_orbit
     {
         get_core_ref(),
         this->get_transformation()
     };
 
-    DualRegEvolutionNew m_homoclinic_orbit
+    DualRegEvolution m_homoclinic_orbit
     {
         get_core_ref(),
         this->get_transformation()
     };
 
-    std::list<DualRegEvolution> m_dual_reg_evolution_list {};
-    
     Renderable4d_WithParams<CollisionManifold> m_collision_manifold
     {
         get_core_ref(),
@@ -386,6 +378,20 @@ private:
     std::vector<Coordsys> homoclinic_orbit_coordsys_vector
     {
         m_covering_relations_setup.get_homoclinic_orbit_coordsys()
+    };
+
+    OrbitFromCoordsysContainer m_periodic_orbit_local
+    {
+        periodic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
+    };
+
+    OrbitFromCoordsysContainer m_homoclinic_orbit_local
+    {
+        homoclinic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
     };
 
     TimelevelDivisor m_timelevel_divisor {};
