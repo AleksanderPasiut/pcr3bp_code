@@ -18,7 +18,6 @@
 #include "rhez_u_24_core_interior_base.hpp"
 
 #include "plot_1/objects/dual_reg_evolution4.hpp"
-#include "plot_2/objects/hl_map.hpp"
 #include "plot_2/objects/hset_renderable.hpp"
 #include "plot_2/objects/collision_manifold.hpp"
 #include "plot_2/objects/renderable4d_with_params.hpp"
@@ -193,28 +192,8 @@ public:
             m_homoclinic_orbit_local.hide();
         }
 
-        // m_origins.clear();
-        
         if (show_periodic_orbit_origins)
         {
-
-            // size_t idx = 0;
-            // for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
-            // {
-            //     HL_Map::Params const params = 
-            //     {
-            //         .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-            //         .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
-            //     };
-
-            //     m_origins.emplace_back(
-            //         std::ref(get_core_ref().get_objects()),
-            //         std::cref(this->get_transformation()),
-            //         std::cref(params) );
-
-            //     ++idx;
-            // }
-
             const OriginsFromCoordsysContainer::Params params
             {
                 .thickness = point_thickness,
@@ -237,26 +216,7 @@ public:
             };
 
             m_homoclinic_orbit_origins.rebuild(params);
-
-            // size_t idx = 0;
-            // for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
-            // {
-            //     HL_Map::Params const params = 
-            //     {
-            //         .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-            //         .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
-            //     };
-
-            //     m_origins.emplace_back(
-            //         std::ref(get_core_ref().get_objects()),
-            //         std::cref(this->get_transformation()),
-            //         std::cref(params) );
-
-            //     ++idx;
-            // }
         }
-
-        // m_h_sets.clear();
 
         for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
         {
@@ -303,11 +263,6 @@ public:
         m_periodic_orbit_local.refresh();
         m_homoclinic_orbit_local.refresh();
 
-        // for (auto& ptdbg : m_origins)
-        // {
-        //     ptdbg.refresh();
-        // }
-
         for (auto& hs : m_h_sets)
         {
             hs.refresh();
@@ -343,8 +298,6 @@ private:
     };
 
     CoveringRelationsSetup m_covering_relations_setup {};
-
-    std::list<HL_Map> m_origins {};
 
     std::list<HsetRenderable> m_h_sets {};
 
