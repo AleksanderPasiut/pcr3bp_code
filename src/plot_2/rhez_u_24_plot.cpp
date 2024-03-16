@@ -31,6 +31,7 @@
 
 namespace Pcr3bpProof
 {
+
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
 public:
@@ -256,18 +257,20 @@ public:
 
             if (is_visible)
             {
-                auto find_coordsys = [&](std::array<double, 4> coordsys_origin) -> CapdUtils::LocalCoordinateSystem<IMap>*
+                auto find_coordsys = [this](CapdUtils::HsetParameters const & hp) -> const Coordsys*
                 {
-                    CapdUtils::LocalCoordinateSystem<IMap>* ret = nullptr;
+                    const std::array<double, 4>& coordsys_origin = hp.coordsys_origin;
+
+                    const Coordsys* ret = nullptr;
                     double distance = INFINITY;
 
-                    RVector co =  { coordsys_origin[0], coordsys_origin[1], coordsys_origin[2], coordsys_origin[3] };
+                    const RVector co =  { coordsys_origin[0], coordsys_origin[1], coordsys_origin[2], coordsys_origin[3] };
 
                     CapdUtils::MaxNorm<RMap> norm {};
 
-                    for (auto& cs : homoclinic_orbit_coordsys_vector)
+                    for (const Coordsys& cs : homoclinic_orbit_coordsys_vector)
                     {
-                        double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
+                        const double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
                         if (d < distance)
                         {
                             ret = &cs;
@@ -275,9 +278,9 @@ public:
                         }
                     }
 
-                    for (auto& cs : periodic_orbit_coordsys_vector)
+                    for (const Coordsys& cs : periodic_orbit_coordsys_vector)
                     {
-                        double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
+                        const double d = norm( CapdUtils::vector_cast<RVector>(cs.get_origin()) - co);
                         if (d < distance)
                         {
                             ret = &cs;
@@ -288,7 +291,7 @@ public:
                     return ret;
                 };
 
-                CapdUtils::LocalCoordinateSystem<IMap>* coordsys_ptr = find_coordsys(hp.coordsys_origin);
+                const CapdUtils::LocalCoordinateSystem<IMap>* coordsys_ptr = find_coordsys(hp);
 
                 const HsetRenderable::Params params
                 {
