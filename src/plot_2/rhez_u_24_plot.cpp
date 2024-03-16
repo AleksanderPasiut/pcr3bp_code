@@ -157,14 +157,6 @@ public:
             m_homoclinic_orbit.hide();
         }
 
-        auto get_initial_point_from_coordsys = [h](const Coordsys& coordsys) -> RVector
-        {
-            return CapdUtils::Concat<MapT>::concat_vectors({
-                CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                RVector{ h }
-            });
-        };
-
         if (show_periodic_orbit_local)
         {
             OrbitFromCoordsysContainer::Params params
@@ -202,9 +194,6 @@ public:
         }
         
         m_origins.clear();
-
-
-
         
         if (show_periodic_orbit_origins)
         {
