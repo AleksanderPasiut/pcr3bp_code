@@ -14,12 +14,12 @@ namespace Pcr3bpProof
 class HL_Map
 {
 public:
-    struct Param
+    struct Params
     {
         RVector U;
         float thickness;
 
-        bool operator!= (const Param& arg)
+        bool operator!= (const Params& arg)
         {
             return 
                 arg.thickness != this->thickness ||
@@ -30,22 +30,22 @@ public:
     HL_Map(
         Lyra::Core3dObjects& core_objects_ref,
         const Manifold4_Transformation & transformation_ref,
-        const Param& param)
-            : m_param(param)
-            , m_vector(core_objects_ref, m_param.U, std::cref(transformation_ref))
+        const Params& params)
+            : m_params(params)
+            , m_vector(core_objects_ref, m_params.U, std::cref(transformation_ref))
     {
         refresh();
     }
 
     void refresh()
     {
-        m_vector.fill(m_param.thickness);
+        m_vector.fill(m_params.thickness);
     }
 
 private:
     using Vector4 = CapdVectorRenderable4<RVector>;
 
-    Param m_param;
+    Params m_params;
 
     Vector4 m_vector;
 };

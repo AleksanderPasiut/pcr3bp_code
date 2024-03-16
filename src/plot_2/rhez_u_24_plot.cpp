@@ -200,7 +200,7 @@ public:
             size_t idx = 0;
             for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
             {
-                HL_Map::Param const param = 
+                HL_Map::Params const params = 
                 {
                     .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
@@ -209,7 +209,7 @@ public:
                 m_origins.emplace_back(
                     std::ref(get_core_ref().get_objects()),
                     std::cref(this->get_transformation()),
-                    std::cref(param) );
+                    std::cref(params) );
 
                 ++idx;
             }
@@ -220,7 +220,7 @@ public:
             size_t idx = 0;
             for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
             {
-                HL_Map::Param const param = 
+                HL_Map::Params const params = 
                 {
                     .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
                     .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
@@ -229,7 +229,7 @@ public:
                 m_origins.emplace_back(
                     std::ref(get_core_ref().get_objects()),
                     std::cref(this->get_transformation()),
-                    std::cref(param) );
+                    std::cref(params) );
 
                 ++idx;
             }
