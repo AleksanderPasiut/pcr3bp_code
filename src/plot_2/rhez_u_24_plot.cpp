@@ -8,14 +8,7 @@ namespace Pcr3bpProof
 {
 
 CoreInterior::CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
-{
-    // for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
-    // {
-    //     m_h_sets.emplace_back(
-    //         std::ref(get_core_ref()),
-    //         std::cref(this->get_transformation()));
-    // }
-}
+{}
 
 void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
 {
@@ -205,38 +198,6 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
     };
 
     m_hset_renderables_container.update(params);
-
-    // auto it = m_h_sets.begin();
-    // for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
-    // {
-    //     bool is_visible = false;
-    //     is_visible |= (show_arg_h_sets && hp.type == CapdUtils::HsetType::Argument);
-    //     is_visible |= (show_img_h_sets && hp.type == CapdUtils::HsetType::Image);
-    //     is_visible |= (show_limg_h_sets && hp.type == CapdUtils::HsetType::LeftImage);
-    //     is_visible |= (show_rimg_h_sets && hp.type == CapdUtils::HsetType::RightImage);
-
-    //     auto & h_set = *(it++);
-    //     if (is_visible)
-    //     {
-    //         const Coordsys& coordsys_ref = m_hset_parameter_to_coordsys_converter.get_coordsys(hp);
-
-    //         const HsetRenderable::Params params
-    //         {
-    //             std::ref(m_basic_objects),
-    //             CapdUtils::LocalCoordinateSystem<MapT>::convert_from( coordsys_ref ),
-    //             hp.coordinates,
-    //             3,
-    //             5,
-    //             reg_evo_thickness
-    //         };
-
-    //         h_set.rebuild(std::cref(params));
-    //     }
-    //     else
-    //     {
-    //         h_set.hide();
-    //     }
-    // }
 }
 
 void CoreInterior::set_rotation_4d(Leo::Matrix4f const & matrix)
@@ -255,11 +216,6 @@ void CoreInterior::set_rotation_4d(Leo::Matrix4f const & matrix)
     m_homoclinic_orbit_local.refresh();
 
     m_hset_renderables_container.refresh();
-
-    // for (auto& hs : m_h_sets)
-    // {
-    //     hs.refresh();
-    // }
 }
 
 void CoreInterior::heartbeat()
