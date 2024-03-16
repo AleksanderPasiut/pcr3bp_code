@@ -31,6 +31,7 @@ plot_component( plot_rhez_u_24
     src/plot_2/rhez_u_24_plot.cpp
     src/plot_2/load_hset_parameters_list.cpp
     src/plot_2/orbit_from_coordsys_container.cpp
+    src/plot_2/hset_parameters_to_coordsys_converter.cpp
     src/tools/variable_printer.cpp)
 
 endif()
