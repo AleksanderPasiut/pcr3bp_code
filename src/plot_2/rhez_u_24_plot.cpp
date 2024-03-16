@@ -290,7 +290,7 @@ public:
 
                 CapdUtils::LocalCoordinateSystem<IMap>* coordsys_ptr = find_coordsys(hp.coordsys_origin);
 
-                const HsetRenderable::Param param
+                const HsetRenderable::Params params
                 {
                     std::ref(m_basic_objects),
                     CapdUtils::LocalCoordinateSystem<MapT>::convert_from( *coordsys_ptr ),
@@ -303,7 +303,7 @@ public:
 
                 m_h_sets.emplace_back(
                     std::ref(get_core_ref()),
-                    std::cref(param));
+                    std::cref(params));
             }
         }
     }
