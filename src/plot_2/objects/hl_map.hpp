@@ -19,7 +19,7 @@ public:
         RVector U;
         float thickness;
 
-        bool operator!= (const Params& arg)
+        bool operator!= (const Params& arg) const noexcept
         {
             return 
                 arg.thickness != this->thickness ||
@@ -40,6 +40,11 @@ public:
     void refresh()
     {
         m_vector.fill(m_params.thickness);
+    }
+
+    const Params& get_params() const noexcept
+    {
+        return m_params;
     }
 
 private:

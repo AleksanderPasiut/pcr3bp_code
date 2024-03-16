@@ -43,7 +43,7 @@ public:
         m_renderable.fill(m_params.thickness);
     }
 
-    const Params& get_params()
+    const Params& get_params() const noexcept
     {
         return m_params;
     }

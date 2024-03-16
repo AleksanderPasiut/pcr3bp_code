@@ -25,12 +25,11 @@
 
 #include "load_hset_parameters_list.hpp"
 #include "orbit_from_coordsys_container.hpp"
+#include "origins_from_coordsys_container.hpp"
 #include "hset_parameters_to_coordsys_converter.hpp"
 
 namespace Pcr3bpProof
 {
-
-
 
 class CoreInterior : CoreInteriorBaseRhez_u_24
 {
@@ -43,7 +42,9 @@ public:
     using Coordsys = CapdUtils::LocalCoordinateSystem<IMap>;
 
     CoreInterior(Lyra::Core3d& core_ref) : CoreInteriorBaseRhez_u_24(core_ref)
-    {}
+    {
+        
+    }
 
     void set_param(const std::vector<Aquila::ParamPacket<double>>& packet_vector)
     {
@@ -191,50 +192,71 @@ public:
         {
             m_homoclinic_orbit_local.hide();
         }
-        
-        m_origins.clear();
+
+        // m_origins.clear();
         
         if (show_periodic_orbit_origins)
         {
-            size_t idx = 0;
-            for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
+
+            // size_t idx = 0;
+            // for (Coordsys const& coordsys : periodic_orbit_coordsys_vector)
+            // {
+            //     HL_Map::Params const params = 
+            //     {
+            //         .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+            //         .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
+            //     };
+
+            //     m_origins.emplace_back(
+            //         std::ref(get_core_ref().get_objects()),
+            //         std::cref(this->get_transformation()),
+            //         std::cref(params) );
+
+            //     ++idx;
+            // }
+
+            const OriginsFromCoordsysContainer::Params params
             {
-                HL_Map::Params const params = 
-                {
-                    .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                    .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
-                };
+                .thickness = point_thickness,
+                .highlight_idx = highlight_periodic_orbit_point
+            };
 
-                m_origins.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params) );
-
-                ++idx;
-            }
+            m_periodic_orbit_origins.rebuild(params);
+        }
+        else
+        {
+            m_periodic_orbit_origins.hide();
         }
 
         if (show_homoclinic_orbit_origins)
         {
-            size_t idx = 0;
-            for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
+            const OriginsFromCoordsysContainer::Params params
             {
-                HL_Map::Params const params = 
-                {
-                    .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
-                    .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
-                };
+                .thickness = point_thickness,
+                .highlight_idx = highlight_homoclinic_orbit_point
+            };
 
-                m_origins.emplace_back(
-                    std::ref(get_core_ref().get_objects()),
-                    std::cref(this->get_transformation()),
-                    std::cref(params) );
+            m_homoclinic_orbit_origins.rebuild(params);
 
-                ++idx;
-            }
+            // size_t idx = 0;
+            // for (Coordsys const& coordsys : homoclinic_orbit_coordsys_vector)
+            // {
+            //     HL_Map::Params const params = 
+            //     {
+            //         .U = CapdUtils::vector_cast<RVector>( coordsys.get_origin() ),
+            //         .thickness = point_thickness * (idx == highlight_periodic_orbit_point ? 2.0f : 1.0f)
+            //     };
+
+            //     m_origins.emplace_back(
+            //         std::ref(get_core_ref().get_objects()),
+            //         std::cref(this->get_transformation()),
+            //         std::cref(params) );
+
+            //     ++idx;
+            // }
         }
 
-        m_h_sets.clear();
+        // m_h_sets.clear();
 
         for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
         {
@@ -275,13 +297,16 @@ public:
         m_periodic_orbit.refresh();
         m_homoclinic_orbit.refresh();
 
+        m_periodic_orbit_origins.refresh();
+        m_homoclinic_orbit_origins.refresh();
+
         m_periodic_orbit_local.refresh();
         m_homoclinic_orbit_local.refresh();
 
-        for (auto& ptdbg : m_origins)
-        {
-            ptdbg.refresh();
-        }
+        // for (auto& ptdbg : m_origins)
+        // {
+        //     ptdbg.refresh();
+        // }
 
         for (auto& hs : m_h_sets)
         {
@@ -343,6 +368,20 @@ private:
         m_hset_parameters_list,
         periodic_orbit_coordsys_vector,
         homoclinic_orbit_coordsys_vector
+    };
+
+    OriginsFromCoordsysContainer m_periodic_orbit_origins
+    {
+        periodic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
+    };
+
+    OriginsFromCoordsysContainer m_homoclinic_orbit_origins
+    {
+        homoclinic_orbit_coordsys_vector,
+        get_core_ref(),
+        this->get_transformation()
     };
 
     OrbitFromCoordsysContainer m_periodic_orbit_local
