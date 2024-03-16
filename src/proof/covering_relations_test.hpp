@@ -185,6 +185,24 @@ public:
 
         EXPECT_TRUE(cr.contraction_condition());
         EXPECT_TRUE(cr.expansion_condition());
+
+        {
+            CapdUtils::CompositeMap<MapT,
+                decltype(J)&,
+                decltype(poincare)&> composite
+            {
+                std::ref(J),
+                std::ref(poincare)
+            };
+            
+            CoveringRelationCheck cr { composite };
+
+            std::list<CapdUtils::HsetParameters> hset_parameters {};
+            hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::Image, coordsys_src, cr.get_img() * this->m_gain_factor));
+            hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::LeftImage, coordsys_src, cr.get_img_left() * this->m_gain_factor));
+            hset_parameters.emplace_back(build_hset_parameters(CapdUtils::HsetType::RightImage, coordsys_src, cr.get_img_right() * this->m_gain_factor));
+            export_hset_parameters(hset_parameters, "parallelogram_coverings_hset_parameters.csv");
+        }
     }
 
 private:

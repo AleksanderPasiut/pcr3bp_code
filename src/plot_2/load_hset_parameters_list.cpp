@@ -24,6 +24,7 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     auto homoclinic_hset_parameters_list = load_hset_parameters_list_file("homoclinic_coverings_hset_parameters.csv");
     auto periodic_hset_parameters_list = load_hset_parameters_list_file("periodic_coverings_hset_parameters.csv");
     auto jump_hset_parameters_list = load_hset_parameters_list_file("jump_coverings_hset_parameters.csv");
+    auto parallelogram_hset_parameters_list = load_hset_parameters_list_file("parallelogram_coverings_hset_parameters.csv");
 
     CapdUtils::HsetParameters periodic_orbit_2_arg_hset
     {
@@ -36,6 +37,7 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     hset_parameters_list.splice(hset_parameters_list.end(), homoclinic_hset_parameters_list);
     hset_parameters_list.splice(hset_parameters_list.end(), periodic_hset_parameters_list);
     hset_parameters_list.splice(hset_parameters_list.end(), jump_hset_parameters_list);
+    hset_parameters_list.splice(hset_parameters_list.end(), parallelogram_hset_parameters_list);
 
     hset_parameters_list.emplace_back(periodic_orbit_2_arg_hset);
 
