@@ -182,6 +182,10 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
 
         m_homoclinic_orbit_origins.rebuild(params);
     }
+    else
+    {
+        m_homoclinic_orbit_origins.hide();
+    }
 
     for (CapdUtils::HsetParameters const & hp : m_hset_parameters_list)
     {
