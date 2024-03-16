@@ -7,6 +7,8 @@
 #include <capd_utils/map_base.hpp>
 #include <capd_utils/local_coordinate_system.hpp>
 
+#include "test_tools.hpp"
+
 namespace Pcr3bpProof
 {
 
