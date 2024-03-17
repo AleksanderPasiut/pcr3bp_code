@@ -33,6 +33,13 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
         .coordinates = periodic_hset_parameters_list.begin()->coordinates
     };
 
+    CapdUtils::HsetParameters homoclinic_orbit_K_arg_hset
+    {
+        .type = CapdUtils::HsetType::Argument,
+        .coordsys_origin = homoclinic_hset_parameters_list.rbegin()->coordsys_origin,
+        .coordinates = periodic_hset_parameters_list.begin()->coordinates
+    };
+
     std::list<CapdUtils::HsetParameters> hset_parameters_list {};
     hset_parameters_list.splice(hset_parameters_list.end(), homoclinic_hset_parameters_list);
     hset_parameters_list.splice(hset_parameters_list.end(), periodic_hset_parameters_list);
@@ -40,6 +47,9 @@ std::list<CapdUtils::HsetParameters> load_hset_parameters_list()
     hset_parameters_list.splice(hset_parameters_list.end(), parallelogram_hset_parameters_list);
 
     hset_parameters_list.emplace_back(periodic_orbit_2_arg_hset);
+    hset_parameters_list.emplace_back(homoclinic_orbit_K_arg_hset);
+
+
 
     // for (auto& hp : hset_parameters_list)
     // {
