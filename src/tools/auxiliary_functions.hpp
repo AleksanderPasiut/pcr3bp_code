@@ -63,6 +63,28 @@ public:
 		return map;
     }
 
+    static MapT R(ScalarType a, ScalarType b)
+    {
+        using CapdUtils::Node;
+
+        auto func = [](Node, Node in[], int, Node out[], int, Node param[], int)
+        {
+            Node& a = param[0];
+            Node& b = param[1];
+
+            Node& xi = in[0];
+            Node& eta = in[1];
+
+            out[0] = b/2*(xi+1);
+            out[1] = (eta * (b-a) +(a+b)) / 2;
+        };
+
+        MapT map(func, 2, 2, 2);
+        map.setParameter(0, a);
+        map.setParameter(1, b);
+		return map;
+    }
+
     static MapT J()
     {
         using CapdUtils::Node;

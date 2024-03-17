@@ -24,6 +24,8 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
 
     const double scale = this->get_param(idx++);
 
+    const size_t centerpoint_index = this->get_param(idx++);
+
     const unsigned show_collision_manifold = this->get_param(idx++);
 
     const unsigned show_periodic_orbit = this->get_param(idx++);
@@ -43,7 +45,7 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
     const bool show_limg_h_sets = this->get_param(idx++);
     const bool show_rimg_h_sets = this->get_param(idx++);
 
-    const size_t centerpoint_index = this->get_param(idx++);
+    const bool show_parallelogram_h_sets = this->get_param(idx++);
 
     this->set_scale(pow(10.0, scale));
 
@@ -194,6 +196,7 @@ void CoreInterior::set_param(const std::vector<Aquila::ParamPacket<double>>& pac
         .show_img_h_sets = show_img_h_sets,
         .show_limg_h_sets = show_limg_h_sets,
         .show_rimg_h_sets = show_rimg_h_sets,
+        .show_parallelogram_h_sets = show_parallelogram_h_sets,
         .reg_evo_thickness = reg_evo_thickness
     };
 

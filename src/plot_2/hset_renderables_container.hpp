@@ -5,6 +5,7 @@
 #pragma once
 
 #include "plot_2/objects/hset_renderable.hpp"
+#include "plot_2/objects/hset_renderable.parallelogram.hpp"
 #include "plot_2/objects/renderable4d_with_params.hpp"
 
 #include "load_hset_parameters_list.hpp"
@@ -23,6 +24,7 @@ public:
         bool show_img_h_sets;
         bool show_limg_h_sets;
         bool show_rimg_h_sets;
+        bool show_parallelogram_h_sets;
         float reg_evo_thickness;
     };
 
@@ -48,6 +50,9 @@ private:
     };
 
     HsetParametersToCoordsysConverter m_hset_parameter_to_coordsys_converter;
+
+    Coordsys m_parallelogram_coordsys;
+    Renderable4d_WithParams<HsetRenderableParallelogram> m_parallelogram_covering;
 };
 
 }
