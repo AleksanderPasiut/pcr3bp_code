@@ -24,6 +24,7 @@ public:
         bool show_img_h_sets;
         bool show_limg_h_sets;
         bool show_rimg_h_sets;
+        bool show_parallelogram_h_sets;
         float reg_evo_thickness;
     };
 

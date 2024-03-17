@@ -56,8 +56,6 @@ public:
                 })
             , transformation_ref )
     {
-        std::cout << m_L << ' ' << m_a0 << ' ' << m_b0 << ' ' << m_composite( RVector{ 0.0, 0.0 } ) << '\n';
-
         refresh();
     }
 

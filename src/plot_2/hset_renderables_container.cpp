@@ -63,7 +63,7 @@ void HsetRenderablesContainer::update(Params const & params)
         }
     }
 
-    if (true)//params.show_parallelogram_covering)
+    if (params.show_parallelogram_h_sets)
     {
         const HsetRenderableParallelogram::Params params_internal
         {
