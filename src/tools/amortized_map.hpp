@@ -31,7 +31,6 @@ public:
             auto it = m_container.find(arg);
             if (it != m_container.end())
             {
-                std::cout << "found\n";
                 return it->second;
             }
 
