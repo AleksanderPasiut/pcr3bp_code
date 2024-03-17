@@ -14,6 +14,8 @@
 #include <tools/local_poincare4_constraint.hpp>
 #include <tools/gain_map.hpp>
 #include <tools/local_poincare4_constraint_spec.hpp>
+#include <tools/amortized_map.hpp>
+
 #include <proof/pcr3bp_reg_basic_objects.hpp>
 
 namespace Pcr3bpProof
@@ -49,7 +51,7 @@ public:
             : m_params(params)
             , m_renderable(
                 core_objects_ref,
-                m_composite,
+                m_amortized_map,
                 Leo::RulerSet<2>({
                     Leo::Ruler<double>( params.coordinates.at(0), params.coordinates.at(1), params.divs, params.subdivs ),
                     Leo::Ruler<double>( params.coordinates.at(2), params.coordinates.at(3), params.divs, params.subdivs )
@@ -154,7 +156,12 @@ private:
         std::ref(m_linear)
     };
 
-    CapdMapRenderable<decltype(m_composite), 2, 4> m_renderable;
+    AmortizedMap<decltype(m_composite)> m_amortized_map
+    {
+        std::ref(m_composite)
+    };
+
+    CapdMapRenderable<decltype(m_amortized_map), 2, 4> m_renderable;
 };
 
 }
